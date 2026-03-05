@@ -32,7 +32,6 @@
         </div>
     </header>
 
-
     <section class="page-hero small">
         <div class="container">
             <h1>Записаться на детейлинг</h1>
@@ -40,26 +39,25 @@
         </div>
     </section>
 
-
     <section class="booking-section">
         <div class="container">
-            <form id="booking-form" action="mailto:polyethylene06@mail.ru" method="post" enctype="text/plain">
+            <form id="booking-form">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="name">Ваше имя *</label>
-                        <input type="text" id="name" name="Имя" required>
+                        <input type="text" id="name" required>
                     </div>
                     <div class="form-group">
                         <label for="phone">Телефон *</label>
-                        <input type="tel" id="phone" name="Телефон" required>
+                        <input type="tel" id="phone" required>
                     </div>
                     <div class="form-group">
                         <label for="car">Марка и модель авто *</label>
-                        <input type="text" id="car" name="Авто" required>
+                        <input type="text" id="car" required>
                     </div>
                     <div class="form-group">
                         <label for="service">Услуга</label>
-                        <select id="service" name="Услуга">
+                        <select id="service">
                             <option value="Комплексная мойка">Комплексная мойка — от 1 500 ₽</option>
                             <option value="Полировка кузова">Полировка кузова — от 5 000 ₽</option>
                             <option value="Химчистка салона">Химчистка салона — от 4 000 ₽</option>
@@ -73,16 +71,16 @@
                     </div>
                     <div class="form-group">
                         <label for="date">Дата *</label>
-                        <input type="date" id="date" name="Дата" required>
+                        <input type="date" id="date" required>
                     </div>
                     <div class="form-group">
                         <label for="time">Время *</label>
-                        <input type="time" id="time" name="Время" required>
+                        <input type="time" id="time" required>
                     </div>
                 </div>
                 <div class="form-group full">
                     <label for="comment">Комментарий</label>
-                    <textarea id="comment" name="Комментарий" rows="4" maxlength="500"></textarea>
+                    <textarea id="comment" rows="4" maxlength="500"></textarea>
                     <p class="char-count" id="char-count">500 символов осталось</p>
                 </div>
                 <button type="submit" class="btn-primary full-btn">Отправить заявку</button>
@@ -90,7 +88,6 @@
             </form>
         </div>
     </section>
-
 
     <footer>
         <div class="container">
@@ -117,7 +114,6 @@
             </div>
         </div>
     </footer>
-
 
     <script src="script.js"></script>
 </body>
