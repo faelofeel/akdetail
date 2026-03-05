@@ -105,4 +105,70 @@ document.addEventListener('DOMContentLoaded', () => {
         commentTextarea.addEventListener('input', updateCount);
         updateCount();
     }
+
+});
+
+// =============================================
+// PocketBase — отправка формы записи (booking.html)
+// =============================================
+
+const PB_URL = 'https://pocketbase-production-70159.up.railway.app';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const bookingForm = document.getElementById('booking-form');
+
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const data = {
+                name:    document.getElementById('name').value.trim(),
+                phone:   document.getElementById('phone').value.trim(),
+                car:     document.getElementById('car').value.trim(),
+                service: document.getElementById('service').value,
+                date:    document.getElementById('date').value,
+                time:    document.getElementById('time').value,
+                comment: document.getElementById('comment')?.value.trim() || '',
+                status:  'новая'
+            };
+
+            try {
+                const response = await fetch(`${PB_URL}/api/collections/bookings/records`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
+                    bookingForm.reset();
+                    // обновляем счётчик символов после очистки
+                    const charCountEl = document.getElementById('char-count');
+                    if (charCountEl) charCountEl.textContent = '500 символов осталось';
+                } else {
+                    const err = await response.json();
+                    alert('Ошибка: ' + (err.message || 'Не удалось отправить заявку'));
+                }
+            } catch (error) {
+                alert('Ошибка соединения. Попробуйте позже или позвоните нам.');
+                console.error(error);
+            }
+        });
+
+        // Счётчик символов для комментария
+        const commentTextarea = document.getElementById('comment');
+        const charCount = document.getElementById('char-count');
+        if (commentTextarea && charCount) {
+            const updateCount = () => {
+                const remaining = 500 - commentTextarea.value.length;
+                charCount.textContent = `${remaining} символов осталось`;
+            };
+            commentTextarea.addEventListener('input', updateCount);
+            updateCount(); // начальное значение
+        }
+    }
+
+    // … здесь остаётся весь твой предыдущий код (бургер-меню, IntersectionObserver и т.д.)
 });
