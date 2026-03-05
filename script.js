@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Обработка формы записи (только на странице booking.html)
+    // Обработка формы записи (только на странице с формой)
     const bookingForm = document.getElementById('booking-form');
     if (bookingForm) {
         // Счётчик символов для комментария
@@ -77,39 +77,71 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCount();
         }
 
-        // Отправка формы
+        // Отправка формы в PocketBase
         bookingForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // Твоя старая валидация
+            // Получаем все поля
             const nameInput = document.getElementById('name');
             const phoneInput = document.getElementById('phone');
-            
+            const carInput = document.getElementById('car');
+            const dateInput = document.getElementById('date');
+            const timeInput = document.getElementById('time');
+            const commentTextarea = document.getElementById('comment');
+
             const name = nameInput.value.trim();
-            let phone = phoneInput.value.trim().replace(/\D/g, '');
-            
+            const phoneRaw = phoneInput.value.trim();
+            const car = carInput.value.trim();
+            const date = dateInput.value.trim();
+            const time = timeInput.value.trim();
+            const comment = commentTextarea ? commentTextarea.value.trim() : '';
+
+            // Улучшенная валидация (обязательные поля + твои проверки)
+            if (!name) {
+                alert('Имя обязательно для заполнения');
+                nameInput.focus();
+                return;
+            }
             if (name.length < 3) {
                 alert('Имя должно содержать минимум 3 символа');
                 nameInput.focus();
                 return;
             }
-            
+
+            if (!phoneRaw) {
+                alert('Телефон обязательно для заполнения');
+                phoneInput.focus();
+                return;
+            }
+            let phone = phoneRaw.replace(/\D/g, '');
             if (phone.length < 10) {
                 alert('Телефон должен содержать минимум 10 цифр');
                 phoneInput.focus();
                 return;
             }
 
-            // Данные для PocketBase
+            if (!date) {
+                alert('Дата обязательна');
+                dateInput.focus();
+                return;
+            }
+
+            if (!time) {
+                alert('Время обязательно');
+                timeInput.focus();
+                return;
+            }
+
+            // Собираем данные для отправки
             const data = {
-                name:    name,
-                phone:   phoneInput.value.trim(),  // сохраняем оригинальный формат телефона
-                car:     document.getElementById('car').value.trim(),
-                service: document.getElementById('service').value,
-                date:    document.getElementById('date').value,
-                time:    document.getElementById('time').value,
-                comment: document.getElementById('comment')?.value.trim() || '',
-                status:  'новая'
+                name: name,
+                phone: phoneRaw,           // отправляем как ввёл пользователь (+7 ...)
+                car: car,
+                service: document.getElementById('service').value || '',
+                date: date,
+                time: time,
+                comment: comment,
+                status: 'новая'
             };
 
             const PB_URL = 'https://pocketbase-production-70159.up.railway.app';
@@ -126,15 +158,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     alert('Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
                     bookingForm.reset();
-                    // сбрасываем счётчик
                     if (charCount) charCount.textContent = '500 символов осталось';
                 } else {
-                    const err = await response.json();
-                    alert('Ошибка отправки: ' + (err.message || 'Попробуйте позже'));
+                    const errData = await response.json();
+                    console.log('Ошибка от PocketBase:', errData); // ← покажет точную причину в консоли
+                    alert('Не удалось отправить заявку. Проверьте все поля и попробуйте снова.');
                 }
             } catch (error) {
-                alert('Ошибка соединения. Попробуйте позже или позвоните нам.');
-                console.error(error);
+                console.error('Ошибка fetch:', error);
+                alert('Ошибка соединения. Проверьте интернет или попробуйте позже.');
             }
         });
     }
