@@ -132,11 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Заявка успешно отправлена!');
                     bookingForm.reset();
                     if (charCount) charCount.textContent = '500 символов осталось';
-                } else {
-                    const errData = await response.json();
-                    console.log('Детали ошибки от PocketBase:', JSON.stringify(errData, null, 2));
-                    alert('Ошибка: ' + (errData.message || 'Не удалось отправить'));
-                }
+                    } else {
+                        const errData = await response.json();
+                        console.log('Детали ошибки от PocketBase:', JSON.stringify(errData, null, 2));
+                        alert('Ошибка отправки. Проверьте все поля и попробуйте снова.');
+                    }
             } catch (error) {
                 console.error('Ошибка:', error);
                 alert('Ошибка соединения');
@@ -144,5 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
