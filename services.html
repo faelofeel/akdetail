@@ -6,6 +6,8 @@
     <title>Услуги | AKDetail Буй</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- PocketBase SDK -->
+    <script src="https://unpkg.com/pocketbase@0.22.1/dist/pocketbase.umd.js"></script>
 </head>
 <body>
     <header>
@@ -32,7 +34,6 @@
         </div>
     </header>
 
-
     <section class="page-hero">
         <div class="container">
             <h1>Наши услуги</h1>
@@ -40,95 +41,13 @@
         </div>
     </section>
 
-
     <section class="services-full">
         <div class="container">
-            <div class="grid-3">
-                <div class="service-card full">
-                    <img src="https://aqualife24.ru/wp-content/uploads/2022/09/8068340c0f9f672e7ed979803ec4214e.jpg" alt="Комплексная мойка">
-                    <div class="service-info">
-                        <h3>Комплексная мойка</h3>
-                        <p>Полная мойка кузова с шампунем, чистка дисков, арок, ковриков и стекол. Бесконтактные методы без царапин и тщательная сушка.</p>
-                        <div class="price-time"><span class="price">от 1 500 ₽</span><span class="time">1 час</span></div>
-                        <a href="booking.html" class="btn-primary">Записаться</a>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://bodybuildersauto.com/wp-content/uploads/2023/04/professional-detailing-a-car-in-car-studio-hands-with-orbital-polisher-scratching-remover--1024x682.jpg" alt="Полировка кузова">
-                    <div class="service-info">
-                        <h3>Полировка кузова</h3>
-                        <p>Одноступенчатая и двухступенчатая полировка. Удаление мелких царапин, голограмм, восстановление блеска.</p>
-                        <div class="price-time"><span class="price">от 5 000 ₽</span><span class="time">3 часа</span></div>
-                        <a href="booking.html" class="btn-primary">Записаться</a>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="http://theragcompany.com/cdn/shop/collections/p-and-s-xpress-interior-cleaner-tacoma-dashboard-demo.jpg?crop=center&height=1200&v=1616452196&width=1200" alt="Химчистка салона">
-                    <div class="service-info">
-                        <h3>Химчистка салона</h3>
-                        <p>Глубокая чистка тканей, кожи, потолка, багажника. Удаление пятен, запахов и загрязнений.</p>
-                        <div class="price-time"><span class="price">от 4 000 ₽</span><span class="time">4 часа</span></div>
-                        <a href="booking.html" class="btn-primary">Записаться</a>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://autoimage.capitalone.com/cms/Auto/assets/images/1398-hero-what-is-ceramic-coating.jpg" alt="Керамическое покрытие">
-                    <div class="service-info">
-                        <h3>Керамическое покрытие</h3>
-                        <p>Профессиональное нанесение керамического покрытия Gyeon. Защита от воды, грязи, УФ-лучей на 2–3 года.</p>
-                        <div class="price-time"><span class="price">от 15 000 ₽</span><span class="time">1 день</span></div>
-                        <a href="booking.html" class="btn-primary">Записаться</a>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://c8.alamy.com/comp/2E3F6PP/transparent-paint-protection-film-or-anti-gravel-protection-coating-wrapped-on-car-hood-car-detailing-2E3F6PP.jpg" alt="Антигравийная защита">
-                    <div class="service-info">
-                        <h3>Антигравийная защита</h3>
-                        <p>Нанесение прозрачной полиуретановой пленки на переднюю часть авто. Самозаживляющаяся и невидимая защита.</p>
-                        <div class="price-time"><span class="price">от 8 000 ₽</span><span class="time">2 часа</span></div>
-                        <a href="booking.html" class="btn-primary">Записаться</a>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://www.drbeasleys.com/wp-content/uploads/2025/02/how-to-hand-sand-headlights.jpg" alt="Детейлинг фар">
-                    <div class="service-info">
-                        <h3>Детейлинг фар</h3>
-                        <p>Шлифовка, полировка и нанесение защитного покрытия. Возвращаем 100% прозрачности и улучшаем освещение.</p>
-                        <div class="price-time"><span class="price">2 500 ₽</span><span class="time">1 час</span></div>
-                        <a href="booking.html" class="btn-primary">Записаться</a>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://images.squarespace-cdn.com/content/v1/507cb8ffe4b03dad7719b984/1708619141641-87D5BZUIM07NS4I16U0P/GettyImages-1415036627.jpg?format=2500w" alt="Оклейка пленкой и тонирование">
-                    <div class="service-info">
-                        <h3>Оклейка пленкой и тонирование</h3>
-                        <p>Оклейка в защитную, матовую или цветную пленку, тонирование стекол и оптики.</p>
-                        <div class="price-time"><span class="price">от 10 000 ₽</span><span class="time">от 4 часов</span></div>
-                        <a href="booking.html" class="btn-primary">Записаться</a>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://c8.alamy.com/comp/2WTY0H7/repairman-painting-car-in-a-spray-booth-at-a-professional-car-service-2WTY0H7.jpg" alt="Малярные и арматурные работы">
-                    <div class="service-info">
-                        <h3>Малярные и арматурные работы</h3>
-                        <p>Профессиональный ремонт, локальный или полный окрас, антихром. Стоимость фиксируется в договоре.</p>
-                        <div class="price-time"><span class="price">от 7 000 ₽</span><span class="time">от 2 дней</span></div>
-                        <a href="booking.html" class="btn-primary">Записаться</a>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://images.unsplash.com/photo-1542362567-b07e54358753" alt="Звёздное небо в салоне автомобиля">
-                    <div class="service-info">
-                        <h3>Интерьер и дооснащение</h3>
-                        <p>Звёздное небо, выдвижные пороги, доводчики дверей, амбиентная подсветка и другие эксклюзивные решения.</p>
-                        <div class="price-time"><span class="price">от 5 000 ₽</span><span class="time">от 1 дня</span></div>
-                        <a href="booking.html" class="btn-primary">Записаться</a>
-                    </div>
-                </div>
+            <div class="grid-3" id="services-container">
+                <!-- Карточки услуг будут подгружаться сюда динамически -->
             </div>
         </div>
     </section>
-
 
     <footer>
         <div class="container">
@@ -156,7 +75,51 @@
         </div>
     </footer>
 
-
     <script src="script.js"></script>
+
+    <!-- Скрипт динамической загрузки услуг -->
+    <script>
+        const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
+
+        async function loadServices() {
+            try {
+                const res = await pb.collection('services').getList(1, 50, {
+                    sort: '+order' // сортировка по полю order (от меньшего к большему)
+                });
+
+                const container = document.getElementById('services-container');
+                container.innerHTML = ''; // очищаем контейнер
+
+                if (res.items.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Услуги пока не добавлены</p>';
+                    return;
+                }
+
+                res.items.forEach(item => {
+                    const card = `
+                        <div class="service-card full">
+                            ${item.image ? `<img src="${pb.getFileUrl(item, item.image)}" alt="${item.title}">` : ''}
+                            <div class="service-info">
+                                <h3>${item.title}</h3>
+                                <p>${item.description || ''}</p>
+                                <div class="price-time">
+                                    <span class="price">${item.price}</span>
+                                    <span class="time">${item.time || ''}</span>
+                                </div>
+                                <a href="booking.html" class="btn-primary">Записаться</a>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            } catch (err) {
+                console.error('Ошибка загрузки услуг:', err);
+                document.getElementById('services-container').innerHTML = '<p style="text-align:center; grid-column: 1 / -1; color:#e74c3c;">Ошибка загрузки услуг. Попробуйте позже.</p>';
+            }
+        }
+
+        // Запускаем загрузку при открытии страницы
+        loadServices();
+    </script>
 </body>
 </html>
