@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (charCount) charCount.textContent = '500 символов осталось';
                 } else {
                     const errData = await response.json();
-                    console.log('Ошибка PocketBase:', errData);
+                    console.log('Детали ошибки от PocketBase:', JSON.stringify(errData, null, 2));
                     alert('Ошибка: ' + (errData.message || 'Не удалось отправить'));
                 }
             } catch (error) {
@@ -144,3 +144,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
