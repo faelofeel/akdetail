@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запись на детейлинг | AKDetail Буй</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="nav">
+            <a href="index.html" class="logo-link">
+                <img src="images/logo.png" alt="AKDetail" class="logo-img">
+            </a>
+            <div class="nav-center">
+                <nav class="nav-links">
+                    <a href="index.html">Главная</a>
+                    <a href="services.html">Услуги</a>
+                    <a href="works.html">Наши работы</a>
+                    <a href="reviews.html">Отзывы</a>
+                    <a href="booking.html" class="active">Запись</a>
+                    <a href="about.html">О нас</a>
+                    <a href="contacts.html">Контакты</a>
+                </nav>
+            </div>
+            <div class="contact-header">
+                <span class="call-us">Позвони нам:</span>
+                <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
+            </div>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+
+    <section class="page-hero small">
+        <div class="container">
+            <h1>Записаться на детейлинг</h1>
+            <p>Быстрая онлайн-запись: выберите услугу, дату и время. Мы подтвердим в течение 15 минут и подарим 3% скидки за заявку через сайт.</p>
+        </div>
+    </section>
+
+
+    <section class="booking-section">
+        <div class="container">
+            <form id="booking-form" action="mailto:polyethylene06@mail.ru" method="post" enctype="text/plain">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Ваше имя *</label>
+                        <input type="text" id="name" name="Имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Телефон *</label>
+                        <input type="tel" id="phone" name="Телефон" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="car">Марка и модель авто *</label>
+                        <input type="text" id="car" name="Авто" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Услуга</label>
+                        <select id="service" name="Услуга">
+                            <option value="Комплексная мойка">Комплексная мойка — от 1 500 ₽</option>
+                            <option value="Полировка кузова">Полировка кузова — от 5 000 ₽</option>
+                            <option value="Химчистка салона">Химчистка салона — от 4 000 ₽</option>
+                            <option value="Керамическое покрытие">Керамическое покрытие — от 15 000 ₽</option>
+                            <option value="Антигравийная защита">Антигравийная защита — от 8 000 ₽</option>
+                            <option value="Детейлинг фар">Детейлинг фар — 2 500 ₽</option>
+                            <option value="Оклейка пленкой и тонирование">Оклейка пленкой и тонирование — от 10 000 ₽</option>
+                            <option value="Малярные и арматурные работы">Малярные и арматурные работы — от 7 000 ₽</option>
+                            <option value="Интерьер и дооснащение">Интерьер и дооснащение — от 5 000 ₽</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Дата *</label>
+                        <input type="date" id="date" name="Дата" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Время *</label>
+                        <input type="time" id="time" name="Время" required>
+                    </div>
+                </div>
+                <div class="form-group full">
+                    <label for="comment">Комментарий</label>
+                    <textarea id="comment" name="Комментарий" rows="4" maxlength="500"></textarea>
+                    <p class="char-count" id="char-count">500 символов осталось</p>
+                </div>
+                <button type="submit" class="btn-primary full-btn">Отправить заявку</button>
+                <p class="form-note">После отправки мы свяжемся с вами в течение 15 минут. Получите 3% скидку при записи через сайт!</p>
+            </form>
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">AK<span>Detail</span></div>
+                <div class="footer-links">
+                    <a href="index.html">Главная</a>
+                    <a href="services.html">Услуги</a>
+                    <a href="works.html">Наши работы</a>
+                    <a href="reviews.html">Отзывы</a>
+                    <a href="booking.html">Запись</a>
+                    <a href="about.html">О нас</a>
+                    <a href="contacts.html">Контакты</a>
+                </div>
+                <div class="footer-info">
+                    <p>г. Буй, ул. Советская, 25</p>
+                    <p>+7 (920) 555-12-34</p>
+                    <p>© 2020–2026 AKDetail. Все права защищены.</p>
+                    <div class="footer-social">
+                        <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
+                        <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
