@@ -4,7 +4,7 @@ const PB_URL = 'https://pocketbase-production-70159.up.railway.app';
 const pb = new PocketBase(PB_URL);
 
 // Простая защита паролем (поменяйте на свой!)
-const ADMIN_PASSWORD = 'ваш_секретный_пароль_2026'; // ← ИЗМЕНИТЕ ЭТО ОБЯЗАТЕЛЬНО
+const ADMIN_PASSWORD = '73f9565659a97bfebc2fff131fc83ac6fb26145abfef685919bf0d34c692b03c'; // ← ИЗМЕНИТЕ ЭТО ОБЯЗАТЕЛЬНО
 
 // Проверка авторизации при загрузке страницы
 if (!localStorage.getItem('adminAuthenticated')) {
