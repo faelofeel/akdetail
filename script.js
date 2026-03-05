@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 date: date,
                 time: time,
                 comment: comment,
-                status: 'новая'
+                status: 'новая,'
             };
 
             const PB_URL = 'https://pocketbase-production-70159.up.railway.app';
@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
 
