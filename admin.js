@@ -3,8 +3,8 @@
 const PB_URL = 'https://pocketbase-production-70159.up.railway.app';
 const pb = new PocketBase(PB_URL);
 
-// Простая защита паролем (поменяйте на свой!)
-const ADMIN_PASSWORD = '73f9565659a97bfebc2fff131fc83ac6fb26145abfef685919bf0d34c692b03c'; // ← ИЗМЕНИТЕ ЭТО ОБЯЗАТЕЛЬНО
+// Простая защита паролем (поменяй на свой!)
+const ADMIN_PASSWORD = 'ваш_секретный_пароль_2026'; // ← ИЗМЕНИТЕ ОБЯЗАТЕЛЬНО
 
 // Проверка авторизации при загрузке страницы
 if (!localStorage.getItem('adminAuthenticated')) {
@@ -12,12 +12,12 @@ if (!localStorage.getItem('adminAuthenticated')) {
   if (enteredPass !== ADMIN_PASSWORD) {
     alert('Неверный пароль');
     window.location.href = 'index.html';
-    return;
+    return; // ← здесь return допустим, внутри if
   }
   localStorage.setItem('adminAuthenticated', 'true');
 }
 
-// Элементы формы
+// Элементы DOM
 const form = document.getElementById('service-form');
 const serviceIdInput = document.getElementById('service-id');
 const titleInput = document.getElementById('title');
@@ -44,10 +44,12 @@ imageInput.addEventListener('change', () => {
   }
 });
 
-// Загрузка списка услуг при открытии страницы
+// Загрузка списка услуг
 async function loadServices() {
   try {
     const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
+    console.log('Услуг загружено:', res.items.length); // ← для отладки
+
     serviceList.innerHTML = '';
     res.items.forEach(item => {
       const card = document.createElement('div');
@@ -67,8 +69,8 @@ async function loadServices() {
       serviceList.appendChild(card);
     });
   } catch (err) {
-    console.error(err);
-    alert('Не удалось загрузить список услуг');
+    console.error('Ошибка загрузки услуг:', err);
+    alert('Не удалось загрузить список услуг: ' + err.message);
   }
 }
 
@@ -88,7 +90,7 @@ window.editService = async (id) => {
     cancelBtn.classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (err) {
-    alert('Ошибка загрузки услуги');
+    alert('Ошибка загрузки услуги: ' + err.message);
   }
 };
 
@@ -109,11 +111,11 @@ window.deleteService = async (id) => {
     loadServices();
     alert('Услуга удалена');
   } catch (err) {
-    alert('Ошибка удаления');
+    alert('Ошибка удаления: ' + err.message);
   }
 };
 
-// Сохранение (создание или обновление)
+// Сохранение (создание / обновление)
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -130,11 +132,9 @@ form.addEventListener('submit', async (e) => {
 
   try {
     if (serviceIdInput.value) {
-      // Обновление существующей
       await pb.collection('services').update(serviceIdInput.value, formData);
       alert('Услуга обновлена!');
     } else {
-      // Создание новой
       await pb.collection('services').create(formData);
       alert('Услуга добавлена!');
     }
@@ -146,10 +146,10 @@ form.addEventListener('submit', async (e) => {
     serviceIdInput.value = '';
     loadServices();
   } catch (err) {
-    console.error(err);
-    alert('Ошибка сохранения: ' + (err.message || 'Проверьте заполненные поля'));
+    console.error('Ошибка сохранения:', err);
+    alert('Ошибка сохранения: ' + (err.message || 'Проверьте поля'));
   }
 });
 
-// Загрузка списка при открытии страницы
+// Инициализация
 loadServices();
