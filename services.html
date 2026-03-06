@@ -6,7 +6,6 @@
     <title>Услуги | AKDetail Буй</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <!-- PocketBase SDK -->
     <script src="https://unpkg.com/pocketbase@0.22.1/dist/pocketbase.umd.js"></script>
 </head>
 <body>
@@ -43,9 +42,7 @@
 
     <section class="services-full">
         <div class="container">
-            <div class="grid-3" id="services-container">
-                <!-- Карточки услуг будут подгружаться сюда динамически -->
-            </div>
+            <div class="grid-3" id="services-container"></div>
         </div>
     </section>
 
@@ -77,33 +74,29 @@
 
     <script src="script.js"></script>
 
-    <!-- Скрипт динамической загрузки услуг -->
     <script>
         const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
         async function loadServices() {
             try {
-                const res = await pb.collection('services').getList(1, 50, {
-                    sort: '+order' // сортировка по полю order (от меньшего к большему)
-                });
-
+                const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
                 const container = document.getElementById('services-container');
-                container.innerHTML = ''; // очищаем контейнер
+                container.innerHTML = '';
 
                 if (res.items.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Услуги пока не добавлены</p>';
+                    container.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Услуги пока не добавлены</p>';
                     return;
                 }
 
                 res.items.forEach(item => {
                     const card = `
                         <div class="service-card full">
-                            ${item.image ? `<img src="${pb.getFileUrl(item, item.image)}" alt="${item.title}">` : ''}
+                            ${item.image ? `<img src="${pb.files.getURL(item, item.image)}" alt="${item.title}">` : ''}
                             <div class="service-info">
                                 <h3>${item.title}</h3>
                                 <p>${item.description || ''}</p>
                                 <div class="price-time">
-                                    <span class="price">${item.price}</span>
+                                    <span class="price">${item.price} ₽</span>
                                     <span class="time">${item.time || ''}</span>
                                 </div>
                                 <a href="booking.html" class="btn-primary">Записаться</a>
@@ -114,11 +107,10 @@
                 });
             } catch (err) {
                 console.error('Ошибка загрузки услуг:', err);
-                document.getElementById('services-container').innerHTML = '<p style="text-align:center; grid-column: 1 / -1; color:#e74c3c;">Ошибка загрузки услуг. Попробуйте позже.</p>';
+                document.getElementById('services-container').innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#e74c3c;">Ошибка загрузки услуг. Попробуйте позже.</p>';
             }
         }
 
-        // Запускаем загрузку при открытии страницы
         loadServices();
     </script>
 </body>
