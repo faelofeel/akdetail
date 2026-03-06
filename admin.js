@@ -1,5 +1,3 @@
-// admin.js — Управление услугами (полностью исправленная версия)
-
 const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
 const form = document.getElementById('service-form');
@@ -11,13 +9,17 @@ const timeInput = document.getElementById('time');
 const imageInput = document.getElementById('image');
 const orderInput = document.getElementById('order');
 const previewImg = document.getElementById('preview');
+const fileNameDisplay = document.getElementById('file-name');
 const formTitle = document.getElementById('form-title');
 const cancelBtn = document.getElementById('cancel-edit');
 const serviceList = document.getElementById('service-list');
 
-// Предпросмотр фото (с проверкой на существование preview)
+// Отображение имени файла при выборе
 imageInput.addEventListener('change', () => {
   const file = imageInput.files[0];
+  if (file && fileNameDisplay) {
+    fileNameDisplay.textContent = file.name;
+  }
   if (file && previewImg) {
     const reader = new FileReader();
     reader.onload = e => {
@@ -41,7 +43,7 @@ async function loadServices() {
         <div class="info">
           <h3>${item.title}</h3>
           <p>${item.description || ''}</p>
-          <strong>${item.price}</strong> • ${item.time || ''}
+          <strong>${item.price} ₽</strong> • ${item.time || ''}
           <div class="actions">
             <button onclick="editService('${item.id}')">Редактировать</button>
             <button onclick="deleteService('${item.id}')">Удалить</button>
@@ -51,18 +53,18 @@ async function loadServices() {
       serviceList.appendChild(card);
     });
   } catch (err) {
-    console.error('Ошибка загрузки услуг:', err);
+    console.error('Ошибка загрузки:', err);
   }
 }
 
-// Редактирование услуги
+// Редактирование
 window.editService = async (id) => {
   try {
     const item = await pb.collection('services').getOne(id);
     serviceIdInput.value = item.id;
     titleInput.value = item.title;
     descInput.value = item.description || '';
-    priceInput.value = item.price;
+    priceInput.value = item.price; // без ₽
     timeInput.value = item.time || '';
     orderInput.value = item.order || 0;
     if (previewImg && item.image) {
@@ -76,16 +78,17 @@ window.editService = async (id) => {
   }
 };
 
-// Отмена редактирования
+// Отмена
 cancelBtn.addEventListener('click', () => {
   form.reset();
   if (previewImg) previewImg.style.display = 'none';
+  if (fileNameDisplay) fileNameDisplay.textContent = 'Не выбран файл';
   formTitle.textContent = 'Добавить новую услугу';
   cancelBtn.classList.add('hidden');
   serviceIdInput.value = '';
 });
 
-// Удаление услуги
+// Удаление
 window.deleteService = async (id) => {
   if (!confirm('Удалить услугу навсегда?')) return;
   try {
@@ -96,14 +99,14 @@ window.deleteService = async (id) => {
   }
 };
 
-// Сохранение (добавление или обновление)
+// Сохранение (автоматически добавляем ₽ при сохранении не нужно — отображаем при выводе)
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const formData = new FormData();
   formData.append('title', titleInput.value);
   formData.append('description', descInput.value);
-  formData.append('price', priceInput.value);
+  formData.append('price', priceInput.value.trim()); // чистое значение без ₽
   formData.append('time', timeInput.value);
   formData.append('order', orderInput.value || 0);
 
@@ -118,11 +121,11 @@ form.addEventListener('submit', async (e) => {
     alert('Услуга сохранена!');
     form.reset();
     if (previewImg) previewImg.style.display = 'none';
+    if (fileNameDisplay) fileNameDisplay.textContent = 'Не выбран файл';
     loadServices();
   } catch (err) {
     alert('Ошибка сохранения: ' + err.message);
   }
 });
 
-// Запуск загрузки списка при открытии страницы
 loadServices();
