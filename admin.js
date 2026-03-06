@@ -13,7 +13,7 @@ const formTitle = document.getElementById('form-title');
 const cancelBtn = document.getElementById('cancel-edit');
 const serviceList = document.getElementById('service-list');
 
-// Предпросмотр фото (безопасно)
+// Предпросмотр фото — безопасно
 imageInput.addEventListener('change', () => {
   const file = imageInput.files[0];
   if (file && previewImg) {
@@ -26,7 +26,7 @@ imageInput.addEventListener('change', () => {
   }
 });
 
-// Загрузка списка
+// Загрузка списка услуг
 async function loadServices() {
   try {
     const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
