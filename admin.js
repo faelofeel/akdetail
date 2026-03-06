@@ -99,14 +99,14 @@ window.deleteService = async (id) => {
   }
 };
 
-// Сохранение (автоматически добавляем ₽ при сохранении не нужно — отображаем при выводе)
+// Сохранение
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const formData = new FormData();
   formData.append('title', titleInput.value);
   formData.append('description', descInput.value);
-  formData.append('price', priceInput.value.trim()); // чистое значение без ₽
+  formData.append('price', priceInput.value.trim()); // чистое значение
   formData.append('time', timeInput.value);
   formData.append('order', orderInput.value || 0);
 
