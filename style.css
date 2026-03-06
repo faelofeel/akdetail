@@ -737,7 +737,9 @@ footer {
 
 }
 
-/* Полная стилизация админ-панели (admin.html) — чистая и красивая форма */
+/* ============================================= */
+/* Красивая и аккуратная стилизация админ-панели (admin.html) */
+/* ============================================= */
 
 .admin-main {
   background: #181818;
@@ -756,34 +758,36 @@ footer {
   color: #fff;
   margin: 80px 0 60px;
   text-align: center;
+  font-weight: 700;
 }
 
 /* Форма */
 .service-form-section {
-  margin-bottom: 120px;
+  margin-bottom: 140px; /* большое расстояние до списка */
 }
 
 .service-form {
-  background: #222;
+  background: #1f1f1f;
   padding: 50px 40px;
   border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.7);
 }
 
 .form-title {
-  font-size: 34px;
+  font-size: 32px;
   color: #fff;
   margin: 0 0 48px;
   text-align: center;
+  font-weight: 600;
 }
 
 .form-group {
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: #ddd;
   font-weight: 500;
   font-size: 16px;
@@ -810,7 +814,8 @@ footer {
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 36px;
+  margin-bottom: 36px;
 }
 
 .form-row .full {
@@ -824,13 +829,18 @@ footer {
 
 .file-upload-btn {
   display: inline-block;
-  padding: 14px 24px;
+  padding: 14px 28px;
   background: #4a90e2;
   color: white;
   border-radius: 10px;
   cursor: pointer;
   margin-right: 16px;
   font-size: 15px;
+  transition: background 0.2s;
+}
+
+.file-upload-btn:hover {
+  background: #357abd;
 }
 
 .file-name {
@@ -840,10 +850,11 @@ footer {
 }
 
 .preview-img {
-  max-height: 140px;
+  max-height: 160px;
   margin-top: 16px;
   border-radius: 12px;
   display: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 /* Кнопки формы */
