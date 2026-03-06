@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AKDetail Admin — Управление услугами</title>
+  <title>AKDetail Admin</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
@@ -35,69 +35,64 @@
 
 <main class="admin-main">
   <div class="admin-container">
-    <h1 class="admin-title">Управление услугами</h1>
+    <h1 class="admin-title">Админ-панель</h1>
 
-    <section class="service-form-section">
-      <h2 class="form-title" id="form-title">Добавить новую услугу</h2>
-      <form id="service-form" class="service-form">
-        <input type="hidden" id="service-id">
+    <!-- Вкладки -->
+    <div class="admin-tabs">
+      <button class="tab-btn active" data-tab="services">Услуги</button>
+      <button class="tab-btn" data-tab="reviews">Отзывы</button>
+    </div>
 
-        <div class="form-group">
-          <label for="title">Название услуги *</label>
-          <input type="text" id="title" required placeholder="Например: Комплексная мойка">
-        </div>
+    <!-- Вкладка Услуги -->
+    <section id="tab-services" class="tab-content active">
+      <h2>Управление услугами</h2>
 
-        <div class="form-group">
-          <label for="description">Описание</label>
-          <textarea id="description" rows="5" placeholder="Что входит в услугу, преимущества, особенности..."></textarea>
-        </div>
+      <div class="service-form">
+        <h3 id="service-form-title">Добавить новую услугу</h3>
+        <form id="service-form">
+          <input type="hidden" id="service-id">
+          <div class="form-group"><label>Название услуги *</label><input type="text" id="title" required></div>
+          <div class="form-group"><label>Описание</label><textarea id="description" rows="4"></textarea></div>
+          <div class="form-group"><label>Цена *</label><input type="text" id="price" required placeholder="от 15 000 ₽"></div>
+          <div class="form-group"><label>Время выполнения *</label><input type="text" id="time" required placeholder="1 день"></div>
+          <div class="form-group"><label>Фото услуги *</label><input type="file" id="image" accept="image/*" required></div>
+          <div class="form-group"><label>Порядок отображения</label><input type="number" id="order" value="0"></div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="price">Цена *</label>
-            <div class="price-input-wrapper">
-              <input type="text" id="price" required placeholder="15000 или 15000-20000">
-              <span class="price-symbol">₽</span>
-            </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-save">Сохранить услугу</button>
+            <button type="button" id="cancel-service-edit" class="btn-cancel hidden">Отмена</button>
           </div>
-          <div class="form-group">
-            <label for="time">Время выполнения *</label>
-            <input type="text" id="time" required placeholder="1–2 часа">
-          </div>
-        </div>
+        </form>
+      </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="image">Фото услуги *</label>
-            <div class="file-upload-wrapper">
-              <input type="file" id="image" accept="image/*" required>
-              <label for="image" class="file-upload-btn">Выбрать фото</label>
-              <span id="file-name" class="file-name">Не выбран файл</span>
-            </div>
-            <img id="preview" class="preview-img" alt="Предпросмотр">
-          </div>
-
-          <div class="form-group">
-            <label for="order">Порядок отображения</label>
-            <input type="number" id="order" value="0">
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn-save">Сохранить услугу</button>
-          <button type="button" id="cancel-edit" class="btn-cancel hidden">Отмена</button>
-        </div>
-      </form>
+      <h3>Список услуг</h3>
+      <div class="service-grid" id="service-list"></div>
     </section>
 
-    <section class="service-list-section">
-      <h2 class="section-title">Список услуг</h2>
-      <div class="service-grid" id="service-list"></div>
+    <!-- Вкладка Отзывы -->
+    <section id="tab-reviews" class="tab-content">
+      <h2>Управление отзывами</h2>
+
+      <div class="service-form">
+        <h3 id="review-form-title">Добавить новый отзыв</h3>
+        <form id="review-form">
+          <input type="hidden" id="review-id">
+          <div class="form-group"><label>Имя клиента *</label><input type="text" id="name" required></div>
+          <div class="form-group"><label>Текст отзыва *</label><textarea id="text" rows="6" required></textarea></div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-save">Сохранить отзыв</button>
+            <button type="button" id="cancel-review-edit" class="btn-cancel hidden">Отмена</button>
+          </div>
+        </form>
+      </div>
+
+      <h3>Список отзывов</h3>
+      <div class="review-grid" id="review-list"></div>
     </section>
   </div>
 </main>
 
-<!-- Локальный PocketBase SDK (чтобы убрать Tracking Prevention) -->
 <script src="pocketbase.umd.js"></script>
 <script src="admin.js"></script>
 <script src="script.js"></script>
