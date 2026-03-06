@@ -1,4 +1,4 @@
-// admin.js — Управление услугами (окончательная версия без предупреждений)
+// admin.js — Управление услугами (полностью исправленная версия)
 
 const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
@@ -15,7 +15,7 @@ const formTitle = document.getElementById('form-title');
 const cancelBtn = document.getElementById('cancel-edit');
 const serviceList = document.getElementById('service-list');
 
-// Предпросмотр фото (безопасно)
+// Предпросмотр фото (с проверкой на существование preview)
 imageInput.addEventListener('change', () => {
   const file = imageInput.files[0];
   if (file && previewImg) {
@@ -51,7 +51,7 @@ async function loadServices() {
       serviceList.appendChild(card);
     });
   } catch (err) {
-    console.error('Ошибка загрузки:', err);
+    console.error('Ошибка загрузки услуг:', err);
   }
 }
 
@@ -124,5 +124,5 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// Запуск загрузки списка
+// Запуск загрузки списка при открытии страницы
 loadServices();
