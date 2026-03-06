@@ -990,3 +990,22 @@ footer {
 .hidden {
   display: none !important;
 }
+
+.price-input-wrapper {
+  position: relative;
+}
+
+.price-input-wrapper input {
+  padding-right: 50px; /* место для символа ₽ */
+}
+
+.price-symbol {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #bbb;
+  font-size: 16px;
+  pointer-events: none;
+}
+
