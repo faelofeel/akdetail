@@ -33,47 +33,65 @@
   </div>
 </header>
 
-<div class="admin-container">
-  <h1>Управление услугами</h1>
+<main class="admin-main">
+  <div class="admin-container">
+    <h1 class="admin-title">Управление услугами</h1>
 
-  <div class="service-form">
-    <h2 id="form-title">Добавить новую услугу</h2>
-    <form id="service-form">
-      <input type="hidden" id="service-id">
-      <div class="form-group">
-        <label for="title">Название услуги *</label>
-        <input type="text" id="title" required>
-      </div>
-      <div class="form-group">
-        <label for="description">Описание</label>
-        <textarea id="description" rows="4"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="price">Цена *</label>
-        <input type="text" id="price" required placeholder="от 15 000 ₽">
-      </div>
-      <div class="form-group">
-        <label for="time">Время выполнения *</label>
-        <input type="text" id="time" required placeholder="1 день">
-      </div>
-      <div class="form-group">
-        <label for="image">Фото услуги *</label>
-        <input type="file" id="image" accept="image/*" required>
-        <img id="preview" class="preview-img" alt="Предпросмотр">
-      </div>
-      <div class="form-group">
-        <label for="order">Порядок отображения</label>
-        <input type="number" id="order" value="0">
-      </div>
+    <section class="admin-section service-form-section">
+      <h2 class="form-title" id="form-title">Добавить новую услугу</h2>
+      <form id="service-form" class="service-form">
+        <input type="hidden" id="service-id">
 
-      <button type="submit" class="btn-primary btn-save">Сохранить услугу</button>
-      <button type="button" id="cancel-edit" class="btn-secondary hidden">Отмена</button>
-    </form>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="title">Название услуги *</label>
+            <input type="text" id="title" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full">
+            <label for="description">Описание</label>
+            <textarea id="description" rows="5"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="price">Цена *</label>
+            <input type="text" id="price" required placeholder="от 15 000 ₽">
+          </div>
+          <div class="form-group">
+            <label for="time">Время выполнения *</label>
+            <input type="text" id="time" required placeholder="1 день">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="image">Фото услуги *</label>
+            <input type="file" id="image" accept="image/*" required>
+            <img id="preview" class="preview-img" alt="Предпросмотр">
+          </div>
+          <div class="form-group">
+            <label for="order">Порядок отображения</label>
+            <input type="number" id="order" value="0">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save">Сохранить услугу</button>
+          <button type="button" id="cancel-edit" class="btn-cancel hidden">Отмена</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="admin-section service-list-section">
+      <h2 class="section-title">Список услуг</h2>
+      <div class="service-grid" id="service-list"></div>
+    </section>
   </div>
-
-  <h2>Список услуг</h2>
-  <div class="service-list" id="service-list"></div>
-</div>
+</main>
 
 <script src="https://unpkg.com/pocketbase@0.22.1/dist/pocketbase.umd.js"></script>
 <script src="admin.js"></script>
