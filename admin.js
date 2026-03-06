@@ -1,12 +1,12 @@
-// admin.js — управление услугами
+// admin.js — управление услугами (исправленная версия)
 
 const PB_URL = 'https://pocketbase-production-70159.up.railway.app';
 const pb = new PocketBase(PB_URL);
 
-// Простая защита паролем (ИЗМЕНИТЕ ЭТО ОБЯЗАТЕЛЬНО!)
+// Простая защита паролем (ОБЯЗАТЕЛЬНО ИЗМЕНИ!)
 const ADMIN_PASSWORD = 'akdetail_admin_2026'; // ← поставь свой пароль
 
-// Проверка авторизации при загрузке страницы
+// Проверка пароля
 if (!localStorage.getItem('adminAuthenticated')) {
     const enteredPass = prompt('Введите пароль администратора:');
     if (enteredPass !== ADMIN_PASSWORD) {
@@ -48,7 +48,7 @@ imageInput.addEventListener('change', () => {
 async function loadServices() {
     try {
         const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
-        console.log('Услуг загружено:', res.items.length); // отладка
+        console.log('Услуг загружено:', res.items.length);
 
         serviceList.innerHTML = '';
         res.items.forEach(item => {
@@ -70,11 +70,11 @@ async function loadServices() {
         });
     } catch (err) {
         console.error('Ошибка загрузки услуг:', err);
-        alert('Не удалось загрузить список услуг: ' + err.message);
+        alert('Не удалось загрузить список услуг');
     }
 }
 
-// Редактирование услуги
+// Редактирование
 window.editService = async (id) => {
     try {
         const item = await pb.collection('services').getOne(id);
@@ -90,7 +90,7 @@ window.editService = async (id) => {
         cancelBtn.classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
-        alert('Ошибка загрузки услуги: ' + err.message);
+        alert('Ошибка загрузки услуги');
     }
 };
 
@@ -103,7 +103,7 @@ cancelBtn.addEventListener('click', () => {
     serviceIdInput.value = '';
 });
 
-// Удаление услуги
+// Удаление
 window.deleteService = async (id) => {
     if (!confirm('Удалить эту услугу навсегда?')) return;
     try {
@@ -111,11 +111,11 @@ window.deleteService = async (id) => {
         loadServices();
         alert('Услуга удалена');
     } catch (err) {
-        alert('Ошибка удаления: ' + err.message);
+        alert('Ошибка удаления');
     }
 };
 
-// Сохранение (создание / обновление)
+// Сохранение
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -146,10 +146,10 @@ form.addEventListener('submit', async (e) => {
         serviceIdInput.value = '';
         loadServices();
     } catch (err) {
-        console.error('Ошибка сохранения:', err);
-        alert('Ошибка сохранения: ' + (err.message || 'Проверьте заполненные поля'));
+        console.error(err);
+        alert('Ошибка сохранения: ' + (err.message || 'Проверьте поля'));
     }
 });
 
-// Инициализация — загружаем список сразу
+// Запуск
 loadServices();
