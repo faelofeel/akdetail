@@ -737,96 +737,211 @@ footer {
 
 }
 
-/* Админ-панель услуг — исправления расстояний и наложения карточек */
+/* ============================================= */
+/* Полная стилизация админ-панели услуг         */
+/* ============================================= */
+
+.admin-main {
+  background: #181818;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
 
 .admin-container {
-  max-width: 1200px;
-  margin: 60px auto 40px; /* увеличил отступ сверху */
+  max-width: 1280px;
+  margin: 0 auto;
   padding: 0 20px;
+}
+
+.admin-title {
+  font-size: 36px;
+  color: #fff;
+  margin: 60px 0 40px;
+  text-align: center;
+}
+
+/* Форма */
+.service-form-section {
+  margin-bottom: 100px; /* большое расстояние до списка */
 }
 
 .service-form {
   background: #222;
   padding: 40px;
-  border-radius: 12px;
-  margin-bottom: 80px; /* БОЛЬШОЕ расстояние снизу от формы */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.6);
 }
 
-.service-form h2 {
-  margin: 0 0 30px;
+.form-title {
+  font-size: 28px;
   color: #fff;
+  margin: 0 0 32px;
+  text-align: center;
 }
 
-h2 + .service-list {
-  margin-top: 60px; /* расстояние от заголовка "Список услуг" до карточек */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
 }
 
-#service-list {
+.form-row .full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.preview-img {
+  max-height: 160px;
+  margin-top: 12px;
+  border-radius: 8px;
+  display: none;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.btn-save {
+  flex: 1;
+  background: #27ae60;
+  color: white;
+  padding: 16px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #555;
+  color: white;
+  padding: 16px 32px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Список услуг */
+.service-list-section {
+  margin-top: 80px;
+}
+
+.section-title {
+  font-size: 32px;
+  color: #fff;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.service-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 40px; /* БОЛЬШОЕ расстояние между карточками */
-  margin-top: 40px;
+  gap: 48px; /* большое расстояние между карточками */
 }
 
 .service-card-admin {
   background: #2a2a2a;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  transition: transform 0.2s;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
 .service-card-admin:hover {
-  transform: translateY(-8px);
+  transform: translateY(-12px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7);
 }
 
 .service-card-admin img {
   width: 100%;
-  height: 180px;
+  height: 200px;
   object-fit: cover;
 }
 
 .service-card-admin .info {
-  padding: 20px;
+  padding: 24px;
 }
 
 .service-card-admin h3 {
-  margin: 0 0 12px;
-  font-size: 22px;
+  margin: 0 0 16px;
+  font-size: 24px;
   color: #fff;
 }
 
 .service-card-admin p {
-  margin: 0 0 16px;
-  color: #bbb;
+  margin: 0 0 20px;
+  color: #ccc;
+  line-height: 1.6;
 }
 
 .service-card-admin strong {
   color: #4a90e2;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .service-card-admin .actions {
   display: flex;
   gap: 16px;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
 .service-card-admin button {
-  padding: 10px 20px;
+  flex: 1;
+  padding: 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
+  transition: background 0.2s;
 }
 
-.service-card-admin .btn-edit {
+.btn-edit {
   background: #4a90e2;
   color: white;
 }
 
-.service-card-admin .btn-delete {
+.btn-edit:hover {
+  background: #357abd;
+}
+
+.btn-delete {
   background: #e74c3c;
   color: white;
+}
+
+.btn-delete:hover {
+  background: #c0392b;
+}
+
+/* Скрытые элементы */
+.hidden {
+  display: none !important;
 }
