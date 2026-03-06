@@ -37,23 +37,19 @@
   <div class="admin-container">
     <h1 class="admin-title">Управление услугами</h1>
 
-    <section class="admin-section service-form-section">
+    <section class="service-form-section">
       <h2 class="form-title" id="form-title">Добавить новую услугу</h2>
       <form id="service-form" class="service-form">
         <input type="hidden" id="service-id">
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="title">Название услуги *</label>
-            <input type="text" id="title" required>
-          </div>
+        <div class="form-group">
+          <label for="title">Название услуги *</label>
+          <input type="text" id="title" required>
         </div>
 
-        <div class="form-row">
-          <div class="form-group full">
-            <label for="description">Описание</label>
-            <textarea id="description" rows="5"></textarea>
-          </div>
+        <div class="form-group">
+          <label for="description">Описание</label>
+          <textarea id="description" rows="5"></textarea>
         </div>
 
         <div class="form-row">
@@ -70,7 +66,11 @@
         <div class="form-row">
           <div class="form-group">
             <label for="image">Фото услуги *</label>
-            <input type="file" id="image" accept="image/*" required>
+            <div class="file-upload-wrapper">
+              <input type="file" id="image" accept="image/*" required>
+              <label for="image" class="file-upload-btn">Выбрать фото</label>
+              <span id="file-name" class="file-name-display">Не выбран файл</span>
+            </div>
             <img id="preview" class="preview-img" alt="Предпросмотр">
           </div>
           <div class="form-group">
@@ -86,7 +86,7 @@
       </form>
     </section>
 
-    <section class="admin-section service-list-section">
+    <section class="service-list-section">
       <h2 class="section-title">Список услуг</h2>
       <div class="service-grid" id="service-list"></div>
     </section>
