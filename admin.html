@@ -47,16 +47,18 @@
       <div class="form-group"><label>Фото услуги *</label><input type="file" id="image" accept="image/*" required></div>
       <div class="form-group"><label>Порядок отображения</label><input type="number" id="order" value="0"></div>
 
+      <img id="preview" style="max-height:120px;margin-top:10px;border-radius:8px;display:none;" alt="Предпросмотр">
+
       <button type="submit" class="btn-primary btn-save">Сохранить услугу</button>
       <button type="button" id="cancel-edit" class="btn-secondary hidden">Отмена</button>
     </form>
   </div>
 
   <h2>Список услуг</h2>
-  <div class="service-list" id="service-list"></div>
+  <div class="service-list" id="service-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px;"></div>
 </div>
 
-<!-- PocketBase SDK (перед admin.js) -->
+<!-- PocketBase SDK -->
 <script src="https://unpkg.com/pocketbase@0.22.1/dist/pocketbase.umd.js"></script>
 <script src="admin.js"></script>
 <script src="script.js"></script>
