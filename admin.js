@@ -1,9 +1,26 @@
 const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
-// Общие элементы
+// Услуги
 const serviceForm = document.getElementById('service-form');
-const reviewForm = document.getElementById('review-form');
+const serviceIdInput = document.getElementById('service-id');
+const titleInput = document.getElementById('title');
+const descInput = document.getElementById('description');
+const priceInput = document.getElementById('price');
+const timeInput = document.getElementById('time');
+const imageInput = document.getElementById('image');
+const orderInput = document.getElementById('order');
+const previewImg = document.getElementById('preview');
+const serviceFormTitle = document.getElementById('service-form-title');
+const cancelServiceBtn = document.getElementById('cancel-service-edit');
 const serviceList = document.getElementById('service-list');
+
+// Отзывы
+const reviewForm = document.getElementById('review-form');
+const reviewIdInput = document.getElementById('review-id');
+const nameInput = document.getElementById('name');
+const textInput = document.getElementById('text');
+const reviewFormTitle = document.getElementById('review-form-title');
+const cancelReviewBtn = document.getElementById('cancel-review-edit');
 const reviewList = document.getElementById('review-list');
 
 // Переключение вкладок
@@ -18,7 +35,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 
 // === УСЛУГИ ===
 
-// Загрузка услуг
 async function loadServices() {
   try {
     const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
@@ -45,77 +61,72 @@ async function loadServices() {
   }
 }
 
-// Редактирование услуги
 window.editService = async (id) => {
   try {
     const item = await pb.collection('services').getOne(id);
-    document.getElementById('service-id').value = item.id;
-    document.getElementById('title').value = item.title;
-    document.getElementById('description').value = item.description || '';
-    document.getElementById('price').value = item.price;
-    document.getElementById('time').value = item.time || '';
-    document.getElementById('order').value = item.order || 0;
-    document.getElementById('form-title').textContent = 'Редактировать услугу';
-    document.getElementById('cancel-service-edit').classList.remove('hidden');
+    serviceIdInput.value = item.id;
+    titleInput.value = item.title;
+    descInput.value = item.description || '';
+    priceInput.value = item.price;
+    timeInput.value = item.time || '';
+    orderInput.value = item.order || 0;
+    serviceFormTitle.textContent = 'Редактировать услугу';
+    if (cancelServiceBtn) cancelServiceBtn.classList.remove('hidden');
   } catch (err) {
     alert('Ошибка загрузки услуги');
   }
 };
 
-// Сохранение услуги
 serviceForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const formData = new FormData();
-  formData.append('title', document.getElementById('title').value);
-  formData.append('description', document.getElementById('description').value);
-  formData.append('price', document.getElementById('price').value.trim());
-  formData.append('time', document.getElementById('time').value);
-  formData.append('order', document.getElementById('order').value || 0);
+  formData.append('title', titleInput.value);
+  formData.append('description', descInput.value);
+  formData.append('price', priceInput.value.trim());
+  formData.append('time', timeInput.value);
+  formData.append('order', orderInput.value || 0);
 
-  if (document.getElementById('image').files[0]) {
-    formData.append('image', document.getElementById('image').files[0]);
-  }
+  if (imageInput.files[0]) formData.append('image', imageInput.files[0]);
 
   try {
-    if (document.getElementById('service-id').value) {
-      await pb.collection('services').update(document.getElementById('service-id').value, formData);
+    if (serviceIdInput.value) {
+      await pb.collection('services').update(serviceIdInput.value, formData);
     } else {
       await pb.collection('services').create(formData);
     }
     alert('Услуга сохранена!');
     serviceForm.reset();
-    document.getElementById('form-title').textContent = 'Добавить новую услугу';
-    document.getElementById('cancel-service-edit').classList.add('hidden');
-    document.getElementById('service-id').value = '';
+    serviceFormTitle.textContent = 'Добавить новую услугу';
+    if (cancelServiceBtn) cancelServiceBtn.classList.add('hidden');
+    serviceIdInput.value = '';
     loadServices();
   } catch (err) {
-    alert('Ошибка сохранения: ' + err.message);
+    alert('Ошибка сохранения услуги: ' + err.message);
   }
 });
 
-// Отмена услуги
-document.getElementById('cancel-service-edit').addEventListener('click', () => {
-  serviceForm.reset();
-  document.getElementById('form-title').textContent = 'Добавить новую услугу';
-  document.getElementById('cancel-service-edit').classList.add('hidden');
-  document.getElementById('service-id').value = '';
-});
+if (cancelServiceBtn) {
+  cancelServiceBtn.addEventListener('click', () => {
+    serviceForm.reset();
+    serviceFormTitle.textContent = 'Добавить новую услугу';
+    cancelServiceBtn.classList.add('hidden');
+    serviceIdInput.value = '';
+  });
+}
 
-// Удаление услуги
 window.deleteService = async (id) => {
   if (!confirm('Удалить услугу навсегда?')) return;
   try {
     await pb.collection('services').delete(id);
     loadServices();
   } catch (err) {
-    alert('Ошибка удаления');
+    alert('Ошибка удаления услуги');
   }
 };
 
 // === ОТЗЫВЫ ===
 
-// Загрузка отзывов
 async function loadReviews() {
   try {
     const res = await pb.collection('reviews').getList(1, 50, { sort: '-created' });
@@ -141,62 +152,60 @@ async function loadReviews() {
   }
 }
 
-// Редактирование отзыва
 window.editReview = async (id) => {
   try {
     const item = await pb.collection('reviews').getOne(id);
-    document.getElementById('review-id').value = item.id;
-    document.getElementById('name').value = item.name;
-    document.getElementById('text').value = item.text;
-    document.getElementById('form-title').textContent = 'Редактировать отзыв';
-    document.getElementById('cancel-edit').classList.remove('hidden');
+    reviewIdInput.value = item.id;
+    nameInput.value = item.name;
+    textInput.value = item.text;
+    reviewFormTitle.textContent = 'Редактировать отзыв';
+    if (cancelReviewBtn) cancelReviewBtn.classList.remove('hidden');
   } catch (err) {
     alert('Ошибка загрузки отзыва');
   }
 };
 
-// Сохранение отзыва
 reviewForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const formData = {
-    name: document.getElementById('name').value.trim(),
-    text: document.getElementById('text').value.trim()
+    name: nameInput.value.trim(),
+    text: textInput.value.trim()
   };
 
   try {
-    if (document.getElementById('review-id').value) {
-      await pb.collection('reviews').update(document.getElementById('review-id').value, formData);
+    if (reviewIdInput.value) {
+      await pb.collection('reviews').update(reviewIdInput.value, formData);
     } else {
       await pb.collection('reviews').create(formData);
     }
     alert('Отзыв сохранён!');
     reviewForm.reset();
-    document.getElementById('form-title').textContent = 'Добавить новый отзыв';
-    document.getElementById('cancel-edit').classList.add('hidden');
-    document.getElementById('review-id').value = '';
+    reviewFormTitle.textContent = 'Добавить новый отзыв';
+    if (cancelReviewBtn) cancelReviewBtn.classList.add('hidden');
+    reviewIdInput.value = '';
     loadReviews();
   } catch (err) {
-    alert('Ошибка сохранения: ' + err.message);
+    alert('Ошибка сохранения отзыва: ' + err.message);
   }
 });
 
-// Отмена отзыва
-document.getElementById('cancel-edit').addEventListener('click', () => {
-  reviewForm.reset();
-  document.getElementById('form-title').textContent = 'Добавить новый отзыв';
-  document.getElementById('cancel-edit').classList.add('hidden');
-  document.getElementById('review-id').value = '';
-});
+if (cancelReviewBtn) {
+  cancelReviewBtn.addEventListener('click', () => {
+    reviewForm.reset();
+    reviewFormTitle.textContent = 'Добавить новый отзыв';
+    cancelReviewBtn.classList.add('hidden');
+    reviewIdInput.value = '';
+  });
+}
 
-// Удаление отзыва
 window.deleteReview = async (id) => {
   if (!confirm('Удалить отзыв навсегда?')) return;
   try {
     await pb.collection('reviews').delete(id);
     loadReviews();
   } catch (err) {
-    alert('Ошибка удаления');
+    alert('Ошибка удаления отзыва');
   }
 };
 
