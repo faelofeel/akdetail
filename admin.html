@@ -6,25 +6,9 @@
   <title>AKDetail Admin — Управление услугами</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    .admin-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-    .service-form { background: #222; padding: 30px; border-radius: 12px; margin-bottom: 40px; }
-    .service-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
-    .service-card-admin { background: #2a2a2a; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.4); transition: transform 0.2s; }
-    .service-card-admin:hover { transform: translateY(-8px); }
-    .service-card-admin img { width: 100%; height: 180px; object-fit: cover; }
-    .service-card-admin .info { padding: 16px; }
-    .actions { display: flex; gap: 12px; margin-top: 12px; }
-    .btn-edit { background: #4a90e2; }
-    .btn-delete { background: #e74c3c; }
-    .btn-save { background: #27ae60; margin-top: 20px; width: 100%; }
-    .hidden { display: none; }
-    .preview-img { max-height: 120px; margin-top: 10px; border-radius: 8px; }
-  </style>
 </head>
 <body>
 
-<!-- Ваш существующий header -->
 <header>
   <div class="nav">
     <a href="index.html" class="logo-link">
@@ -49,58 +33,34 @@
   </div>
 </header>
 
-<div class="admin-container">
+<div class="admin-container" style="max-width:1200px;margin:40px auto;padding:0 20px;">
   <h1>Управление услугами</h1>
 
-  <!-- Форма добавления / редактирования -->
-  <div class="service-form">
+  <div class="service-form" style="background:#222;padding:30px;border-radius:12px;margin-bottom:40px;">
     <h2 id="form-title">Добавить новую услугу</h2>
     <form id="service-form">
       <input type="hidden" id="service-id">
 
-      <div class="form-group">
-        <label for="title">Название услуги *</label>
-        <input type="text" id="title" required>
-      </div>
-
-      <div class="form-group">
-        <label for="description">Описание</label>
-        <textarea id="description" rows="5"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="price">Цена *</label>
-        <input type="text" id="price" required placeholder="от 15 000 ₽">
-      </div>
-
-      <div class="form-group">
-        <label for="time">Время выполнения *</label>
-        <input type="text" id="time" required placeholder="1 день / 3–4 часа">
-      </div>
-
-      <div class="form-group">
-        <label for="image">Фото услуги *</label>
-        <input type="file" id="image" accept="image/*" required>
-        <img id="preview" class="preview-img" style="display:none;">
-      </div>
-
-      <div class="form-group">
-        <label for="order">Порядок отображения (число)</label>
-        <input type="number" id="order" min="0" value="0">
-      </div>
+      <div class="form-group"><label>Название *</label><input type="text" id="title" required></div>
+      <div class="form-group"><label>Описание</label><textarea id="description" rows="4"></textarea></div>
+      <div class="form-group"><label>Цена *</label><input type="text" id="price" required placeholder="от 15 000 ₽"></div>
+      <div class="form-group"><label>Время *</label><input type="text" id="time" required placeholder="1 день"></div>
+      <div class="form-group"><label>Фото *</label><input type="file" id="image" accept="image/*" required></div>
+      <div class="form-group"><label>Порядок</label><input type="number" id="order" value="0"></div>
 
       <button type="submit" class="btn-primary btn-save">Сохранить услугу</button>
-      <button type="button" id="cancel-edit" class="btn-secondary hidden">Отмена редактирования</button>
+      <button type="button" id="cancel-edit" class="btn-secondary hidden">Отмена</button>
     </form>
   </div>
 
-  <!-- Список всех услуг -->
-  <h2>Текущие услуги</h2>
-  <div class="service-list" id="service-list"></div>
+  <h2>Список услуг</h2>
+  <div class="service-list" id="service-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px;"></div>
 </div>
 
+<!-- ВАЖНО: SDK подключается ПЕРЕД admin.js -->
+<script src="https://unpkg.com/pocketbase@0.22.1/dist/pocketbase.umd.js"></script>
 <script src="admin.js"></script>
-<script src="script.js"></script> <!-- ваш общий скрипт с бургер-меню и т.д. -->
+<script src="script.js"></script>
 
 </body>
 </html>
