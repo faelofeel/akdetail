@@ -1,4 +1,4 @@
-// admin.js — Управление услугами (финальная чистая версия)
+// admin.js — Управление услугами (окончательная версия без предупреждений)
 
 const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
@@ -15,7 +15,7 @@ const formTitle = document.getElementById('form-title');
 const cancelBtn = document.getElementById('cancel-edit');
 const serviceList = document.getElementById('service-list');
 
-// Предпросмотр фото (безопасно, с проверкой)
+// Предпросмотр фото (безопасно)
 imageInput.addEventListener('change', () => {
   const file = imageInput.files[0];
   if (file && previewImg) {
@@ -51,7 +51,7 @@ async function loadServices() {
       serviceList.appendChild(card);
     });
   } catch (err) {
-    console.error('Ошибка загрузки услуг:', err);
+    console.error('Ошибка загрузки:', err);
   }
 }
 
@@ -91,7 +91,6 @@ window.deleteService = async (id) => {
   try {
     await pb.collection('services').delete(id);
     loadServices();
-    alert('Услуга удалена');
   } catch (err) {
     alert('Ошибка удаления');
   }
@@ -108,30 +107,22 @@ form.addEventListener('submit', async (e) => {
   formData.append('time', timeInput.value);
   formData.append('order', orderInput.value || 0);
 
-  if (imageInput.files[0]) {
-    formData.append('image', imageInput.files[0]);
-  }
+  if (imageInput.files[0]) formData.append('image', imageInput.files[0]);
 
   try {
     if (serviceIdInput.value) {
       await pb.collection('services').update(serviceIdInput.value, formData);
-      alert('Услуга обновлена!');
     } else {
       await pb.collection('services').create(formData);
-      alert('Услуга добавлена!');
     }
-
+    alert('Услуга сохранена!');
     form.reset();
     if (previewImg) previewImg.style.display = 'none';
-    formTitle.textContent = 'Добавить новую услугу';
-    cancelBtn.classList.add('hidden');
-    serviceIdInput.value = '';
     loadServices();
   } catch (err) {
-    console.error('Ошибка сохранения:', err);
-    alert('Ошибка сохранения: ' + (err.message || 'Проверьте заполненные поля'));
+    alert('Ошибка сохранения: ' + err.message);
   }
 });
 
-// Запуск загрузки списка при открытии страницы
+// Запуск загрузки списка
 loadServices();
