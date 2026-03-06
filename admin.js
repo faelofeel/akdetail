@@ -1,3 +1,5 @@
+// admin.js — Управление услугами (финальная чистая версия)
+
 const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
 const form = document.getElementById('service-form');
@@ -13,7 +15,7 @@ const formTitle = document.getElementById('form-title');
 const cancelBtn = document.getElementById('cancel-edit');
 const serviceList = document.getElementById('service-list');
 
-// Предпросмотр фото — безопасно
+// Предпросмотр фото (безопасно, с проверкой)
 imageInput.addEventListener('change', () => {
   const file = imageInput.files[0];
   if (file && previewImg) {
@@ -35,7 +37,7 @@ async function loadServices() {
       const card = document.createElement('div');
       card.className = 'service-card-admin';
       card.innerHTML = `
-        ${item.image ? `<img src="${pb.files.getUrl(item, item.image)}" alt="${item.title}">` : ''}
+        ${item.image ? `<img src="${pb.files.getURL(item, item.image)}" alt="${item.title}">` : ''}
         <div class="info">
           <h3>${item.title}</h3>
           <p>${item.description || ''}</p>
@@ -49,11 +51,11 @@ async function loadServices() {
       serviceList.appendChild(card);
     });
   } catch (err) {
-    console.error('Ошибка загрузки:', err);
+    console.error('Ошибка загрузки услуг:', err);
   }
 }
 
-// Редактирование
+// Редактирование услуги
 window.editService = async (id) => {
   try {
     const item = await pb.collection('services').getOne(id);
@@ -64,7 +66,7 @@ window.editService = async (id) => {
     timeInput.value = item.time || '';
     orderInput.value = item.order || 0;
     if (previewImg && item.image) {
-      previewImg.src = pb.files.getUrl(item, item.image);
+      previewImg.src = pb.files.getURL(item, item.image);
       previewImg.style.display = 'block';
     }
     formTitle.textContent = 'Редактировать услугу';
@@ -74,7 +76,7 @@ window.editService = async (id) => {
   }
 };
 
-// Отмена
+// Отмена редактирования
 cancelBtn.addEventListener('click', () => {
   form.reset();
   if (previewImg) previewImg.style.display = 'none';
@@ -83,18 +85,19 @@ cancelBtn.addEventListener('click', () => {
   serviceIdInput.value = '';
 });
 
-// Удаление
+// Удаление услуги
 window.deleteService = async (id) => {
-  if (!confirm('Удалить услугу?')) return;
+  if (!confirm('Удалить услугу навсегда?')) return;
   try {
     await pb.collection('services').delete(id);
     loadServices();
+    alert('Услуга удалена');
   } catch (err) {
     alert('Ошибка удаления');
   }
 };
 
-// Сохранение
+// Сохранение (добавление или обновление)
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -105,21 +108,30 @@ form.addEventListener('submit', async (e) => {
   formData.append('time', timeInput.value);
   formData.append('order', orderInput.value || 0);
 
-  if (imageInput.files[0]) formData.append('image', imageInput.files[0]);
+  if (imageInput.files[0]) {
+    formData.append('image', imageInput.files[0]);
+  }
 
   try {
     if (serviceIdInput.value) {
       await pb.collection('services').update(serviceIdInput.value, formData);
+      alert('Услуга обновлена!');
     } else {
       await pb.collection('services').create(formData);
+      alert('Услуга добавлена!');
     }
-    alert('Услуга сохранена!');
+
     form.reset();
     if (previewImg) previewImg.style.display = 'none';
+    formTitle.textContent = 'Добавить новую услугу';
+    cancelBtn.classList.add('hidden');
+    serviceIdInput.value = '';
     loadServices();
   } catch (err) {
-    alert('Ошибка сохранения: ' + err.message);
+    console.error('Ошибка сохранения:', err);
+    alert('Ошибка сохранения: ' + (err.message || 'Проверьте заполненные поля'));
   }
 });
 
+// Запуск загрузки списка при открытии страницы
 loadServices();
