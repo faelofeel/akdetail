@@ -33,21 +33,38 @@
   </div>
 </header>
 
-<div class="admin-container" style="max-width:1200px;margin:40px auto;padding:0 20px;">
+<div class="admin-container">
   <h1>Управление услугами</h1>
 
-  <div class="service-form" style="background:#222;padding:30px;border-radius:12px;margin-bottom:40px;">
+  <div class="service-form">
     <h2 id="form-title">Добавить новую услугу</h2>
     <form id="service-form">
       <input type="hidden" id="service-id">
-      <div class="form-group"><label>Название услуги *</label><input type="text" id="title" required></div>
-      <div class="form-group"><label>Описание</label><textarea id="description" rows="4"></textarea></div>
-      <div class="form-group"><label>Цена *</label><input type="text" id="price" required placeholder="от 15 000 ₽"></div>
-      <div class="form-group"><label>Время выполнения *</label><input type="text" id="time" required placeholder="1 день"></div>
-      <div class="form-group"><label>Фото услуги *</label><input type="file" id="image" accept="image/*" required></div>
-      <div class="form-group"><label>Порядок отображения</label><input type="number" id="order" value="0"></div>
-
-      <img id="preview" style="max-height:120px;margin-top:10px;border-radius:8px;display:none;" alt="Предпросмотр">
+      <div class="form-group">
+        <label for="title">Название услуги *</label>
+        <input type="text" id="title" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Описание</label>
+        <textarea id="description" rows="4"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="price">Цена *</label>
+        <input type="text" id="price" required placeholder="от 15 000 ₽">
+      </div>
+      <div class="form-group">
+        <label for="time">Время выполнения *</label>
+        <input type="text" id="time" required placeholder="1 день">
+      </div>
+      <div class="form-group">
+        <label for="image">Фото услуги *</label>
+        <input type="file" id="image" accept="image/*" required>
+        <img id="preview" class="preview-img" alt="Предпросмотр">
+      </div>
+      <div class="form-group">
+        <label for="order">Порядок отображения</label>
+        <input type="number" id="order" value="0">
+      </div>
 
       <button type="submit" class="btn-primary btn-save">Сохранить услугу</button>
       <button type="button" id="cancel-edit" class="btn-secondary hidden">Отмена</button>
@@ -55,11 +72,10 @@
   </div>
 
   <h2>Список услуг</h2>
-  <div class="service-list" id="service-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px;"></div>
+  <div class="service-list" id="service-list"></div>
 </div>
 
-<!-- Локальная копия PocketBase SDK — чтобы убрать Tracking Prevention -->
-<script src="pocketbase.umd.js"></script>
+<script src="https://unpkg.com/pocketbase@0.22.1/dist/pocketbase.umd.js"></script>
 <script src="admin.js"></script>
 <script src="script.js"></script>
 
