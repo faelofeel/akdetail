@@ -1781,3 +1781,109 @@ h3 {
   opacity: 0.9;
   transform: translateY(-2px);
 }
+
+/* Центрированные карточки отзывов в админке — идентичны сайту */
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 40px;
+  justify-content: center;          /* карточки строго по центру страницы */
+  padding: 20px 0;
+}
+
+.review-card {
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 36px 32px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  transition: all 0.3s ease;
+  border: 1px solid #2a2a2a;
+  text-align: center;               /* весь текст внутри карточки центрирован */
+  max-width: 420px;                 /* ограничиваем ширину, чтобы не растягивалась */
+  margin: 0 auto;                   /* дополнительное центрирование карточки */
+}
+
+.review-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+  border-color: #4a90e2;
+}
+
+.review-header {
+  margin-bottom: 24px;
+}
+
+.review-name {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+
+.review-meta {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.review-car,
+.review-service {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 18px;
+  border-radius: 10px;
+}
+
+.review-car {
+  background: rgba(74, 144, 226, 0.12);
+  border: 1px solid #4a90e2;
+  color: #4a90e2;
+}
+
+.review-service {
+  background: rgba(39, 174, 96, 0.12);
+  border: 1px solid #27ae60;
+  color: #27ae60;
+}
+
+.review-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ddd;
+  margin: 0 0 28px;
+  font-weight: 300;
+}
+
+/* Кнопки действий — центрированные, компактные */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.actions button:first-child {
+  background: #4a90e2;
+  color: white;
+}
+
+.actions button:last-child {
+  background: #e74c3c;
+  color: white;
+}
+
+.actions button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
