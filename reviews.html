@@ -6,7 +6,6 @@
   <title>Отзывы | AKDetail Буй</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <!-- Локальный SDK (чтобы не было ошибок) -->
   <script src="pocketbase.umd.js"></script>
 </head>
 <body>
@@ -38,7 +37,7 @@
 <section class="page-hero">
   <div class="container">
     <h1>Отзывы наших клиентов</h1>
-    <p>Что говорят те, кто уже доверил нам свой автомобиль</p>
+    <p>Реальные истории владельцев автомобилей, которые уже доверили нам свой автомобиль</p>
   </div>
 </section>
 
@@ -59,38 +58,39 @@
 
   async function loadReviews() {
     try {
-      const res = await pb.collection('reviews').getList(1, 50, { 
-        sort: '-created' 
-      });
-
+      const res = await pb.collection('reviews').getList(1, 50, { sort: '-created' });
       const container = document.getElementById('reviews-container');
       container.innerHTML = '';
 
-      if (res.items.length === 0) {
-        container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Пока нет отзывов</p>';
-        return;
-      }
-
       res.items.forEach(item => {
+        const date = new Date(item.created);
+        const formattedDate = date.toLocaleDateString('ru-RU', { 
+          day: 'numeric', 
+          month: 'long', 
+          year: 'numeric' 
+        });
+
         const card = `
           <div class="review-card">
             <div class="review-header">
-              <h3>${item.name}</h3>
-              <div class="review-date">${new Date(item.created).toLocaleDateString('ru-RU')}</div>
+              <div>
+                <h3>${item.name}</h3>
+                ${item.car ? `<div class="car-model">${item.car}</div>` : ''}
+              </div>
+              <div class="review-date">${formattedDate}</div>
             </div>
-            <p>${item.text}</p>
+            <p class="review-text">${item.text}</p>
           </div>
         `;
         container.innerHTML += card;
       });
     } catch (err) {
-      console.error('Ошибка загрузки отзывов:', err);
+      console.error(err);
       document.getElementById('reviews-container').innerHTML = 
-        '<p style="text-align:center;color:#e74c3c; grid-column:1/-1;">Не удалось загрузить отзывы. Попробуйте позже.</p>';
+        '<p style="text-align:center; grid-column:1/-1;">Отзывы загружаются...</p>';
     }
   }
 
-  // Загружаем отзывы сразу при открытии страницы
   loadReviews();
 </script>
 
