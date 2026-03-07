@@ -80,7 +80,7 @@
 
   async function loadReviews() {
     try {
-      const res = await pb.collection('reviews').getList(1, 50, { sort: '-created' });
+      const res = await pb.collection('reviews').getList(1, 50);
       const container = document.getElementById('reviews-container');
       container.innerHTML = '';
 
@@ -103,7 +103,7 @@
         container.innerHTML += card;
       });
     } catch (err) {
-      console.error(err);
+      console.error('Ошибка загрузки отзывов:', err);
       document.getElementById('reviews-container').innerHTML = 
         '<p style="text-align:center;color:#e74c3c; grid-column:1/-1;">Не удалось загрузить отзывы</p>';
     }
