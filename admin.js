@@ -24,22 +24,17 @@ const reviewFormTitle = document.getElementById('review-form-title');
 const cancelReviewBtn = document.getElementById('cancel-review-edit');
 const reviewList = document.getElementById('review-list');
 
-// Переключение вкладок (если вкладки есть)
-const tabs = document.querySelectorAll('.tab-btn');
-if (tabs.length > 0) {
-  tabs.forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      const tabId = `tab-${btn.dataset.tab}`;
-      const tabContent = document.getElementById(tabId);
-      if (tabContent) tabContent.classList.add('active');
-    });
+// Переключение вкладок
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
   });
-}
+});
 
-// ==================== ФУНКЦИИ УСЛУГ ====================
+// ==================== УСЛУГИ ====================
 
 async function loadServices() {
   if (!serviceList) return;
@@ -81,7 +76,7 @@ window.editService = async (id) => {
     serviceFormTitle.textContent = 'Редактировать услугу';
     if (cancelServiceBtn) cancelServiceBtn.classList.remove('hidden');
   } catch (err) {
-    alert('Ошибка загрузки услуги: ' + err.message);
+    alert('Ошибка загрузки услуги');
   }
 };
 
@@ -112,7 +107,7 @@ if (serviceForm) {
       loadServices();
     } catch (err) {
       console.error('Ошибка сохранения услуги:', err);
-      alert('Ошибка сохранения услуги:\n' + (err.message || 'Проверьте заполненные поля'));
+      alert('Ошибка сохранения услуги: ' + err.message);
     }
   });
 }
@@ -127,7 +122,7 @@ if (cancelServiceBtn) {
 }
 
 window.deleteService = async (id) => {
-  if (!confirm('Удалить услугу навсегда?')) return;
+  if (!confirm('Удалить услугу?')) return;
   try {
     await pb.collection('services').delete(id);
     loadServices();
@@ -148,11 +143,13 @@ async function loadReviews() {
       card.className = 'review-card-admin';
       card.innerHTML = `
         <div class="review-header">
-          <h3>${item.name}</h3>
-          ${item.car ? `<div class="car-model">${item.car}</div>` : ''}
-          ${item.service ? `<div class="service-name">${item.service}</div>` : ''}
+          <h3 class="review-name">${item.name}</h3>
+          <div class="review-meta">
+            ${item.car ? `<span class="review-car">${item.car}</span>` : ''}
+            ${item.service ? `<span class="review-service">${item.service}</span>` : ''}
+          </div>
         </div>
-        <p>${item.text}</p>
+        <p class="review-text">${item.text}</p>
         <div class="actions">
           <button onclick="editReview('${item.id}')">Редактировать</button>
           <button onclick="deleteReview('${item.id}')">Удалить</button>
@@ -206,7 +203,7 @@ if (reviewForm) {
       loadReviews();
     } catch (err) {
       console.error('Ошибка сохранения отзыва:', err);
-      alert('Ошибка сохранения отзыва:\n' + (err.message || 'Проверьте заполненные поля'));
+      alert('Ошибка сохранения отзыва: ' + err.message);
     }
   });
 }
@@ -221,7 +218,7 @@ if (cancelReviewBtn) {
 }
 
 window.deleteReview = async (id) => {
-  if (!confirm('Удалить отзыв навсегда?')) return;
+  if (!confirm('Удалить отзыв?')) return;
   try {
     await pb.collection('reviews').delete(id);
     loadReviews();
@@ -231,5 +228,5 @@ window.deleteReview = async (id) => {
 };
 
 // Запуск
-if (serviceList) loadServices();
-if (reviewList) loadReviews();
+loadServices();
+loadReviews();
