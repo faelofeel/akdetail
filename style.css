@@ -1487,3 +1487,101 @@ h3 {
   margin: 0;
   font-weight: 300;
 }
+
+/* Красивые карточки отзывов в админке */
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 48px;
+  justify-content: center; /* центрирует карточки на странице */
+}
+
+.review-card-admin {
+  background: #222;
+  border-radius: 16px;
+  padding: 36px 32px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+  border: 1px solid #333;
+  text-align: center; /* центрирует всё содержимое карточки */
+}
+
+.review-card-admin:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+  border-color: #4a90e2;
+}
+
+/* Имя клиента — крупное и выделенное */
+.review-name {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 16px;
+}
+
+/* Блок с маркой и услугой — центрированный, разные цвета */
+.review-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.review-car {
+  color: #4a90e2; /* синий для машины */
+  background: rgba(74, 144, 226, 0.1);
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(74, 144, 226, 0.3);
+}
+
+.review-service {
+  color: #27ae60; /* зелёный для услуги */
+  background: rgba(39, 174, 96, 0.1);
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(39, 174, 96, 0.3);
+}
+
+/* Текст отзыва */
+.review-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ccc;
+  margin: 0 0 28px;
+  font-weight: 300;
+}
+
+/* Кнопки действий */
+.actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.actions button:first-child {
+  background: #4a90e2;
+  color: white;
+}
+
+.actions button:last-child {
+  background: #e74c3c;
+  color: white;
+}
+
+.actions button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
