@@ -1094,7 +1094,47 @@ footer {
   margin: 0;
 }
 
-/* Остальные стили формы и карточек остаются как были раньше */
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 40px;
+}
+
+.review-card {
+  background: #222;
+  border-radius: 20px;
+  padding: 40px 36px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+  border: 1px solid #333;
+}
+
+.review-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+  border-color: #4a90e2;
+}
+
+.review-header h3 {
+  font-size: 26px;
+  margin: 0 0 8px 0;
+  color: #fff;
+}
+
+.car-model {
+  font-size: 18px;
+  color: #4a90e2;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.review-text {
+  font-size: 17px;
+  line-height: 1.75;
+  color: #ddd;
+  margin: 0;
+}
+
 
 
 
