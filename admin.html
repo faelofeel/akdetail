@@ -42,20 +42,45 @@
     <button class="tab-btn" data-tab="reviews">Отзывы</button>
   </div>
 
-  <!-- ==================== ВКЛАДКА УСЛУГИ ==================== -->
+  <!-- Вкладка Услуги (оригинальная форма, без изменений в дизайне) -->
   <div id="tab-services" class="tab-content active">
     <h2>Управление услугами</h2>
-    <!-- Здесь твоя старая форма услуг (оставил как было) -->
+
     <div class="service-form">
       <h3 id="service-form-title">Добавить новую услугу</h3>
       <form id="service-form">
         <input type="hidden" id="service-id">
-        <div class="form-group"><label>Название услуги *</label><input type="text" id="title" required></div>
-        <div class="form-group"><label>Описание</label><textarea id="description" rows="4"></textarea></div>
-        <div class="form-group"><label>Цена *</label><input type="text" id="price" required></div>
-        <div class="form-group"><label>Время выполнения *</label><input type="text" id="time" required></div>
-        <div class="form-group"><label>Фото услуги *</label><input type="file" id="image" accept="image/*" required></div>
-        <div class="form-group"><label>Порядок отображения</label><input type="number" id="order" value="0"></div>
+
+        <div class="form-group">
+          <label for="title">Название услуги *</label>
+          <input type="text" id="title" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Описание</label>
+          <textarea id="description" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="price">Цена *</label>
+          <input type="text" id="price" required placeholder="от 15 000 ₽">
+        </div>
+
+        <div class="form-group">
+          <label for="time">Время выполнения *</label>
+          <input type="text" id="time" required placeholder="1 день">
+        </div>
+
+        <div class="form-group">
+          <label for="image">Фото услуги *</label>
+          <input type="file" id="image" accept="image/*" required>
+          <img id="preview" style="max-height:140px; margin-top:12px; border-radius:8px; display:none;" alt="Предпросмотр">
+        </div>
+
+        <div class="form-group">
+          <label for="order">Порядок отображения</label>
+          <input type="number" id="order" value="0">
+        </div>
 
         <div class="form-actions">
           <button type="submit" class="btn-save">Сохранить услугу</button>
@@ -63,15 +88,15 @@
         </div>
       </form>
     </div>
+
     <h3>Список услуг</h3>
     <div class="service-grid" id="service-list"></div>
   </div>
 
-  <!-- ==================== ВКЛАДКА ОТЗЫВЫ ==================== -->
+  <!-- Вкладка Отзывы (форма добавления + список) -->
   <div id="tab-reviews" class="tab-content">
     <h2>Управление отзывами</h2>
 
-    <!-- Форма добавления отзыва -->
     <div class="service-form">
       <h3 id="review-form-title">Добавить новый отзыв</h3>
       <form id="review-form">
@@ -85,6 +110,11 @@
         <div class="form-group">
           <label for="car">Марка авто</label>
           <input type="text" id="car" placeholder="Toyota Camry">
+        </div>
+
+        <div class="form-group">
+          <label for="service">Услуга</label>
+          <input type="text" id="service" placeholder="Керамика + химчистка салона">
         </div>
 
         <div class="form-group">
