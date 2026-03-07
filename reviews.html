@@ -80,8 +80,7 @@
 
   async function loadReviews() {
     try {
-      // Убрал сортировку по -created, чтобы не падало после удаления поля
-      const res = await pb.collection('reviews').getList(1, 50);
+      const res = await pb.collection('reviews').getList(1, 50, { sort: '-created' });
       const container = document.getElementById('reviews-container');
       container.innerHTML = '';
 
@@ -96,6 +95,7 @@
             <div class="review-header">
               <h3>${item.name}</h3>
               ${item.car ? `<div class="car-model">${item.car}</div>` : ''}
+              ${item.service ? `<div class="service-name">${item.service}</div>` : ''}
             </div>
             <p class="review-text">${item.text}</p>
           </div>
@@ -103,13 +103,12 @@
         container.innerHTML += card;
       });
     } catch (err) {
-      console.error('Ошибка загрузки отзывов:', err);
+      console.error(err);
       document.getElementById('reviews-container').innerHTML = 
-        '<p style="text-align:center;color:#e74c3c; grid-column:1/-1;">Не удалось загрузить отзывы. Попробуйте позже.</p>';
+        '<p style="text-align:center;color:#e74c3c; grid-column:1/-1;">Не удалось загрузить отзывы</p>';
     }
   }
 
-  // Запуск при открытии страницы
   loadReviews();
 </script>
 
