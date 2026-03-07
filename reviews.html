@@ -37,7 +37,7 @@
 <section class="page-hero">
   <div class="container">
     <h1>Отзывы наших клиентов</h1>
-    <p>Реальные истории владельцев автомобилей, которые уже доверили нам свой автомобиль</p>
+    <p>Реальные истории владельцев автомобилей</p>
   </div>
 </section>
 
@@ -59,15 +59,15 @@
         <a href="booking.html">Запись</a>
         <a href="about.html">О нас</a>
         <a href="contacts.html">Контакты</a>
-      </div>
-      <div class="footer-info">
-        <p>г. Буй, ул. Советская, 25</p>
-        <p>+7 (920) 555-12-34</p>
-        <p>© 2020–2026 AKDetail. Все права защищены.</p>
-        <div class="footer-social">
-          <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
-          <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
-        </div>
+      </nav>
+    </div>
+    <div class="footer-info">
+      <p>г. Буй, ул. Советская, 25</p>
+      <p>+7 (920) 555-12-34</p>
+      <p>© 2020–2026 AKDetail. Все права защищены.</p>
+      <div class="footer-social">
+        <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
+        <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
       </div>
     </div>
   </div>
@@ -92,12 +92,10 @@
       res.items.forEach(item => {
         const card = `
           <div class="review-card">
-            <div class="review-header">
-              <h3 class="review-name">${item.name}</h3>
-              <div class="review-info">
-                ${item.car ? `<span class="review-car">${item.car}</span>` : ''}
-                ${item.service ? `<span class="review-service">${item.service}</span>` : ''}
-              </div>
+            <h3 class="review-name">${item.name}</h3>
+            <div class="review-meta">
+              ${item.car ? `<div class="review-car">${item.car}</div>` : ''}
+              ${item.service ? `<div class="review-service">${item.service}</div>` : ''}
             </div>
             <p class="review-text">${item.text}</p>
           </div>
@@ -116,4 +114,3 @@
 
 </body>
 </html>
-
