@@ -135,12 +135,14 @@ window.deleteService = async (id) => {
 
 async function loadReviews() {
   if (!reviewList) return;
+
   try {
     const res = await pb.collection('reviews').getList(1, 50);
     reviewList.innerHTML = '';
+
     res.items.forEach(item => {
       const card = document.createElement('div');
-      card.className = 'review-card'; // тот же класс, что и на публичной странице
+      card.className = 'review-card-admin';
       card.innerHTML = `
         <div class="review-header">
           <h3 class="review-name">${item.name}</h3>
