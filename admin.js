@@ -1,10 +1,7 @@
 const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
-// ==================== ОБЩИЕ ЭЛЕМЕНТЫ ====================
-const serviceForm = document.getElementById('service-form');
-const reviewForm = document.getElementById('review-form');
-
 // ==================== УСЛУГИ ====================
+const serviceForm = document.getElementById('service-form');
 const serviceId = document.getElementById('service-id');
 const serviceTitle = document.getElementById('title');
 const serviceDesc = document.getElementById('description');
@@ -17,6 +14,7 @@ const cancelServiceBtn = document.getElementById('cancel-service-edit');
 const serviceList = document.getElementById('service-list');
 
 // ==================== ОТЗЫВЫ ====================
+const reviewForm = document.getElementById('review-form');
 const reviewId = document.getElementById('review-id');
 const reviewName = document.getElementById('name');
 const reviewCar = document.getElementById('car');
@@ -26,19 +24,25 @@ const reviewFormTitle = document.getElementById('review-form-title');
 const cancelReviewBtn = document.getElementById('cancel-review-edit');
 const reviewList = document.getElementById('review-list');
 
-// Переключение вкладок
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+// Переключение вкладок (безопасно)
+const tabs = document.querySelectorAll('.tab-btn');
+if (tabs.length > 0) {
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const tabId = `tab-${btn.dataset.tab}`;
+      const tabContent = document.getElementById(tabId);
+      if (tabContent) tabContent.classList.add('active');
+    });
   });
-});
+}
 
 // ==================== УСЛУГИ ====================
 
 async function loadServices() {
+  if (!serviceList) return;
   try {
     const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
     serviceList.innerHTML = '';
@@ -65,6 +69,7 @@ async function loadServices() {
 }
 
 window.editService = async (id) => {
+  if (!serviceId || !serviceTitle || !serviceDesc || !servicePrice || !serviceTime || !serviceOrder || !serviceFormTitle) return;
   try {
     const item = await pb.collection('services').getOne(id);
     serviceId.value = item.id;
@@ -76,39 +81,41 @@ window.editService = async (id) => {
     serviceFormTitle.textContent = 'Редактировать услугу';
     if (cancelServiceBtn) cancelServiceBtn.classList.remove('hidden');
   } catch (err) {
-    alert('Ошибка загрузки услуги');
+    alert('Ошибка загрузки услуги: ' + err.message);
   }
 };
 
-serviceForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
+if (serviceForm) {
+  serviceForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  const formData = new FormData();
-  formData.append('title', serviceTitle.value);
-  formData.append('description', serviceDesc.value);
-  formData.append('price', servicePrice.value.trim());
-  formData.append('time', serviceTime.value);
-  formData.append('order', serviceOrder.value || 0);
+    const formData = new FormData();
+    formData.append('title', serviceTitle.value);
+    formData.append('description', serviceDesc.value);
+    formData.append('price', servicePrice.value.trim());
+    formData.append('time', serviceTime.value);
+    formData.append('order', serviceOrder.value || 0);
 
-  if (serviceImage.files[0]) formData.append('image', serviceImage.files[0]);
+    if (serviceImage && serviceImage.files[0]) formData.append('image', serviceImage.files[0]);
 
-  try {
-    if (serviceId.value) {
-      await pb.collection('services').update(serviceId.value, formData);
-    } else {
-      await pb.collection('services').create(formData);
+    try {
+      if (serviceId.value) {
+        await pb.collection('services').update(serviceId.value, formData);
+      } else {
+        await pb.collection('services').create(formData);
+      }
+      alert('Услуга сохранена!');
+      serviceForm.reset();
+      serviceFormTitle.textContent = 'Добавить новую услугу';
+      if (cancelServiceBtn) cancelServiceBtn.classList.add('hidden');
+      serviceId.value = '';
+      loadServices();
+    } catch (err) {
+      console.error('Ошибка сохранения услуги:', err);
+      alert('Ошибка сохранения услуги:\n' + (err.message || 'Проверьте заполненные поля'));
     }
-    alert('Услуга сохранена!');
-    serviceForm.reset();
-    serviceFormTitle.textContent = 'Добавить новую услугу';
-    if (cancelServiceBtn) cancelServiceBtn.classList.add('hidden');
-    serviceId.value = '';
-    loadServices();
-  } catch (err) {
-    console.error('Ошибка сохранения услуги:', err);
-    alert('Ошибка сохранения услуги: ' + (err.message || 'Неизвестная ошибка'));
-  }
-});
+  });
+}
 
 if (cancelServiceBtn) {
   cancelServiceBtn.addEventListener('click', () => {
@@ -132,6 +139,7 @@ window.deleteService = async (id) => {
 // ==================== ОТЗЫВЫ ====================
 
 async function loadReviews() {
+  if (!reviewList) return;
   try {
     const res = await pb.collection('reviews').getList(1, 50);
     reviewList.innerHTML = '';
@@ -158,6 +166,7 @@ async function loadReviews() {
 }
 
 window.editReview = async (id) => {
+  if (!reviewId || !reviewName || !reviewCar || !reviewService || !reviewText || !reviewFormTitle) return;
   try {
     const item = await pb.collection('reviews').getOne(id);
     reviewId.value = item.id;
@@ -172,33 +181,35 @@ window.editReview = async (id) => {
   }
 };
 
-reviewForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
+if (reviewForm) {
+  reviewForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  const data = {
-    name: reviewName.value.trim(),
-    car: reviewCar.value.trim(),
-    service: reviewService.value.trim(),
-    text: reviewText.value.trim()
-  };
+    const data = {
+      name: reviewName.value.trim(),
+      car: reviewCar.value.trim(),
+      service: reviewService.value.trim(),
+      text: reviewText.value.trim()
+    };
 
-  try {
-    if (reviewId.value) {
-      await pb.collection('reviews').update(reviewId.value, data);
-    } else {
-      await pb.collection('reviews').create(data);
+    try {
+      if (reviewId.value) {
+        await pb.collection('reviews').update(reviewId.value, data);
+      } else {
+        await pb.collection('reviews').create(data);
+      }
+      alert('Отзыв сохранён!');
+      reviewForm.reset();
+      reviewFormTitle.textContent = 'Добавить новый отзыв';
+      if (cancelReviewBtn) cancelReviewBtn.classList.add('hidden');
+      reviewId.value = '';
+      loadReviews();
+    } catch (err) {
+      console.error('Ошибка сохранения отзыва:', err);
+      alert('Ошибка сохранения отзыва:\n' + (err.message || 'Проверьте заполненные поля'));
     }
-    alert('Отзыв сохранён!');
-    reviewForm.reset();
-    reviewFormTitle.textContent = 'Добавить новый отзыв';
-    if (cancelReviewBtn) cancelReviewBtn.classList.add('hidden');
-    reviewId.value = '';
-    loadReviews();
-  } catch (err) {
-    console.error('Полная ошибка сохранения отзыва:', err);
-    alert('Ошибка сохранения отзыва: ' + (err.message || 'Неизвестная ошибка'));
-  }
-});
+  });
+}
 
 if (cancelReviewBtn) {
   cancelReviewBtn.addEventListener('click', () => {
@@ -220,5 +231,5 @@ window.deleteReview = async (id) => {
 };
 
 // Запуск при загрузке страницы
-loadServices();
-loadReviews();
+if (serviceList) loadServices();
+if (reviewList) loadReviews();
