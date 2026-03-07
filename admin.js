@@ -1,8 +1,30 @@
 const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
-// ==================== ОБЩИЕ ФУНКЦИИ ====================
+// ==================== УСЛУГИ ====================
+const serviceForm = document.getElementById('service-form');
+const serviceId = document.getElementById('service-id');
+const serviceTitle = document.getElementById('title');
+const serviceDesc = document.getElementById('description');
+const servicePrice = document.getElementById('price');
+const serviceTime = document.getElementById('time');
+const serviceImage = document.getElementById('image');
+const serviceOrder = document.getElementById('order');
+const serviceFormTitle = document.getElementById('service-form-title');
+const cancelServiceBtn = document.getElementById('cancel-service-edit');
+const serviceList = document.getElementById('service-list');
 
-// Переключение вкладок (безопасно)
+// ==================== ОТЗЫВЫ ====================
+const reviewForm = document.getElementById('review-form');
+const reviewId = document.getElementById('review-id');
+const reviewName = document.getElementById('name');
+const reviewCar = document.getElementById('car');
+const reviewService = document.getElementById('service');
+const reviewText = document.getElementById('text');
+const reviewFormTitle = document.getElementById('review-form-title');
+const cancelReviewBtn = document.getElementById('cancel-review-edit');
+const reviewList = document.getElementById('review-list');
+
+// Переключение вкладок (если вкладки есть)
 const tabs = document.querySelectorAll('.tab-btn');
 if (tabs.length > 0) {
   tabs.forEach(btn => {
@@ -17,22 +39,10 @@ if (tabs.length > 0) {
   });
 }
 
-// ==================== УСЛУГИ ====================
-
-const serviceForm = document.getElementById('service-form');
-const serviceId = document.getElementById('service-id');
-const serviceTitle = document.getElementById('title');
-const serviceDesc = document.getElementById('description');
-const servicePrice = document.getElementById('price');
-const serviceTime = document.getElementById('time');
-const serviceImage = document.getElementById('image');
-const serviceOrder = document.getElementById('order');
-const serviceFormTitle = document.getElementById('service-form-title');
-const cancelServiceBtn = document.getElementById('cancel-service-edit');
-const serviceList = document.getElementById('service-list');
+// ==================== ФУНКЦИИ УСЛУГ ====================
 
 async function loadServices() {
-  if (!serviceList) return console.log('Список услуг не найден на странице');
+  if (!serviceList) return;
   try {
     const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
     serviceList.innerHTML = '';
@@ -59,10 +69,7 @@ async function loadServices() {
 }
 
 window.editService = async (id) => {
-  if (!serviceId || !serviceTitle || !serviceDesc || !servicePrice || !serviceTime || !serviceOrder || !serviceFormTitle) {
-    console.warn('Элементы формы услуг не найдены');
-    return;
-  }
+  if (!serviceId || !serviceTitle || !serviceDesc || !servicePrice || !serviceTime || !serviceOrder || !serviceFormTitle) return;
   try {
     const item = await pb.collection('services').getOne(id);
     serviceId.value = item.id;
@@ -132,7 +139,7 @@ window.deleteService = async (id) => {
 // ==================== ОТЗЫВЫ ====================
 
 async function loadReviews() {
-  if (!reviewList) return console.log('Список отзывов не найден на странице');
+  if (!reviewList) return;
   try {
     const res = await pb.collection('reviews').getList(1, 50);
     reviewList.innerHTML = '';
@@ -159,10 +166,7 @@ async function loadReviews() {
 }
 
 window.editReview = async (id) => {
-  if (!reviewId || !reviewName || !reviewCar || !reviewService || !reviewText || !reviewFormTitle) {
-    console.warn('Элементы формы отзывов не найдены');
-    return;
-  }
+  if (!reviewId || !reviewName || !reviewCar || !reviewService || !reviewText || !reviewFormTitle) return;
   try {
     const item = await pb.collection('reviews').getOne(id);
     reviewId.value = item.id;
@@ -226,6 +230,6 @@ window.deleteReview = async (id) => {
   }
 };
 
-// Запуск (безопасно)
+// Запуск
 if (serviceList) loadServices();
 if (reviewList) loadReviews();
