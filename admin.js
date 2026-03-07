@@ -140,7 +140,7 @@ async function loadReviews() {
     reviewList.innerHTML = '';
     res.items.forEach(item => {
       const card = document.createElement('div');
-      card.className = 'review-card-admin';
+      card.className = 'review-card'; // ← тот же класс, что и на сайте
       card.innerHTML = `
         <div class="review-header">
           <h3 class="review-name">${item.name}</h3>
