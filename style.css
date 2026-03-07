@@ -1135,6 +1135,58 @@ footer {
   margin: 0;
 }
 
+/* Стили отзывов — красивые карточки */
+.reviews-section {
+  padding: 80px 0 120px; /* большое расстояние от шапки и до футера */
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 48px; /* нормальное расстояние между карточками */
+}
+
+.review-card {
+  background: #222;
+  border-radius: 20px;
+  padding: 40px 36px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+  border: 1px solid #333;
+}
+
+.review-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+  border-color: #4a90e2;
+}
+
+.review-header {
+  margin-bottom: 24px;
+}
+
+.review-header h3 {
+  font-size: 28px;
+  margin: 0 0 8px 0;
+  color: #fff;
+}
+
+.car-model,
+.service-name {
+  font-size: 18px;
+  color: #4a90e2;
+  font-weight: 500;
+  margin: 4px 0 16px 0;
+}
+
+.review-text {
+  font-size: 17px;
+  line-height: 1.75;
+  color: #ddd;
+  margin: 0;
+}
+
+
 
 
 
