@@ -37,7 +37,7 @@
 <section class="page-hero">
   <div class="container">
     <h1>Отзывы наших клиентов</h1>
-    <p>Реальные истории владельцев автомобилей</p>
+    <p>Реальные истории владельцев автомобилей, которые уже доверили нам свой автомобиль</p>
   </div>
 </section>
 
@@ -48,7 +48,29 @@
 </section>
 
 <footer>
-  <!-- твой футер -->
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">AK<span>Detail</span></div>
+      <div class="footer-links">
+        <a href="index.html">Главная</a>
+        <a href="services.html">Услуги</a>
+        <a href="works.html">Наши работы</a>
+        <a href="reviews.html">Отзывы</a>
+        <a href="booking.html">Запись</a>
+        <a href="about.html">О нас</a>
+        <a href="contacts.html">Контакты</a>
+      </div>
+      <div class="footer-info">
+        <p>г. Буй, ул. Советская, 25</p>
+        <p>+7 (920) 555-12-34</p>
+        <p>© 2020–2026 AKDetail. Все права защищены.</p>
+        <div class="footer-social">
+          <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
+          <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </footer>
 
 <script src="script.js"></script>
@@ -61,6 +83,11 @@
       const res = await pb.collection('reviews').getList(1, 50, { sort: '-created' });
       const container = document.getElementById('reviews-container');
       container.innerHTML = '';
+
+      if (res.items.length === 0) {
+        container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Пока нет отзывов</p>';
+        return;
+      }
 
       res.items.forEach(item => {
         const card = `
@@ -75,10 +102,13 @@
         container.innerHTML += card;
       });
     } catch (err) {
-      console.error(err);
+      console.error('Ошибка загрузки отзывов:', err);
+      document.getElementById('reviews-container').innerHTML = 
+        '<p style="text-align:center;color:#e74c3c; grid-column:1/-1;">Не удалось загрузить отзывы. Попробуйте позже.</p>';
     }
   }
 
+  // Запуск загрузки при открытии страницы
   loadReviews();
 </script>
 
