@@ -37,7 +37,7 @@
 <section class="page-hero">
   <div class="container">
     <h1>Отзывы наших клиентов</h1>
-    <p>Реальные истории владельцев автомобилей</p>
+    <p>Реальные истории владельцев автомобилей, которые уже доверили нам свой автомобиль</p>
   </div>
 </section>
 
@@ -93,9 +93,11 @@
         const card = `
           <div class="review-card">
             <div class="review-header">
-              <h3>${item.name}</h3>
-              ${item.car ? `<div class="car-model">${item.car}</div>` : ''}
-              ${item.service ? `<div class="service-name">${item.service}</div>` : ''}
+              <h3 class="review-name">${item.name}</h3>
+              <div class="review-info">
+                ${item.car ? `<span class="review-car">${item.car}</span>` : ''}
+                ${item.service ? `<span class="review-service">${item.service}</span>` : ''}
+              </div>
             </div>
             <p class="review-text">${item.text}</p>
           </div>
@@ -109,6 +111,7 @@
     }
   }
 
+  // Запуск загрузки
   loadReviews();
 </script>
 
