@@ -37,7 +37,7 @@
 <section class="page-hero">
   <div class="container">
     <h1>Отзывы наших клиентов</h1>
-    <p>Реальные истории владельцев автомобилей, которые уже доверили нам свой автомобиль</p>
+    <p>Реальные истории владельцев автомобилей</p>
   </div>
 </section>
 
@@ -48,7 +48,7 @@
 </section>
 
 <footer>
-  <!-- твой обычный футер -->
+  <!-- твой футер -->
 </footer>
 
 <script src="script.js"></script>
@@ -63,21 +63,11 @@
       container.innerHTML = '';
 
       res.items.forEach(item => {
-        const date = new Date(item.created);
-        const formattedDate = date.toLocaleDateString('ru-RU', { 
-          day: 'numeric', 
-          month: 'long', 
-          year: 'numeric' 
-        });
-
         const card = `
           <div class="review-card">
             <div class="review-header">
-              <div>
-                <h3>${item.name}</h3>
-                ${item.car ? `<div class="car-model">${item.car}</div>` : ''}
-              </div>
-              <div class="review-date">${formattedDate}</div>
+              <h3>${item.name}</h3>
+              ${item.car ? `<div class="car-model">${item.car}</div>` : ''}
             </div>
             <p class="review-text">${item.text}</p>
           </div>
@@ -86,8 +76,6 @@
       });
     } catch (err) {
       console.error(err);
-      document.getElementById('reviews-container').innerHTML = 
-        '<p style="text-align:center; grid-column:1/-1;">Отзывы загружаются...</p>';
     }
   }
 
