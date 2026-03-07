@@ -1,117 +1,66 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Услуги | AKDetail Буй</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <script src="pocketbase.umd.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Отзывы | AKDetail Буй</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <script src="pocketbase.umd.js"></script>
 </head>
 <body>
-    <header>
-        <div class="nav">
-            <a href="index.html" class="logo-link">
-                <img src="images/logo.png" alt="AKDetail" class="logo-img">
-            </a>
-            <div class="nav-center">
-                <nav class="nav-links">
-                    <a href="index.html">Главная</a>
-                    <a href="services.html" class="active">Услуги</a>
-                    <a href="works.html">Наши работы</a>
-                    <a href="reviews.html">Отзывы</a>
-                    <a href="booking.html">Запись</a>
-                    <a href="about.html">О нас</a>
-                    <a href="contacts.html">Контакты</a>
-                </nav>
-            </div>
-            <div class="contact-header">
-                <span class="call-us">Позвони нам:</span>
-                <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
-            </div>
-            <div class="hamburger"><span></span><span></span><span></span></div>
-        </div>
-    </header>
+  <!-- твой header -->
 
-    <section class="page-hero">
-        <div class="container">
-            <h1>Наши услуги</h1>
-            <p>Профессиональный детейлинг в Буе: от простой мойки до премиум-защиты и эксклюзивного тюнинга салона. Только проверенные материалы и 6 лет опыта.</p>
-        </div>
-    </section>
+  <section class="page-hero">
+    <div class="container">
+      <h1>Отзывы наших клиентов</h1>
+      <p>Что говорят те, кто уже доверил нам свой автомобиль</p>
+    </div>
+  </section>
 
-    <section class="services-full">
-        <div class="container">
-            <div class="grid-3" id="services-container"></div>
-        </div>
-    </section>
+  <section class="reviews-section">
+    <div class="container">
+      <div class="review-grid" id="reviews-container"></div>
+    </div>
+  </section>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">AK<span>Detail</span></div>
-                <div class="footer-links">
-                    <a href="index.html">Главная</a>
-                    <a href="services.html">Услуги</a>
-                    <a href="works.html">Наши работы</a>
-                    <a href="reviews.html">Отзывы</a>
-                    <a href="booking.html">Запись</a>
-                    <a href="about.html">О нас</a>
-                    <a href="contacts.html">Контакты</a>
-                </div>
-                <div class="footer-info">
-                    <p>г. Буй, ул. Советская, 25</p>
-                    <p>+7 (920) 555-12-34</p>
-                    <p>© 2020–2026 AKDetail. Все права защищены.</p>
-                    <div class="footer-social">
-                        <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
-                        <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+  <!-- твой footer -->
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 
-    <script>
-        const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
+  <script>
+    const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
-        async function loadServices() {
-            try {
-                const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
-                const container = document.getElementById('services-container');
-                container.innerHTML = '';
+    async function loadReviews() {
+      try {
+        const res = await pb.collection('reviews').getList(1, 50, { sort: '-created' });
+        const container = document.getElementById('reviews-container');
+        container.innerHTML = '';
 
-                if (res.items.length === 0) {
-                    container.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Услуги пока не добавлены</p>';
-                    return;
-                }
-
-                res.items.forEach(item => {
-                    const card = `
-                        <div class="service-card full">
-                            ${item.image ? `<img src="${pb.files.getURL(item, item.image)}" alt="${item.title}">` : ''}
-                            <div class="service-info">
-                                <h3>${item.title}</h3>
-                                <p>${item.description || ''}</p>
-                                <div class="price-time">
-                                    <span class="price">${item.price} ₽</span>
-                                    <span class="time">${item.time || ''}</span>
-                                </div>
-                                <a href="booking.html" class="btn-primary">Записаться</a>
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += card;
-                });
-            } catch (err) {
-                console.error('Ошибка загрузки услуг:', err);
-                document.getElementById('services-container').innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#e74c3c;">Ошибка загрузки услуг. Попробуйте позже.</p>';
-            }
+        if (res.items.length === 0) {
+          container.innerHTML = '<p style="text-align:center;">Отзывов пока нет</p>';
+          return;
         }
 
-        loadServices();
-    </script>
+        res.items.forEach(item => {
+          const card = `
+            <div class="review-card">
+              <div class="review-header">
+                <h3>${item.name}</h3>
+                <div class="review-date">${new Date(item.created).toLocaleDateString('ru-RU')}</div>
+              </div>
+              <p>${item.text}</p>
+            </div>
+          `;
+          container.innerHTML += card;
+        });
+      } catch (err) {
+        console.error('Ошибка загрузки отзывов:', err);
+        document.getElementById('reviews-container').innerHTML = '<p style="text-align:center;color:#e74c3c;">Ошибка загрузки отзывов</p>';
+      }
+    }
+
+    loadReviews();
+  </script>
 </body>
 </html>
