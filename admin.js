@@ -1,7 +1,10 @@
 const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
-// ==================== УСЛУГИ (оставил как было) ====================
+// ==================== ОБЩИЕ ЭЛЕМЕНТЫ ====================
 const serviceForm = document.getElementById('service-form');
+const reviewForm = document.getElementById('review-form');
+
+// ==================== УСЛУГИ ====================
 const serviceId = document.getElementById('service-id');
 const serviceTitle = document.getElementById('title');
 const serviceDesc = document.getElementById('description');
@@ -14,16 +17,16 @@ const cancelServiceBtn = document.getElementById('cancel-service-edit');
 const serviceList = document.getElementById('service-list');
 
 // ==================== ОТЗЫВЫ ====================
-const reviewForm = document.getElementById('review-form');
 const reviewId = document.getElementById('review-id');
 const reviewName = document.getElementById('name');
 const reviewCar = document.getElementById('car');
+const reviewService = document.getElementById('service');
 const reviewText = document.getElementById('text');
 const reviewFormTitle = document.getElementById('review-form-title');
 const cancelReviewBtn = document.getElementById('cancel-review-edit');
 const reviewList = document.getElementById('review-list');
 
-// Переключение вкладок (без изменений)
+// Переключение вкладок
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -33,58 +36,149 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// ==================== УСЛУГИ (без изменений) ====================
-// ... (оставил весь блок услуг как был раньше)
+// ==================== УСЛУГИ ====================
+
+async function loadServices() {
+  try {
+    const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
+    serviceList.innerHTML = '';
+    res.items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'service-card-admin';
+      card.innerHTML = `
+        ${item.image ? `<img src="${pb.files.getURL(item, item.image)}" alt="${item.title}">` : ''}
+        <div class="info">
+          <h3>${item.title}</h3>
+          <p>${item.description || ''}</p>
+          <strong>${item.price} ₽</strong> • ${item.time || ''}
+          <div class="actions">
+            <button onclick="editService('${item.id}')">Редактировать</button>
+            <button onclick="deleteService('${item.id}')">Удалить</button>
+          </div>
+        </div>
+      `;
+      serviceList.appendChild(card);
+    });
+  } catch (err) {
+    console.error('Ошибка загрузки услуг:', err);
+  }
+}
+
+window.editService = async (id) => {
+  try {
+    const item = await pb.collection('services').getOne(id);
+    serviceId.value = item.id;
+    serviceTitle.value = item.title;
+    serviceDesc.value = item.description || '';
+    servicePrice.value = item.price;
+    serviceTime.value = item.time || '';
+    serviceOrder.value = item.order || 0;
+    serviceFormTitle.textContent = 'Редактировать услугу';
+    if (cancelServiceBtn) cancelServiceBtn.classList.remove('hidden');
+  } catch (err) {
+    alert('Ошибка загрузки услуги');
+  }
+};
+
+serviceForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append('title', serviceTitle.value);
+  formData.append('description', serviceDesc.value);
+  formData.append('price', servicePrice.value.trim());
+  formData.append('time', serviceTime.value);
+  formData.append('order', serviceOrder.value || 0);
+
+  if (serviceImage.files[0]) formData.append('image', serviceImage.files[0]);
+
+  try {
+    if (serviceId.value) {
+      await pb.collection('services').update(serviceId.value, formData);
+    } else {
+      await pb.collection('services').create(formData);
+    }
+    alert('Услуга сохранена!');
+    serviceForm.reset();
+    serviceFormTitle.textContent = 'Добавить новую услугу';
+    if (cancelServiceBtn) cancelServiceBtn.classList.add('hidden');
+    serviceId.value = '';
+    loadServices();
+  } catch (err) {
+    console.error('Ошибка сохранения услуги:', err);
+    alert('Ошибка сохранения услуги: ' + (err.message || 'Неизвестная ошибка'));
+  }
+});
+
+if (cancelServiceBtn) {
+  cancelServiceBtn.addEventListener('click', () => {
+    serviceForm.reset();
+    serviceFormTitle.textContent = 'Добавить новую услугу';
+    cancelServiceBtn.classList.add('hidden');
+    serviceId.value = '';
+  });
+}
+
+window.deleteService = async (id) => {
+  if (!confirm('Удалить услугу навсегда?')) return;
+  try {
+    await pb.collection('services').delete(id);
+    loadServices();
+  } catch (err) {
+    alert('Ошибка удаления услуги');
+  }
+};
 
 // ==================== ОТЗЫВЫ ====================
 
 async function loadReviews() {
-  const res = await pb.collection('reviews').getList(1, 50, { sort: '-created' });
-  reviewList.innerHTML = '';
-  res.items.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'review-card-admin';
-    card.innerHTML = `
-      <div class="review-header">
-        <h3>${item.name}</h3>
-        ${item.car ? `<div class="car-model">${item.car}</div>` : ''}
-      </div>
-      <p>${item.text}</p>
-      <div class="actions">
-        <button onclick="editReview('${item.id}')">Редактировать</button>
-        <button onclick="deleteReview('${item.id}')">Удалить</button>
-      </div>
-    `;
-    reviewList.appendChild(card);
-  });
+  try {
+    const res = await pb.collection('reviews').getList(1, 50);
+    reviewList.innerHTML = '';
+    res.items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'review-card-admin';
+      card.innerHTML = `
+        <div class="review-header">
+          <h3>${item.name}</h3>
+          ${item.car ? `<div class="car-model">${item.car}</div>` : ''}
+          ${item.service ? `<div class="service-name">${item.service}</div>` : ''}
+        </div>
+        <p>${item.text}</p>
+        <div class="actions">
+          <button onclick="editReview('${item.id}')">Редактировать</button>
+          <button onclick="deleteReview('${item.id}')">Удалить</button>
+        </div>
+      `;
+      reviewList.appendChild(card);
+    });
+  } catch (err) {
+    console.error('Ошибка загрузки отзывов:', err);
+  }
 }
 
 window.editReview = async (id) => {
-  const item = await pb.collection('reviews').getOne(id);
-  reviewId.value = item.id;
-  reviewName.value = item.name;
-  reviewCar.value = item.car || '';
-  reviewText.value = item.text;
-  reviewFormTitle.textContent = 'Редактировать отзыв';
-  if (cancelReviewBtn) cancelReviewBtn.classList.remove('hidden');
+  try {
+    const item = await pb.collection('reviews').getOne(id);
+    reviewId.value = item.id;
+    reviewName.value = item.name;
+    reviewCar.value = item.car || '';
+    reviewService.value = item.service || '';
+    reviewText.value = item.text;
+    reviewFormTitle.textContent = 'Редактировать отзыв';
+    if (cancelReviewBtn) cancelReviewBtn.classList.remove('hidden');
+  } catch (err) {
+    alert('Ошибка загрузки отзыва');
+  }
 };
 
 reviewForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // Проверка перед отправкой
-  if (!reviewName.value.trim()) {
-    alert('Введите имя клиента!');
-    return;
-  }
-  if (!reviewText.value.trim()) {
-    alert('Введите текст отзыва!');
-    return;
-  }
-
   const data = {
     name: reviewName.value.trim(),
     car: reviewCar.value.trim(),
+    service: reviewService.value.trim(),
     text: reviewText.value.trim()
   };
 
@@ -94,16 +188,15 @@ reviewForm.addEventListener('submit', async (e) => {
     } else {
       await pb.collection('reviews').create(data);
     }
-    alert('Отзыв успешно сохранён!');
+    alert('Отзыв сохранён!');
     reviewForm.reset();
     reviewFormTitle.textContent = 'Добавить новый отзыв';
     if (cancelReviewBtn) cancelReviewBtn.classList.add('hidden');
     reviewId.value = '';
     loadReviews();
   } catch (err) {
-    console.error("Полная ошибка:", err);           // ← смотрим в консоль
-    const msg = err.data?.message || err.message || 'Неизвестная ошибка';
-    alert('Ошибка сохранения отзыва:\n' + msg);
+    console.error('Полная ошибка сохранения отзыва:', err);
+    alert('Ошибка сохранения отзыва: ' + (err.message || 'Неизвестная ошибка'));
   }
 });
 
@@ -117,11 +210,15 @@ if (cancelReviewBtn) {
 }
 
 window.deleteReview = async (id) => {
-  if (!confirm('Удалить отзыв?')) return;
-  await pb.collection('reviews').delete(id);
-  loadReviews();
+  if (!confirm('Удалить отзыв навсегда?')) return;
+  try {
+    await pb.collection('reviews').delete(id);
+    loadReviews();
+  } catch (err) {
+    alert('Ошибка удаления отзыва');
+  }
 };
 
-// Запуск
+// Запуск при загрузке страницы
 loadServices();
 loadReviews();
