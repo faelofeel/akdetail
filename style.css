@@ -1350,3 +1350,67 @@ h3 {
   margin: 0;
   font-weight: 300;
 }
+
+/* Центрированные и красивые карточки отзывов */
+.reviews-section {
+  padding: 80px 0 120px; /* расстояние сверху и снизу */
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  gap: 48px;
+  justify-content: center;          /* ← главное исправление: центрирование карточек */
+  max-width: 1400px;                /* ограничиваем ширину, чтобы не растягивалось */
+  margin: 0 auto;                   /* центрируем весь грид */
+}
+
+.review-card {
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  transition: all 0.3s ease;
+  border: 1px solid #2a2a2a;
+  text-align: center;               /* центрируем весь текст внутри карточки */
+  width: 100%;                      /* карточка занимает всю ширину своей ячейки */
+}
+
+.review-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+  border-color: #4a90e2;
+}
+
+.review-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 16px;
+  line-height: 1.3;
+}
+
+.review-info {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 28px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.review-car {
+  color: #4a90e2; /* синий для машины */
+}
+
+.review-service {
+  color: #27ae60; /* зелёный для услуги — чтобы отличались */
+}
+
+.review-text {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #ddd;
+  margin: 0;
+  font-weight: 300;
+}
