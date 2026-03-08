@@ -24,6 +24,16 @@ const reviewFormTitle = document.getElementById('review-form-title');
 const cancelReviewBtn = document.getElementById('cancel-review-edit');
 const reviewList = document.getElementById('review-list');
 
+// ==================== НАШИ РАБОТЫ ====================
+const worksForm = document.getElementById('works-form');
+const worksId = document.getElementById('works-id');
+const worksTitle = document.getElementById('title');           // переиспользуем id="title" из формы работ
+const worksDesc = document.getElementById('description');      // переиспользуем id="description"
+const worksImages = document.getElementById('images');
+const worksFormTitle = document.getElementById('works-form-title');
+const cancelWorksBtn = document.getElementById('cancel-works-edit');
+const worksList = document.getElementById('works-list');
+
 // Переключение вкладок
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -37,7 +47,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // ==================== УСЛУГИ ====================
 
 async function loadServices() {
-  if (!serviceList) return console.log('Список услуг не найден');
+  if (!serviceList) return;
   try {
     const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
     serviceList.innerHTML = '';
@@ -83,14 +93,12 @@ window.editService = async (id) => {
 if (serviceForm) {
   serviceForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append('title', serviceTitle.value);
     formData.append('description', serviceDesc.value);
     formData.append('price', servicePrice.value.trim());
     formData.append('time', serviceTime.value);
     formData.append('order', serviceOrder.value || 0);
-
     if (serviceImage && serviceImage.files[0]) formData.append('image', serviceImage.files[0]);
 
     try {
@@ -106,7 +114,6 @@ if (serviceForm) {
       serviceId.value = '';
       loadServices();
     } catch (err) {
-      console.error('Ошибка сохранения услуги:', err);
       alert('Ошибка сохранения услуги: ' + err.message);
     }
   });
@@ -134,7 +141,7 @@ window.deleteService = async (id) => {
 // ==================== ОТЗЫВЫ ====================
 
 async function loadReviews() {
-  if (!reviewList) return console.log('Список отзывов не найден');
+  if (!reviewList) return;
   try {
     const res = await pb.collection('reviews').getList(1, 50);
     reviewList.innerHTML = '';
@@ -181,14 +188,12 @@ window.editReview = async (id) => {
 if (reviewForm) {
   reviewForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     const data = {
       name: reviewName.value.trim(),
       car: reviewCar.value.trim(),
       service: reviewService.value.trim(),
       text: reviewText.value.trim()
     };
-
     try {
       if (reviewId.value) {
         await pb.collection('reviews').update(reviewId.value, data);
@@ -202,7 +207,6 @@ if (reviewForm) {
       reviewId.value = '';
       loadReviews();
     } catch (err) {
-      console.error('Ошибка сохранения отзыва:', err);
       alert('Ошибка сохранения отзыва: ' + err.message);
     }
   });
@@ -227,6 +231,98 @@ window.deleteReview = async (id) => {
   }
 };
 
-// Запуск (безопасно, чтобы не падало)
-if (serviceList) loadServices();
-if (reviewList) loadReviews();
+// ==================== НАШИ РАБОТЫ ====================
+
+async function loadWorks() {
+  if (!worksList) return;
+  try {
+    const res = await pb.collection('works').getList(1, 50, { sort: '-created' });
+    worksList.innerHTML = '';
+    res.items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'work-card-admin';
+      let imagesHtml = '';
+      if (item.images && item.images.length > 0) {
+        imagesHtml = item.images.map(img => 
+          `<img src="${pb.files.getURL(item, img)}" alt="${item.title}">`
+        ).join('');
+      }
+      card.innerHTML = `
+        <div class="work-images">${imagesHtml}</div>
+        <div class="info">
+          <h3>${item.title}</h3>
+          <p>${item.description || ''}</p>
+          <div class="actions">
+            <button onclick="editWork('${item.id}')">Редактировать</button>
+            <button onclick="deleteWork('${item.id}')">Удалить</button>
+          </div>
+        </div>
+      `;
+      worksList.appendChild(card);
+    });
+  } catch (err) {
+    console.error('Ошибка загрузки работ:', err);
+  }
+}
+
+window.editWork = async (id) => {
+  // пока без редактирования изображений (можно добавить позже)
+  alert('Редактирование работы пока не реализовано. Удалите и добавьте заново.');
+};
+
+if (worksForm) {
+  worksForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('title', worksTitle.value);
+    formData.append('description', worksDesc.value || '');
+
+    // Добавляем все выбранные фото
+    if (worksImages.files.length > 0) {
+      for (let file of worksImages.files) {
+        formData.append('images', file);
+      }
+    }
+
+    try {
+      if (worksId.value) {
+        await pb.collection('works').update(worksId.value, formData);
+      } else {
+        await pb.collection('works').create(formData);
+      }
+      alert('Работа сохранена!');
+      worksForm.reset();
+      worksFormTitle.textContent = 'Добавить новую работу';
+      if (cancelWorksBtn) cancelWorksBtn.classList.add('hidden');
+      worksId.value = '';
+      loadWorks();
+    } catch (err) {
+      alert('Ошибка сохранения работы: ' + err.message);
+    }
+  });
+}
+
+if (cancelWorksBtn) {
+  cancelWorksBtn.addEventListener('click', () => {
+    worksForm.reset();
+    worksFormTitle.textContent = 'Добавить новую работу';
+    cancelWorksBtn.classList.add('hidden');
+    worksId.value = '';
+  });
+}
+
+window.deleteWork = async (id) => {
+  if (!confirm('Удалить работу?')) return;
+  try {
+    await pb.collection('works').delete(id);
+    loadWorks();
+  } catch (err) {
+    alert('Ошибка удаления работы');
+  }
+};
+
+// ==================== ЗАПУСК ====================
+loadServices();
+loadReviews();
+loadWorks();
