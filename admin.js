@@ -27,9 +27,9 @@ const reviewList = document.getElementById('review-list');
 // ==================== НАШИ РАБОТЫ ====================
 const worksForm = document.getElementById('works-form');
 const worksId = document.getElementById('works-id');
-const worksTitle = document.getElementById('title');           // переиспользуем id="title" из формы работ
-const worksDesc = document.getElementById('description');      // переиспользуем id="description"
-const worksImages = document.getElementById('images');
+const worksTitle = document.getElementById('works-title');
+const worksDesc = document.getElementById('works-description');
+const worksImages = document.getElementById('works-images');
 const worksFormTitle = document.getElementById('works-form-title');
 const cancelWorksBtn = document.getElementById('cancel-works-edit');
 const worksList = document.getElementById('works-list');
@@ -45,7 +45,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 // ==================== УСЛУГИ ====================
-
 async function loadServices() {
   if (!serviceList) return;
   try {
@@ -68,13 +67,10 @@ async function loadServices() {
       `;
       serviceList.appendChild(card);
     });
-  } catch (err) {
-    console.error('Ошибка загрузки услуг:', err);
-  }
+  } catch (err) { console.error(err); }
 }
 
 window.editService = async (id) => {
-  if (!serviceId || !serviceTitle || !serviceDesc || !servicePrice || !serviceTime || !serviceOrder || !serviceFormTitle) return;
   try {
     const item = await pb.collection('services').getOne(id);
     serviceId.value = item.id;
@@ -85,9 +81,7 @@ window.editService = async (id) => {
     serviceOrder.value = item.order || 0;
     serviceFormTitle.textContent = 'Редактировать услугу';
     if (cancelServiceBtn) cancelServiceBtn.classList.remove('hidden');
-  } catch (err) {
-    alert('Ошибка загрузки услуги');
-  }
+  } catch (err) { alert('Ошибка загрузки услуги'); }
 };
 
 if (serviceForm) {
@@ -102,20 +96,15 @@ if (serviceForm) {
     if (serviceImage && serviceImage.files[0]) formData.append('image', serviceImage.files[0]);
 
     try {
-      if (serviceId.value) {
-        await pb.collection('services').update(serviceId.value, formData);
-      } else {
-        await pb.collection('services').create(formData);
-      }
+      if (serviceId.value) await pb.collection('services').update(serviceId.value, formData);
+      else await pb.collection('services').create(formData);
       alert('Услуга сохранена!');
       serviceForm.reset();
       serviceFormTitle.textContent = 'Добавить новую услугу';
       if (cancelServiceBtn) cancelServiceBtn.classList.add('hidden');
       serviceId.value = '';
       loadServices();
-    } catch (err) {
-      alert('Ошибка сохранения услуги: ' + err.message);
-    }
+    } catch (err) { alert('Ошибка: ' + err.message); }
   });
 }
 
@@ -133,13 +122,10 @@ window.deleteService = async (id) => {
   try {
     await pb.collection('services').delete(id);
     loadServices();
-  } catch (err) {
-    alert('Ошибка удаления услуги');
-  }
+  } catch (err) { alert('Ошибка удаления'); }
 };
 
 // ==================== ОТЗЫВЫ ====================
-
 async function loadReviews() {
   if (!reviewList) return;
   try {
@@ -164,13 +150,10 @@ async function loadReviews() {
       `;
       reviewList.appendChild(card);
     });
-  } catch (err) {
-    console.error('Ошибка загрузки отзывов:', err);
-  }
+  } catch (err) { console.error(err); }
 }
 
 window.editReview = async (id) => {
-  if (!reviewId || !reviewName || !reviewCar || !reviewService || !reviewText || !reviewFormTitle) return;
   try {
     const item = await pb.collection('reviews').getOne(id);
     reviewId.value = item.id;
@@ -180,9 +163,7 @@ window.editReview = async (id) => {
     reviewText.value = item.text;
     reviewFormTitle.textContent = 'Редактировать отзыв';
     if (cancelReviewBtn) cancelReviewBtn.classList.remove('hidden');
-  } catch (err) {
-    alert('Ошибка загрузки отзыва');
-  }
+  } catch (err) { alert('Ошибка загрузки отзыва'); }
 };
 
 if (reviewForm) {
@@ -195,20 +176,15 @@ if (reviewForm) {
       text: reviewText.value.trim()
     };
     try {
-      if (reviewId.value) {
-        await pb.collection('reviews').update(reviewId.value, data);
-      } else {
-        await pb.collection('reviews').create(data);
-      }
+      if (reviewId.value) await pb.collection('reviews').update(reviewId.value, data);
+      else await pb.collection('reviews').create(data);
       alert('Отзыв сохранён!');
       reviewForm.reset();
       reviewFormTitle.textContent = 'Добавить новый отзыв';
       if (cancelReviewBtn) cancelReviewBtn.classList.add('hidden');
       reviewId.value = '';
       loadReviews();
-    } catch (err) {
-      alert('Ошибка сохранения отзыва: ' + err.message);
-    }
+    } catch (err) { alert('Ошибка: ' + err.message); }
   });
 }
 
@@ -226,13 +202,10 @@ window.deleteReview = async (id) => {
   try {
     await pb.collection('reviews').delete(id);
     loadReviews();
-  } catch (err) {
-    alert('Ошибка удаления отзыва');
-  }
+  } catch (err) { alert('Ошибка удаления'); }
 };
 
 // ==================== НАШИ РАБОТЫ ====================
-
 async function loadWorks() {
   if (!worksList) return;
   try {
@@ -241,64 +214,48 @@ async function loadWorks() {
     res.items.forEach(item => {
       const card = document.createElement('div');
       card.className = 'work-card-admin';
-      let imagesHtml = '';
-      if (item.images && item.images.length > 0) {
-        imagesHtml = item.images.map(img => 
-          `<img src="${pb.files.getURL(item, img)}" alt="${item.title}">`
-        ).join('');
+      let imgs = '';
+      if (item.images && item.images.length) {
+        imgs = item.images.map(img => `<img src="${pb.files.getURL(item, img)}" alt="">`).join('');
       }
       card.innerHTML = `
-        <div class="work-images">${imagesHtml}</div>
-        <div class="info">
-          <h3>${item.title}</h3>
-          <p>${item.description || ''}</p>
-          <div class="actions">
-            <button onclick="editWork('${item.id}')">Редактировать</button>
-            <button onclick="deleteWork('${item.id}')">Удалить</button>
-          </div>
+        <div class="work-images">${imgs}</div>
+        <h3>${item.title}</h3>
+        <p>${item.description || ''}</p>
+        <div class="actions">
+          <button onclick="deleteWork('${item.id}')">Удалить</button>
         </div>
       `;
       worksList.appendChild(card);
     });
-  } catch (err) {
-    console.error('Ошибка загрузки работ:', err);
-  }
+  } catch (err) { console.error(err); }
 }
-
-window.editWork = async (id) => {
-  // пока без редактирования изображений (можно добавить позже)
-  alert('Редактирование работы пока не реализовано. Удалите и добавьте заново.');
-};
 
 if (worksForm) {
   worksForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
-    formData.append('title', worksTitle.value);
-    formData.append('description', worksDesc.value || '');
-
-    // Добавляем все выбранные фото
+    formData.append('title', worksTitle.value.trim());
+    formData.append('description', worksDesc.value.trim());
     if (worksImages.files.length > 0) {
       for (let file of worksImages.files) {
         formData.append('images', file);
       }
     }
-
     try {
       if (worksId.value) {
         await pb.collection('works').update(worksId.value, formData);
       } else {
         await pb.collection('works').create(formData);
       }
-      alert('Работа сохранена!');
+      alert('Работа успешно сохранена!');
       worksForm.reset();
       worksFormTitle.textContent = 'Добавить новую работу';
       if (cancelWorksBtn) cancelWorksBtn.classList.add('hidden');
       worksId.value = '';
       loadWorks();
     } catch (err) {
-      alert('Ошибка сохранения работы: ' + err.message);
+      alert('Ошибка сохранения: ' + err.message);
     }
   });
 }
@@ -317,9 +274,7 @@ window.deleteWork = async (id) => {
   try {
     await pb.collection('works').delete(id);
     loadWorks();
-  } catch (err) {
-    alert('Ошибка удаления работы');
-  }
+  } catch (err) { alert('Ошибка удаления'); }
 };
 
 // ==================== ЗАПУСК ====================
