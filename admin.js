@@ -70,10 +70,60 @@ async function loadServices() {
   } catch (err) { console.error(err); }
 }
 
-window.editService = async (id) => { /* без изменений */ };
-if (serviceForm) { /* без изменений */ }
-if (cancelServiceBtn) { /* без изменений */ }
-window.deleteService = async (id) => { /* без изменений */ };
+window.editService = async (id) => {
+  try {
+    const item = await pb.collection('services').getOne(id);
+    serviceId.value = item.id;
+    serviceTitle.value = item.title;
+    serviceDesc.value = item.description || '';
+    servicePrice.value = item.price;
+    serviceTime.value = item.time || '';
+    serviceOrder.value = item.order || 0;
+    serviceFormTitle.textContent = 'Редактировать услугу';
+    if (cancelServiceBtn) cancelServiceBtn.classList.remove('hidden');
+  } catch (err) { alert('Ошибка загрузки услуги'); }
+};
+
+if (serviceForm) {
+  serviceForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('title', serviceTitle.value);
+    formData.append('description', serviceDesc.value);
+    formData.append('price', servicePrice.value.trim());
+    formData.append('time', serviceTime.value);
+    formData.append('order', serviceOrder.value || 0);
+    if (serviceImage && serviceImage.files[0]) formData.append('image', serviceImage.files[0]);
+
+    try {
+      if (serviceId.value) await pb.collection('services').update(serviceId.value, formData);
+      else await pb.collection('services').create(formData);
+      alert('Услуга сохранена!');
+      serviceForm.reset();
+      serviceFormTitle.textContent = 'Добавить новую услугу';
+      if (cancelServiceBtn) cancelServiceBtn.classList.add('hidden');
+      serviceId.value = '';
+      loadServices();
+    } catch (err) { alert('Ошибка: ' + err.message); }
+  });
+}
+
+if (cancelServiceBtn) {
+  cancelServiceBtn.addEventListener('click', () => {
+    serviceForm.reset();
+    serviceFormTitle.textContent = 'Добавить новую услугу';
+    cancelServiceBtn.classList.add('hidden');
+    serviceId.value = '';
+  });
+}
+
+window.deleteService = async (id) => {
+  if (!confirm('Удалить услугу?')) return;
+  try {
+    await pb.collection('services').delete(id);
+    loadServices();
+  } catch (err) { alert('Ошибка удаления'); }
+};
 
 // ==================== ОТЗЫВЫ ====================
 async function loadReviews() {
@@ -103,10 +153,57 @@ async function loadReviews() {
   } catch (err) { console.error(err); }
 }
 
-window.editReview = async (id) => { /* без изменений */ };
-if (reviewForm) { /* без изменений */ }
-if (cancelReviewBtn) { /* без изменений */ }
-window.deleteReview = async (id) => { /* без изменений */ };
+window.editReview = async (id) => {
+  try {
+    const item = await pb.collection('reviews').getOne(id);
+    reviewId.value = item.id;
+    reviewName.value = item.name;
+    reviewCar.value = item.car || '';
+    reviewService.value = item.service || '';
+    reviewText.value = item.text;
+    reviewFormTitle.textContent = 'Редактировать отзыв';
+    if (cancelReviewBtn) cancelReviewBtn.classList.remove('hidden');
+  } catch (err) { alert('Ошибка загрузки отзыва'); }
+};
+
+if (reviewForm) {
+  reviewForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      name: reviewName.value.trim(),
+      car: reviewCar.value.trim(),
+      service: reviewService.value.trim(),
+      text: reviewText.value.trim()
+    };
+    try {
+      if (reviewId.value) await pb.collection('reviews').update(reviewId.value, data);
+      else await pb.collection('reviews').create(data);
+      alert('Отзыв сохранён!');
+      reviewForm.reset();
+      reviewFormTitle.textContent = 'Добавить новый отзыв';
+      if (cancelReviewBtn) cancelReviewBtn.classList.add('hidden');
+      reviewId.value = '';
+      loadReviews();
+    } catch (err) { alert('Ошибка: ' + err.message); }
+  });
+}
+
+if (cancelReviewBtn) {
+  cancelReviewBtn.addEventListener('click', () => {
+    reviewForm.reset();
+    reviewFormTitle.textContent = 'Добавить новый отзыв';
+    cancelReviewBtn.classList.add('hidden');
+    reviewId.value = '';
+  });
+}
+
+window.deleteReview = async (id) => {
+  if (!confirm('Удалить отзыв?')) return;
+  try {
+    await pb.collection('reviews').delete(id);
+    loadReviews();
+  } catch (err) { alert('Ошибка удаления'); }
+};
 
 // ==================== НАШИ РАБОТЫ ====================
 async function loadWorks() {
@@ -138,6 +235,12 @@ if (worksForm) {
   worksForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    if (!worksTitle.value.trim()) {
+      alert('Название авто обязательно!');
+      worksTitle.focus();
+      return;
+    }
+
     const formData = new FormData();
     formData.append('title', worksTitle.value.trim());
     formData.append('description', worksDesc.value.trim());
@@ -161,8 +264,8 @@ if (worksForm) {
       worksId.value = '';
       loadWorks();
     } catch (err) {
-      console.error('Полная ошибка PocketBase:', err);
-      alert('Ошибка создания записи:\n' + JSON.stringify(err.data || err.message, null, 2));
+      console.error('Полная ошибка:', err);
+      alert('Ошибка создания записи:\n' + (err.data?.message || err.message));
     }
   });
 }
@@ -184,7 +287,7 @@ window.deleteWork = async (id) => {
   } catch (err) { alert('Ошибка удаления'); }
 };
 
-// Запуск
+// ==================== ЗАПУСК ====================
 loadServices();
 loadReviews();
 loadWorks();
