@@ -235,19 +235,21 @@ if (worksForm) {
   worksForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // Защита от пустого названия
     if (!worksTitle.value.trim()) {
-      alert('Название авто обязательно!');
+      alert('Поле "Название авто" обязательно!');
       worksTitle.focus();
       return;
     }
 
     const formData = new FormData();
     formData.append('title', worksTitle.value.trim());
-    formData.append('description', worksDesc.value.trim());
+    formData.append('description', worksDesc.value.trim() || '');
 
-    if (worksImages.files.length > 0) {
-      for (let file of worksImages.files) {
-        formData.append('images', file);
+    // Добавляем фото (если выбраны)
+    if (worksImages && worksImages.files && worksImages.files.length > 0) {
+      for (let i = 0; i < worksImages.files.length; i++) {
+        formData.append('images', worksImages.files[i]);
       }
     }
 
@@ -264,8 +266,11 @@ if (worksForm) {
       worksId.value = '';
       loadWorks();
     } catch (err) {
-      console.error('Полная ошибка:', err);
-      alert('Ошибка создания записи:\n' + (err.data?.message || err.message));
+      console.error('Полная ошибка PocketBase:', err);
+      let msg = 'Ошибка создания записи.';
+      if (err.data?.message) msg += '\n' + err.data.message;
+      if (err.data?.data?.title?.message) msg += '\n' + err.data.data.title.message;
+      alert(msg);
     }
   });
 }
