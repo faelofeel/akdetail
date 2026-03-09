@@ -251,6 +251,9 @@ if (worksForm) {
       for (let i = 0; i < worksImages.files.length; i++) {
         formData.append('images', worksImages.files[i]);
       }
+    } else {
+      alert('Добавьте хотя бы одно фото!');
+      return;
     }
 
     try {
@@ -270,6 +273,7 @@ if (worksForm) {
       let msg = 'Ошибка создания записи.';
       if (err.data?.message) msg += '\n' + err.data.message;
       if (err.data?.data?.title?.message) msg += '\n' + err.data.data.title.message;
+      if (err.data?.data?.images?.message) msg += '\n' + err.data.data.images.message;
       alert(msg);
     }
   });
