@@ -109,7 +109,6 @@ if (serviceForm) {
       serviceId.value = '';
       loadServices();
     } catch (err) {
-      console.error('Ошибка сохранения услуги:', err);
       alert('Ошибка сохранения услуги: ' + err.message);
     }
   });
@@ -198,7 +197,6 @@ if (reviewForm) {
       reviewId.value = '';
       loadReviews();
     } catch (err) {
-      console.error('Ошибка сохранения отзыва:', err);
       alert('Ошибка сохранения отзыва: ' + err.message);
     }
   });
@@ -313,7 +311,9 @@ window.deleteWork = async (id) => {
   try {
     await pb.collection('works').delete(id);
     loadWorks();
-  } catch (err) { alert('Ошибка удаления'); }
+  } catch (err) {
+    alert('Ошибка удаления работы');
+  }
 };
 
 // ==================== ЗАПУСК ====================
