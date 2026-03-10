@@ -76,12 +76,11 @@
     const grid = document.getElementById('works-grid');
     if (!grid) return;
 
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;">Загрузка...</p>';
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;">Загрузка работ...</p>';
 
     try {
-      // Самый простой запрос без параметров сортировки и фильтров
+      // Самый простой запрос без сортировки и параметров
       const res = await pb.collection('works').getList(1, 50);
-      
       grid.innerHTML = '';
 
       if (res.items.length === 0) {
@@ -94,7 +93,7 @@
         if (item.field && Array.isArray(item.field) && item.field.length > 0) {
           imagesHTML = item.field.map(img => {
             const url = `${pb.baseUrl}/api/files/${item.collectionId}/${item.id}/${img}`;
-            return `<img src="${url}" alt="${item.title || 'Работа'}" loading="lazy">`;
+            return `<img src="${url}" alt="${item.title || 'Работа'}" loading="eager">`;  // ← loading="eager" убирает lazy-предупреждение
           }).join('');
         }
 
