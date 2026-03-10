@@ -10,7 +10,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// Услуги (оставляем как было)
+// Услуги (без изменений)
 const serviceForm = document.getElementById('service-form');
 const serviceId = document.getElementById('service-id');
 const serviceTitle = document.getElementById('title');
@@ -30,18 +30,18 @@ async function loadServices() {
     res.items.forEach(item => {
       const card = document.createElement('div');
       card.innerHTML = `
-        <div style="background:#222;padding:20px;border-radius:12px;">
-          ${item.image ? `<img src="${pb.files.getURL(item, item.image)}" style="width:100%;height:180px;object-fit:cover;border-radius:8px;">` : ''}
-          <h3 style="margin:15px 0 10px;">${item.title}</h3>
-          <p style="color:#aaa;">${item.description || ''}</p>
-          <strong style="color:#4a90e2;">${item.price} ₽</strong> • ${item.time || ''}
-          <div style="margin-top:15px;">
-            <button onclick="editService('${item.id}')" style="background:#4a90e2;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;">Редактировать</button>
-            <button onclick="deleteService('${item.id}')" style="background:#e74c3c;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;margin-left:10px;">Удалить</button>
+        ${item.image ? `<img src="${pb.files.getURL(item, item.image)}" alt="${item.title}">` : ''}
+        <div class="info">
+          <h3>${item.title}</h3>
+          <p>${item.description || ''}</p>
+          <strong>${item.price} ₽</strong> • ${item.time || ''}
+          <div class="actions">
+            <button onclick="editService('${item.id}')">Редактировать</button>
+            <button onclick="deleteService('${item.id}')">Удалить</button>
           </div>
         </div>
       `;
-      serviceList.appendChild(card.firstChild);
+      serviceList.appendChild(card);
     });
   } catch (err) { console.error(err); }
 }
@@ -91,10 +91,10 @@ window.deleteService = async (id) => {
   try {
     await pb.collection('services').delete(id);
     loadServices();
-  } catch (err) { alert('Ошибка удаления'); }
+  } catch (err) { alert('Ошибка удаления услуги'); }
 };
 
-// Отзывы (оставляем как было)
+// Отзывы (без изменений)
 const reviewForm = document.getElementById('review-form');
 const reviewId = document.getElementById('review-id');
 const reviewName = document.getElementById('name');
@@ -112,17 +112,20 @@ async function loadReviews() {
     res.items.forEach(item => {
       const card = document.createElement('div');
       card.innerHTML = `
-        <div style="background:#222;padding:20px;border-radius:12px;margin-bottom:20px;">
-          <h3 style="margin:0 0 10px;">${item.name}</h3>
-          <p style="color:#aaa;margin:0 0 10px;">${item.car ? item.car + ' • ' : ''}${item.service || ''}</p>
-          <p style="margin:0;">${item.text}</p>
-          <div style="margin-top:15px;">
-            <button onclick="editReview('${item.id}')" style="background:#4a90e2;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;">Редактировать</button>
-            <button onclick="deleteReview('${item.id}')" style="background:#e74c3c;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;margin-left:10px;">Удалить</button>
+        <div class="review-header">
+          <h3 class="review-name">${item.name}</h3>
+          <div class="review-meta">
+            ${item.car ? `<span class="review-car">${item.car}</span>` : ''}
+            ${item.service ? `<span class="review-service">${item.service}</span>` : ''}
           </div>
         </div>
+        <p class="review-text">${item.text}</p>
+        <div class="actions">
+          <button onclick="editReview('${item.id}')">Редактировать</button>
+          <button onclick="deleteReview('${item.id}')">Удалить</button>
+        </div>
       `;
-      reviewList.appendChild(card.firstChild);
+      reviewList.appendChild(card);
     });
   } catch (err) { console.error(err); }
 }
@@ -169,10 +172,10 @@ window.deleteReview = async (id) => {
   try {
     await pb.collection('reviews').delete(id);
     loadReviews();
-  } catch (err) { alert('Ошибка удаления'); }
+  } catch (err) { alert('Ошибка удаления отзыва'); }
 };
 
-// Наши работы — список + стили как на сайте
+// Наши работы (форма без изменений + список внизу)
 const worksForm = document.getElementById('works-form');
 const worksId = document.getElementById('works-id');
 const worksTitle = document.getElementById('works-title');
@@ -195,29 +198,24 @@ async function loadWorks() {
       let imgs = '';
       if (item.field && item.field.length) {
         imgs = item.field.map(img => `
-          <img src="${pb.files.getURL(item, img)}" style="width:100%;height:100%;object-fit:cover;">
+          <img src="${pb.files.getURL(item, img)}" alt="">
         `).join('');
       }
 
       const card = document.createElement('div');
-      card.className = 'work-card-admin';
+      card.className = 'work-card';
       card.innerHTML = `
-        <div class="work-images">
-          ${imgs || '<div style="height:220px;display:flex;align-items:center;justify-content:center;color:#666;">Нет фото</div>'}
-        </div>
+        <div class="work-images">${imgs}</div>
         <div class="work-info">
-          <h3>${item.title || 'Без названия'}</h3>
-          <p>${item.description || 'Описание отсутствует'}</p>
-          <div class="actions">
-            <button onclick="deleteWork('${item.id}')">Удалить</button>
-          </div>
+          <h3>${item.title}</h3>
+          <p>${item.description || ''}</p>
         </div>
       `;
       worksList.appendChild(card);
     });
   } catch (err) {
     console.error('Ошибка загрузки работ:', err);
-    worksList.innerHTML = '<p style="color:#e74c3c;text-align:center;">Ошибка загрузки списка работ</p>';
+    worksList.innerHTML = '<p style="text-align:center;color:#e74c3c;">Ошибка загрузки списка</p>';
   }
 }
 
@@ -225,7 +223,8 @@ worksForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   if (!worksTitle.value.trim()) {
-    alert('Название авто обязательно!');
+    alert('Поле "Название авто" обязательно!');
+    worksTitle.focus();
     return;
   }
 
@@ -238,8 +237,8 @@ worksForm.addEventListener('submit', async (e) => {
     return;
   }
 
-  for (let file of worksImages.files) {
-    formData.append('field', file);
+  for (let i = 0; i < worksImages.files.length; i++) {
+    formData.append('field', worksImages.files[i]);
   }
 
   try {
@@ -248,14 +247,14 @@ worksForm.addEventListener('submit', async (e) => {
     } else {
       await pb.collection('works').create(formData);
     }
-    alert('Работа сохранена!');
+    alert('Работа успешно сохранена!');
     worksForm.reset();
     cancelWorksBtn.classList.add('hidden');
     worksId.value = '';
     loadWorks();
   } catch (err) {
-    console.error(err);
-    alert('Ошибка сохранения: ' + (err.data?.message || err.message));
+    console.error('Ошибка:', err);
+    alert('Ошибка создания записи: ' + (err.data?.message || err.message));
   }
 });
 
@@ -265,17 +264,7 @@ cancelWorksBtn.addEventListener('click', () => {
   worksId.value = '';
 });
 
-window.deleteWork = async (id) => {
-  if (!confirm('Удалить работу?')) return;
-  try {
-    await pb.collection('works').delete(id);
-    loadWorks();
-  } catch (err) {
-    alert('Ошибка удаления');
-  }
-};
-
-// Запуск загрузки всех данных
+// Запуск всех функций
 loadServices();
 loadReviews();
 loadWorks();
