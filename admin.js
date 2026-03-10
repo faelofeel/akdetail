@@ -209,7 +209,8 @@ window.deleteReview = async (id) => {
 async function loadWorks() {
   if (!worksList) return;
   try {
-    const res = await pb.collection('works').getList(1, 50, { sort: '-created' });
+    // УБРАЛИ sort, чтобы не было 400
+    const res = await pb.collection('works').getList(1, 50);
     worksList.innerHTML = '';
     res.items.forEach(item => {
       const card = document.createElement('div');
@@ -249,7 +250,7 @@ if (worksForm) {
 
     if (worksImages && worksImages.files && worksImages.files.length > 0) {
       for (let i = 0; i < worksImages.files.length; i++) {
-        formData.append('field', worksImages.files[i]);   // ← ИМЯ ПОЛЯ В БАЗЕ = "field"
+        formData.append('field', worksImages.files[i]);
       }
     } else {
       alert('Добавьте хотя бы одно фото!');
