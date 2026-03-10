@@ -215,8 +215,8 @@ async function loadWorks() {
       const card = document.createElement('div');
       card.className = 'work-card-admin';
       let imgs = '';
-      if (item.images && item.images.length) {
-        imgs = item.images.map(img => `<img src="${pb.files.getURL(item, img)}" alt="">`).join('');
+      if (item.field && item.field.length) {
+        imgs = item.field.map(img => `<img src="${pb.files.getURL(item, img)}" alt="">`).join('');
       }
       card.innerHTML = `
         <div class="work-images">${imgs}</div>
@@ -249,7 +249,7 @@ if (worksForm) {
 
     if (worksImages && worksImages.files && worksImages.files.length > 0) {
       for (let i = 0; i < worksImages.files.length; i++) {
-        formData.append('images', worksImages.files[i]);
+        formData.append('field', worksImages.files[i]);   // ← ИСПРАВЛЕНО: поле называется "field"
       }
     } else {
       alert('Добавьте хотя бы одно фото!');
@@ -273,7 +273,7 @@ if (worksForm) {
       let msg = 'Ошибка создания записи.';
       if (err.data?.message) msg += '\n' + err.data.message;
       if (err.data?.data?.title?.message) msg += '\n' + err.data.data.title.message;
-      if (err.data?.data?.images?.message) msg += '\n' + err.data.data.images.message;
+      if (err.data?.data?.field?.message) msg += '\n' + err.data.data.field.message;
       alert(msg);
     }
   });
