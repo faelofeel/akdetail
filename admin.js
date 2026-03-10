@@ -210,7 +210,7 @@ window.deleteReview = async (id) => {
 async function loadWorks() {
   if (!worksList) return;
   try {
-    // Убрали sort полностью — это причина 400 ошибки
+    // Самый простой запрос — без sort, чтобы избежать 400
     const res = await pb.collection('works').getList(1, 50);
     worksList.innerHTML = '';
     if (res.items.length === 0) {
