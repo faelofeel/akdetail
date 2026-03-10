@@ -55,15 +55,9 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.4s ease;
-      cursor: pointer;
     }
 
-    .work-card:hover .work-slide img {
-      transform: scale(1.08);
-    }
-
-    /* Стрелки на карточке — всегда видны при >1 фото */
+    /* Стрелки на карточке — появляются ТОЛЬКО при наведении */
     .slider-arrows {
       position: absolute;
       top: 50%;
@@ -73,11 +67,17 @@
       display: flex;
       justify-content: space-between;
       padding: 0 15px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
       pointer-events: none;
     }
 
-    .slider-arrow {
+    .work-card:hover .slider-arrows {
+      opacity: 1;
       pointer-events: auto;
+    }
+
+    .slider-arrow {
       background: rgba(0,0,0,0.6);
       color: white;
       border: none;
@@ -98,7 +98,7 @@
       transform: scale(1.1);
     }
 
-    /* Точки на карточке */
+    /* Точки на карточке — тоже только при наведении */
     .slider-dots {
       position: absolute;
       bottom: 15px;
@@ -106,6 +106,12 @@
       transform: translateX(-50%);
       display: flex;
       gap: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .work-card:hover .slider-dots {
+      opacity: 1;
     }
 
     .slider-dot {
@@ -122,7 +128,7 @@
       transform: scale(1.3);
     }
 
-    /* Текст под фото — всегда виден, занимает место */
+    /* Текст под фото — всегда виден */
     .work-info {
       padding: 20px 20px 30px;
       min-height: 120px;
@@ -382,37 +388,30 @@
           `;
         }
 
-        // Карточка как единый элемент
         const card = document.createElement('div');
         card.className = 'work-card';
-
-        // Явно добавляем все части
-        const sliderDiv = document.createElement('div');
-        sliderDiv.className = 'work-slider';
-        sliderDiv.innerHTML = `
-          <div class="work-slides">${imagesHTML}</div>
-          ${arrowsHTML}
-          ${imagesArray.length > 1 ? `<div class="slider-dots">${dotsHTML}</div>` : ''}
+        card.innerHTML = `
+          <div class="work-slider">
+            <div class="work-slides">
+              ${imagesHTML}
+            </div>
+            ${arrowsHTML}
+            ${imagesArray.length > 1 ? `<div class="slider-dots">${dotsHTML}</div>` : ''}
+          </div>
+          <div class="work-info">
+            <h3>${item.title || 'Без названия'}</h3>
+            <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
+          </div>
         `;
-
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'work-info';
-        infoDiv.innerHTML = `
-          <h3>${item.title || 'Без названия'}</h3>
-          <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
-        `;
-
-        card.appendChild(sliderDiv);
-        card.appendChild(infoDiv);
 
         grid.appendChild(card);
 
         // Слайдер внутри карточки
         if (imagesArray.length > 1) {
-          const slides = sliderDiv.querySelector('.work-slides');
-          const prev = sliderDiv.querySelector('.prev');
-          const next = sliderDiv.querySelector('.next');
-          const dots = sliderDiv.querySelectorAll('.slider-dot');
+          const slides = card.querySelector('.work-slides');
+          const prev = card.querySelector('.prev');
+          const next = card.querySelector('.next');
+          const dots = card.querySelectorAll('.slider-dot');
 
           let current = 0;
           const total = imagesArray.length;
@@ -428,7 +427,7 @@
           dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
         }
 
-        // Открытие галереи
+        // Открытие галереи при клике на фото
         card.querySelectorAll('.work-slide img').forEach(img => {
           img.addEventListener('click', () => {
             galleryImages = imagesArray;
