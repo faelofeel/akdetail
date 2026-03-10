@@ -79,7 +79,8 @@
     grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;">Загрузка работ...</p>';
 
     try {
-      const res = await pb.collection('works').getList(1, 50, { sort: '-created' });
+      // УБРАЛИ sort, чтобы не было 400
+      const res = await pb.collection('works').getList(1, 50);
       grid.innerHTML = '';
 
       if (res.items.length === 0) {
@@ -91,7 +92,7 @@
         let imagesHTML = '';
         if (item.field && item.field.length) {
           imagesHTML = item.field.map(img => {
-            // ПРЯМАЯ ССЫЛКА НА PocketBase (обходит блокировку Tracking Prevention)
+            // Прямая ссылка на PocketBase (обходит все блокировки)
             const directUrl = `${pb.baseUrl}/api/files/${item.collectionId}/${item.id}/${img}`;
             return `<img src="${directUrl}" alt="${item.title}" loading="lazy">`;
           }).join('');
