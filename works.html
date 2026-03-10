@@ -151,12 +151,12 @@
       line-height: 1.5;
     }
 
-    /* Галерея при клике — фото ещё крупнее */
+    /* Галерея при клике — фото максимально большое */
     .gallery-modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.97);
+      background: rgba(0,0,0,0.98);
       z-index: 9999;
       align-items: center;
       justify-content: center;
@@ -165,9 +165,8 @@
 
     .gallery-content {
       position: relative;
-      width: 98%;
-      max-width: 1800px; /* шире, чтобы фото занимало больше места */
-      height: 98vh;
+      width: 99.5%;
+      height: 99.5vh;
     }
 
     .gallery-slides {
@@ -185,10 +184,10 @@
     }
 
     .gallery-slide img {
-      max-width: 98%;  /* ← увеличено до 98% — фото теперь почти на весь экран */
-      max-height: 98%;
+      max-width: 99.5%;
+      max-height: 99.5%;
       object-fit: contain;
-      box-shadow: 0 0 60px rgba(255,255,255,0.2);
+      box-shadow: 0 0 80px rgba(255,255,255,0.25);
     }
 
     .gallery-close {
