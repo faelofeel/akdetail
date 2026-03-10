@@ -210,7 +210,8 @@ window.deleteReview = async (id) => {
 async function loadWorks() {
   if (!worksList) return;
   try {
-    const res = await pb.collection('works').getList(1, 50, { sort: '-created' });
+    // Убрали sort полностью — это причина 400 ошибки
+    const res = await pb.collection('works').getList(1, 50);
     worksList.innerHTML = '';
     if (res.items.length === 0) {
       worksList.innerHTML = '<p style="text-align:center;color:#666;">Пока нет работ</p>';
@@ -220,7 +221,9 @@ async function loadWorks() {
     res.items.forEach(item => {
       let imgs = '';
       if (item.field && item.field.length) {
-        imgs = item.field.map(img => `<img src="${pb.files.getURL(item, img)}" alt="">`).join('');
+        imgs = item.field.map(img => `
+          <img src="${pb.files.getURL(item, img)}" alt="">
+        `).join('');
       }
 
       const card = document.createElement('div');
