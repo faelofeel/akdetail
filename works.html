@@ -79,7 +79,6 @@
     grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;">Загрузка работ...</p>';
 
     try {
-      // Самый простой запрос без сортировки и параметров
       const res = await pb.collection('works').getList(1, 50);
       grid.innerHTML = '';
 
@@ -93,7 +92,7 @@
         if (item.field && Array.isArray(item.field) && item.field.length > 0) {
           imagesHTML = item.field.map(img => {
             const url = `${pb.baseUrl}/api/files/${item.collectionId}/${item.id}/${img}`;
-            return `<img src="${url}" alt="${item.title || 'Работа'}" loading="eager">`;  // ← loading="eager" убирает lazy-предупреждение
+            return `<img src="${url}" alt="${item.title || 'Работа'}" loading="eager">`;
           }).join('');
         }
 
@@ -104,7 +103,7 @@
             </div>
             <div class="work-info">
               <h3>${item.title || 'Без названия'}</h3>
-              <p>${item.description || 'Описание отсутствует'}</p>
+              <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
             </div>
           </div>
         `;
