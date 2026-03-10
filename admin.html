@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-
 <header>
   <div class="nav">
     <a href="index.html" class="logo-link">
@@ -32,17 +31,14 @@
     <div class="hamburger"><span></span><span></span><span></span></div>
   </div>
 </header>
-
 <div class="admin-container">
   <h1>Админ-панель AKDetail</h1>
-
   <!-- Вкладки -->
   <div class="admin-tabs">
     <button class="tab-btn active" data-tab="services">Услуги</button>
     <button class="tab-btn" data-tab="reviews">Отзывы</button>
     <button class="tab-btn" data-tab="works">Наши работы</button>
   </div>
-
   <!-- Услуги -->
   <div id="tab-services" class="tab-content active">
     <h2>Управление услугами</h2>
@@ -65,7 +61,6 @@
     <h3>Список услуг</h3>
     <div class="service-grid" id="service-list"></div>
   </div>
-
   <!-- Отзывы -->
   <div id="tab-reviews" class="tab-content">
     <h2>Управление отзывами</h2>
@@ -86,7 +81,6 @@
     <h3>Список отзывов</h3>
     <div class="review-grid" id="review-list"></div>
   </div>
-
   <!-- Наши работы -->
   <div id="tab-works" class="tab-content">
     <h2>Управление работами</h2>
@@ -107,7 +101,6 @@
     <div class="works-grid" id="works-list"></div>
   </div>
 </div>
-
 <script src="pocketbase.umd.js"></script>
 <script src="admin.js"></script>
 </body>
