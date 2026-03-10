@@ -67,9 +67,7 @@ async function loadServices() {
       `;
       serviceList.appendChild(card);
     });
-  } catch (err) {
-    console.error('loadServices ошибка:', err);
-  }
+  } catch (err) { console.error(err); }
 }
 
 window.editService = async (id) => {
@@ -83,9 +81,7 @@ window.editService = async (id) => {
     serviceOrder.value = item.order || 0;
     serviceFormTitle.textContent = 'Редактировать услугу';
     if (cancelServiceBtn) cancelServiceBtn.classList.remove('hidden');
-  } catch (err) {
-    alert('Ошибка загрузки услуги');
-  }
+  } catch (err) { alert('Ошибка загрузки услуги'); }
 };
 
 if (serviceForm) {
@@ -108,9 +104,7 @@ if (serviceForm) {
       if (cancelServiceBtn) cancelServiceBtn.classList.add('hidden');
       serviceId.value = '';
       loadServices();
-    } catch (err) {
-      alert('Ошибка сохранения услуги: ' + err.message);
-    }
+    } catch (err) { alert('Ошибка: ' + err.message); }
   });
 }
 
@@ -128,9 +122,7 @@ window.deleteService = async (id) => {
   try {
     await pb.collection('services').delete(id);
     loadServices();
-  } catch (err) {
-    alert('Ошибка удаления услуги');
-  }
+  } catch (err) { alert('Ошибка удаления услуги'); }
 };
 
 // ==================== ОТЗЫВЫ ====================
@@ -158,9 +150,7 @@ async function loadReviews() {
       `;
       reviewList.appendChild(card);
     });
-  } catch (err) {
-    console.error('Ошибка загрузки отзывов:', err);
-  }
+  } catch (err) { console.error(err); }
 }
 
 window.editReview = async (id) => {
@@ -173,9 +163,7 @@ window.editReview = async (id) => {
     reviewText.value = item.text;
     reviewFormTitle.textContent = 'Редактировать отзыв';
     if (cancelReviewBtn) cancelReviewBtn.classList.remove('hidden');
-  } catch (err) {
-    alert('Ошибка загрузки отзыва');
-  }
+  } catch (err) { alert('Ошибка загрузки отзыва'); }
 };
 
 if (reviewForm) {
@@ -196,9 +184,7 @@ if (reviewForm) {
       if (cancelReviewBtn) cancelReviewBtn.classList.add('hidden');
       reviewId.value = '';
       loadReviews();
-    } catch (err) {
-      alert('Ошибка сохранения отзыва: ' + err.message);
-    }
+    } catch (err) { alert('Ошибка: ' + err.message); }
   });
 }
 
@@ -216,9 +202,7 @@ window.deleteReview = async (id) => {
   try {
     await pb.collection('reviews').delete(id);
     loadReviews();
-  } catch (err) {
-    alert('Ошибка удаления отзыва');
-  }
+  } catch (err) { alert('Ошибка удаления отзыва'); }
 };
 
 // ==================== НАШИ РАБОТЫ ====================
@@ -253,7 +237,6 @@ if (worksForm) {
   worksForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Защита от пустого названия
     if (!worksTitle.value.trim()) {
       alert('Поле "Название авто" обязательно!');
       worksTitle.focus();
@@ -264,7 +247,6 @@ if (worksForm) {
     formData.append('title', worksTitle.value.trim());
     formData.append('description', worksDesc.value.trim() || '');
 
-    // Добавляем фото (если выбраны)
     if (worksImages && worksImages.files && worksImages.files.length > 0) {
       for (let i = 0; i < worksImages.files.length; i++) {
         formData.append('images', worksImages.files[i]);
@@ -272,6 +254,12 @@ if (worksForm) {
     } else {
       alert('Добавьте хотя бы одно фото!');
       return;
+    }
+
+    // === ДЛЯ ОТЛАДКИ ===
+    console.log('Отправляемые данные:');
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
     }
 
     try {
@@ -311,9 +299,7 @@ window.deleteWork = async (id) => {
   try {
     await pb.collection('works').delete(id);
     loadWorks();
-  } catch (err) {
-    alert('Ошибка удаления работы');
-  }
+  } catch (err) { alert('Ошибка удаления работы'); }
 };
 
 // ==================== ЗАПУСК ====================
