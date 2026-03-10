@@ -249,7 +249,7 @@ if (worksForm) {
 
     if (worksImages && worksImages.files && worksImages.files.length > 0) {
       for (let i = 0; i < worksImages.files.length; i++) {
-        formData.append('field', worksImages.files[i]);   // ← ИСПРАВЛЕНО: поле называется "field"
+        formData.append('field', worksImages.files[i]);   // ← ИМЯ ПОЛЯ В БАЗЕ = "field"
       }
     } else {
       alert('Добавьте хотя бы одно фото!');
