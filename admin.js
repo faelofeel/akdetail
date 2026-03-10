@@ -256,12 +256,6 @@ if (worksForm) {
       return;
     }
 
-    // === ДЛЯ ОТЛАДКИ ===
-    console.log('Отправляемые данные:');
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
-
     try {
       if (worksId.value) {
         await pb.collection('works').update(worksId.value, formData);
