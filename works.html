@@ -76,10 +76,12 @@
 
   async function loadWorks() {
     const grid = document.getElementById('works-grid');
+    if (!grid) return;
+
     grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;">Загрузка работ...</p>';
 
     try {
-      // УБРАЛИ sort, чтобы не было 400
+      // Убрали sort полностью — это главная причина 400
       const res = await pb.collection('works').getList(1, 50);
       grid.innerHTML = '';
 
@@ -92,7 +94,6 @@
         let imagesHTML = '';
         if (item.field && item.field.length) {
           imagesHTML = item.field.map(img => {
-            // Прямая ссылка на PocketBase (обходит все блокировки)
             const directUrl = `${pb.baseUrl}/api/files/${item.collectionId}/${item.id}/${img}`;
             return `<img src="${directUrl}" alt="${item.title}" loading="lazy">`;
           }).join('');
@@ -112,7 +113,7 @@
         grid.innerHTML += card;
       });
     } catch (err) {
-      console.error(err);
+      console.error('Ошибка загрузки работ:', err);
       grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#e74c3c;">Не удалось загрузить работы</p>';
     }
   }
