@@ -69,8 +69,6 @@
   </div>
 </footer>
 
-<script src="script.js"></script>
-
 <script>
   const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
@@ -78,11 +76,12 @@
     const grid = document.getElementById('works-grid');
     if (!grid) return;
 
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;">Загрузка работ...</p>';
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;">Загрузка...</p>';
 
     try {
-      // Убрали sort полностью — это главная причина 400
+      // Самый простой запрос без параметров сортировки и фильтров
       const res = await pb.collection('works').getList(1, 50);
+      
       grid.innerHTML = '';
 
       if (res.items.length === 0) {
@@ -92,29 +91,34 @@
 
       res.items.forEach(item => {
         let imagesHTML = '';
-        if (item.field && item.field.length) {
+        if (item.field && Array.isArray(item.field) && item.field.length > 0) {
           imagesHTML = item.field.map(img => {
-            const directUrl = `${pb.baseUrl}/api/files/${item.collectionId}/${item.id}/${img}`;
-            return `<img src="${directUrl}" alt="${item.title}" loading="lazy">`;
+            const url = `${pb.baseUrl}/api/files/${item.collectionId}/${item.id}/${img}`;
+            return `<img src="${url}" alt="${item.title || 'Работа'}" loading="lazy">`;
           }).join('');
         }
 
         const card = `
           <div class="work-card">
             <div class="work-images">
-              ${imagesHTML}
+              ${imagesHTML || '<p style="color:#666;">Фото отсутствует</p>'}
             </div>
             <div class="work-info">
-              <h3>${item.title}</h3>
-              <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
+              <h3>${item.title || 'Без названия'}</h3>
+              <p>${item.description || 'Описание отсутствует'}</p>
             </div>
           </div>
         `;
         grid.innerHTML += card;
       });
     } catch (err) {
-      console.error('Ошибка загрузки работ:', err);
-      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#e74c3c;">Не удалось загрузить работы</p>';
+      console.error('Ошибка загрузки:', err);
+      grid.innerHTML = `
+        <p style="grid-column:1/-1;text-align:center;color:#e74c3c;">
+          Не удалось загрузить работы<br>
+          <small>${err.message || 'Сервер вернул ошибку'}</small>
+        </p>
+      `;
     }
   }
 
