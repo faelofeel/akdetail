@@ -1,124 +1,122 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Наши работы | AKDetail Буй</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Наши работы | AKDetail Буй</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <script src="pocketbase.umd.js"></script>
 </head>
 <body>
-    <header>
-        <div class="nav">
-            <a href="index.html" class="logo-link">
-                <img src="images/logo.png" alt="AKDetail" class="logo-img">
-            </a>
-            <div class="nav-center">
-                <nav class="nav-links">
-                    <a href="index.html">Главная</a>
-                    <a href="services.html">Услуги</a>
-                    <a href="works.html" class="active">Наши работы</a>
-                    <a href="reviews.html">Отзывы</a>
-                    <a href="booking.html">Запись</a>
-                    <a href="about.html">О нас</a>
-                    <a href="contacts.html">Контакты</a>
-                </nav>
+
+<header>
+  <div class="nav">
+    <a href="index.html" class="logo-link">
+      <img src="images/logo.png" alt="AKDetail" class="logo-img">
+    </a>
+    <div class="nav-center">
+      <nav class="nav-links">
+        <a href="index.html">Главная</a>
+        <a href="services.html">Услуги</a>
+        <a href="works.html" class="active">Наши работы</a>
+        <a href="reviews.html">Отзывы</a>
+        <a href="booking.html">Запись</a>
+        <a href="about.html">О нас</a>
+        <a href="contacts.html">Контакты</a>
+      </nav>
+    </div>
+    <div class="contact-header">
+      <span class="call-us">Позвони нам:</span>
+      <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <h1>Наши работы</h1>
+    <p>До и после — реальные результаты</p>
+  </div>
+</section>
+
+<section class="works-section">
+  <div class="container">
+    <div class="works-grid" id="works-grid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">AK<span>Detail</span></div>
+      <div class="footer-links">
+        <a href="index.html">Главная</a>
+        <a href="services.html">Услуги</a>
+        <a href="works.html">Наши работы</a>
+        <a href="reviews.html">Отзывы</a>
+        <a href="booking.html">Запись</a>
+        <a href="about.html">О нас</a>
+        <a href="contacts.html">Контакты</a>
+      </div>
+      <div class="footer-info">
+        <p>г. Буй, ул. Советская, 25</p>
+        <p>+7 (920) 555-12-34</p>
+        <p>© 2020–2026 AKDetail. Все права защищены.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+
+<script>
+  const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
+
+  async function loadWorks() {
+    const grid = document.getElementById('works-grid');
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;">Загрузка работ...</p>';
+
+    try {
+      const res = await pb.collection('works').getList(1, 50, { sort: '-created' });
+      grid.innerHTML = '';
+
+      if (res.items.length === 0) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Пока нет работ</p>';
+        return;
+      }
+
+      res.items.forEach(item => {
+        let imagesHTML = '';
+        if (item.field && item.field.length) {
+          imagesHTML = item.field.map(img => 
+            `<img src="${pb.files.getURL(item, img)}" alt="${item.title}" loading="lazy">`
+          ).join('');
+        }
+
+        const card = `
+          <div class="work-card">
+            <div class="work-images">
+              ${imagesHTML}
             </div>
-            <div class="contact-header">
-                <span class="call-us">Позвони нам:</span>
-                <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
+            <div class="work-info">
+              <h3>${item.title}</h3>
+              <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
             </div>
-            <div class="hamburger"><span></span><span></span><span></span></div>
-        </div>
-    </header>
+          </div>
+        `;
+        grid.innerHTML += card;
+      });
+    } catch (err) {
+      console.error(err);
+      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#e74c3c;">Не удалось загрузить работы</p>';
+    }
+  }
 
+  // Запуск
+  loadWorks();
+</script>
 
-    <section class="page-hero small">
-        <div class="container">
-            <h1>Наши работы</h1>
-            <p>Реальные примеры до и после: полировка, керамика, химчистка и тюнинг. Убедитесь в качестве наших услуг на фото.</p>
-        </div>
-    </section>
-
-
-    <section class="services-full">
-        <div class="container">
-            <h2>Примеры наших проектов</h2>
-            <div class="grid-3">
-                <div class="service-card full">
-                    <img src="https://cleanerquickercarwash.com/wp-content/uploads/2015/04/ghosting-example3.jpg" alt="Before and After полировка кузова">
-                    <div class="service-info">
-                        <h3>Before and After полировка кузова</h3>
-                        <p>Удаление swirl-марок и голограмм на оранжевом автомобиле. Результат: идеальный блеск без дефектов.</p>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://i.ytimg.com/vi/tGnf8G8A8qU/maxresdefault.jpg" alt="Before and After чистка интерьера">
-                    <div class="service-info">
-                        <h3>Before and After чистка интерьера</h3>
-                        <p>Глубокая чистка дверных панелей и салона. Удаление грязи и восстановление чистоты.</p>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://i.ytimg.com/vi/KY-8KyRrOuE/maxresdefault.jpg" alt="Before and After керамическое покрытие">
-                    <div class="service-info">
-                        <h3>Before and After керамическое покрытие</h3>
-                        <p>Нанесение керамики на синий автомобиль. Защита от грязи и идеальный гидрофобный эффект.</p>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://durable.com/_next/image?url=https%3A%2F%2Frjdavx8ozyznxeyh.public.blob.vercel-storage.com%2Fproduction%2Fcms-medias%2Fcar-detailing-before-after-example.webp&w=3840&q=75" alt="Before and After детальный интерьер">
-                    <div class="service-info">
-                        <h3>Before and After детальный интерьер</h3>
-                        <p>Полная химчистка салона GMC. Удаление сильных загрязнений и восстановление комфорта.</p>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://chassis.imgix.net/447/447%20Halls%20Gully%20Automotive%20Paint%20Comp%202024.jpg?auto=format&fit=max&w=1200" alt="Before and After покраска автомобиля">
-                    <div class="service-info">
-                        <h3>Before and After покраска автомобиля</h3>
-                        <p>Восстановление цвета и блеска старых автомобилей через полную полировку и покраску.</p>
-                    </div>
-                </div>
-                <div class="service-card full">
-                    <img src="https://highimpactdetailing.com/wp-content/uploads/2023/02/329264841_712157163784784_5744262386200841754_n.jpg" alt="Before and After чистка сидений">
-                    <div class="service-info">
-                        <h3>Before and After чистка сидений</h3>
-                        <p>Удаление пятен и грязи с тканевых сидений. Идеальная чистота интерьера.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">AK<span>Detail</span></div>
-                <div class="footer-links">
-                    <a href="index.html">Главная</a>
-                    <a href="services.html">Услуги</a>
-                    <a href="works.html">Наши работы</a>
-                    <a href="reviews.html">Отзывы</a>
-                    <a href="booking.html">Запись</a>
-                    <a href="about.html">О нас</a>
-                    <a href="contacts.html">Контакты</a>
-                </div>
-                <div class="footer-info">
-                    <p>г. Буй, ул. Советская, 25</p>
-                    <p>+7 (920) 555-12-34</p>
-                    <p>© 2020–2026 AKDetail. Все права защищены.</p>
-                    <div class="footer-social">
-                        <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
-                        <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-    <script src="script.js"></script>
 </body>
 </html>
