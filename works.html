@@ -8,7 +8,97 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <script src="pocketbase.umd.js"></script>
   <style>
-    /* Стили для галереи (модальное окно) */
+    /* Стили слайдера внутри карточки */
+    .work-slider {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      overflow: hidden;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .work-slides {
+      display: flex;
+      transition: transform 0.5s ease;
+      height: 100%;
+    }
+
+    .work-slide {
+      flex: 0 0 100%;
+      height: 100%;
+    }
+
+    .work-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+      cursor: pointer;
+    }
+
+    .work-card:hover .work-slide img {
+      transform: scale(1.08);
+    }
+
+    .slider-arrows {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .work-card:hover .slider-arrows {
+      opacity: 1;
+    }
+
+    .slider-arrow {
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+
+    .slider-arrow:hover {
+      background: rgba(74,144,226,0.7);
+    }
+
+    .slider-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+
+    .slider-dot {
+      width: 10px;
+      height: 10px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .slider-dot.active {
+      background: #4a90e2;
+    }
+
+    /* Модальная галерея */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -223,23 +313,23 @@
           }).join('');
         }
 
-        const card = `
-          <div class="work-card">
-            <div class="work-images">
-              ${imagesHTML || '<p style="color:#666;">Фото отсутствует</p>'}
-            </div>
-            <div class="work-info">
-              <h3>${item.title || 'Без названия'}</h3>
-              <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
-            </div>
+        const card = document.createElement('div');
+        card.className = 'work-card';
+        card.innerHTML = `
+          <div class="work-images">
+            ${imagesHTML || '<p style="color:#666;">Фото отсутствует</p>'}
+          </div>
+          <div class="work-info">
+            <h3>${item.title || 'Без названия'}</h3>
+            <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
           </div>
         `;
-        grid.innerHTML += card;
 
-        // Добавляем обработчик клика по фото
+        grid.appendChild(card);
+
+        // Добавляем обработчики клика по фото (теперь на реальном элементе)
         if (imagesArray.length > 0) {
-          const cardElement = grid.lastChild;
-          cardElement.querySelectorAll('img').forEach(img => {
+          card.querySelectorAll('img').forEach(img => {
             img.addEventListener('click', () => {
               galleryImages = imagesArray;
               currentGalleryIndex = parseInt(img.dataset.index) || 0;
@@ -254,7 +344,6 @@
     }
   }
 
-  // Открытие галереи
   function openGallery() {
     const modal = document.getElementById('galleryModal');
     const slidesContainer = document.getElementById('gallerySlides');
@@ -282,32 +371,29 @@
     });
   }
 
-  // Закрытие галереи
-  document.getElementById('galleryClose')?.addEventListener('click', () => {
+  document.getElementById('galleryClose').addEventListener('click', () => {
     document.getElementById('galleryModal').style.display = 'none';
   });
 
-  // Стрелки
-  document.getElementById('galleryPrev')?.addEventListener('click', () => {
+  document.getElementById('galleryPrev').addEventListener('click', () => {
     let newIndex = currentGalleryIndex - 1;
     if (newIndex < 0) newIndex = galleryImages.length - 1;
     goToSlide(newIndex);
   });
 
-  document.getElementById('galleryNext')?.addEventListener('click', () => {
+  document.getElementById('galleryNext').addEventListener('click', () => {
     let newIndex = currentGalleryIndex + 1;
     if (newIndex >= galleryImages.length) newIndex = 0;
     goToSlide(newIndex);
   });
 
-  // Клик по точкам
   document.addEventListener('click', e => {
     if (e.target.classList.contains('gallery-dot')) {
       goToSlide(parseInt(e.target.dataset.index));
     }
   });
 
-  // Запуск загрузки работ
+  // Запуск
   loadWorks();
 </script>
 
