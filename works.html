@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <script src="pocketbase.umd.js"></script>
   <style>
-    /* Карточки (оставляем как было) */
+    /* Карточки (без изменений) */
     .work-card {
       background: #1e1e1e;
       border-radius: 16px;
@@ -151,12 +151,12 @@
       line-height: 1.5;
     }
 
-    /* Галерея при клике (увеличение фото) */
+    /* Галерея при клике — фото ещё крупнее */
     .gallery-modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.95);
+      background: rgba(0,0,0,0.97);
       z-index: 9999;
       align-items: center;
       justify-content: center;
@@ -165,9 +165,9 @@
 
     .gallery-content {
       position: relative;
-      width: 95%;
-      max-width: 1600px; /* больше, чтобы фото было крупнее */
-      height: 95vh;
+      width: 98%;
+      max-width: 1800px; /* шире, чтобы фото занимало больше места */
+      height: 98vh;
     }
 
     .gallery-slides {
@@ -185,10 +185,10 @@
     }
 
     .gallery-slide img {
-      max-width: 95%;
-      max-height: 95%;
+      max-width: 98%;  /* ← увеличено до 98% — фото теперь почти на весь экран */
+      max-height: 98%;
       object-fit: contain;
-      box-shadow: 0 0 40px rgba(255,255,255,0.15);
+      box-shadow: 0 0 60px rgba(255,255,255,0.2);
     }
 
     .gallery-close {
@@ -199,7 +199,7 @@
       font-size: 40px;
       cursor: pointer;
       background: rgba(0,0,0,0.6);
-      width: 55px; /* меньше */
+      width: 55px;
       height: 55px;
       border-radius: 50%;
       display: flex;
@@ -220,7 +220,7 @@
       background: rgba(0,0,0,0.7);
       color: white;
       border: none;
-      width: 60px; /* меньше */
+      width: 60px;
       height: 60px;
       border-radius: 50%;
       font-size: 32px;
