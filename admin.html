@@ -3,41 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AKDetail Admin</title>
+  <title>Админ-панель | AKDetail</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <script src="pocketbase.umd.js"></script>
+  <style>
+    body { font-family: 'Montserrat', sans-serif; background: #111; color: #eee; margin: 0; padding: 0; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
+    .tab-btn { background: #222; color: #aaa; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; }
+    .tab-btn.active { background: #4a90e2; color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .section-title { font-size: 28px; margin-bottom: 20px; color: #fff; }
+    form { background: #1a1a1a; padding: 30px; border-radius: 12px; margin-bottom: 40px; }
+    label { display: block; margin: 15px 0 8px; color: #ccc; }
+    input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #444; border-radius: 8px; color: white; font-size: 16px; }
+    input[type="file"] { padding: 8px; }
+    button { background: #4a90e2; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: background 0.3s; }
+    button:hover { background: #357abd; }
+    .btn-cancel { background: #555; margin-left: 10px; }
+    .btn-cancel:hover { background: #444; }
+    .works-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 30px; }
+    .work-card-admin {
+      background: #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      transition: all 0.3s;
+      border: 1px solid #2a2a2a;
+    }
+    .work-card-admin:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.7); border-color: #4a90e2; }
+    .work-images { height: 220px; overflow: hidden; position: relative; }
+    .work-images img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .work-card-admin:hover .work-images img { transform: scale(1.05); }
+    .work-info { padding: 20px; }
+    .work-info h3 { margin: 0 0 12px; font-size: 20px; color: #fff; }
+    .work-info p { margin: 0 0 15px; color: #aaa; font-size: 15px; line-height: 1.5; }
+    .actions { display: flex; justify-content: center; gap: 15px; }
+    .actions button { background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: background 0.3s; }
+    .actions button:hover { background: #c0392b; }
+  </style>
 </head>
 <body>
 
-<header>
-  <div class="nav">
-    <a href="index.html" class="logo-link">
-      <img src="images/logo.png" alt="AKDetail" class="logo-img">
-    </a>
-    <div class="nav-center">
-      <nav class="nav-links">
-        <a href="index.html">Главная</a>
-        <a href="services.html">Услуги</a>
-        <a href="works.html">Наши работы</a>
-        <a href="reviews.html">Отзывы</a>
-        <a href="booking.html">Запись</a>
-        <a href="about.html">О нас</a>
-        <a href="contacts.html">Контакты</a>
-      </nav>
-    </div>
-    <div class="contact-header">
-      <span class="call-us">Позвони нам:</span>
-      <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
-    </div>
-    <div class="hamburger"><span></span><span></span><span></span></div>
-  </div>
-</header>
+<div class="container">
+  <h1 style="text-align:center; margin:40px 0 30px;">Админ-панель AKDetail</h1>
 
-<div class="admin-container">
-  <h1>Админ-панель AKDetail</h1>
-
-  <!-- Вкладки -->
-  <div class="admin-tabs">
+  <div class="tabs">
     <button class="tab-btn active" data-tab="services">Услуги</button>
     <button class="tab-btn" data-tab="reviews">Отзывы</button>
     <button class="tab-btn" data-tab="works">Наши работы</button>
@@ -45,70 +57,72 @@
 
   <!-- Услуги -->
   <div id="tab-services" class="tab-content active">
-    <h2>Управление услугами</h2>
-    <div class="service-form">
-      <h3 id="service-form-title">Добавить новую услугу</h3>
-      <form id="service-form">
-        <input type="hidden" id="service-id">
-        <div class="form-group"><label>Название услуги *</label><input type="text" id="title" required></div>
-        <div class="form-group"><label>Описание</label><textarea id="description" rows="4"></textarea></div>
-        <div class="form-group"><label>Цена *</label><input type="text" id="price" required></div>
-        <div class="form-group"><label>Время выполнения *</label><input type="text" id="time" required></div>
-        <div class="form-group"><label>Фото услуги</label><input type="file" id="image" accept="image/*"></div>
-        <div class="form-group"><label>Порядок отображения</label><input type="number" id="order" value="0"></div>
-        <div class="form-actions">
-          <button type="submit" class="btn-save">Сохранить услугу</button>
-          <button type="button" id="cancel-service-edit" class="btn-cancel hidden">Отмена</button>
-        </div>
-      </form>
-    </div>
-    <h3>Список услуг</h3>
-    <div class="service-grid" id="service-list"></div>
+    <h2 class="section-title">Услуги</h2>
+    <form id="service-form">
+      <input type="hidden" id="service-id">
+      <label for="title">Название услуги</label>
+      <input type="text" id="title" required>
+      <label for="description">Описание</label>
+      <textarea id="description" rows="4"></textarea>
+      <label for="price">Цена (₽)</label>
+      <input type="text" id="price" required>
+      <label for="time">Время выполнения</label>
+      <input type="text" id="time">
+      <label for="order">Порядок (число)</label>
+      <input type="number" id="order" value="0">
+      <label for="image">Фото</label>
+      <input type="file" id="image" accept="image/*">
+      <div style="margin-top:20px;">
+        <button type="submit" class="btn-save">Сохранить</button>
+        <button type="button" id="cancel-service-edit" class="btn-cancel hidden">Отмена</button>
+      </div>
+    </form>
+    <div id="service-list" class="services-grid"></div>
   </div>
 
   <!-- Отзывы -->
   <div id="tab-reviews" class="tab-content">
-    <h2>Управление отзывами</h2>
-    <div class="service-form">
-      <h3 id="review-form-title">Добавить новый отзыв</h3>
-      <form id="review-form">
-        <input type="hidden" id="review-id">
-        <div class="form-group"><label>Имя клиента *</label><input type="text" id="name" required></div>
-        <div class="form-group"><label>Марка авто</label><input type="text" id="car"></div>
-        <div class="form-group"><label>Услуга</label><input type="text" id="service"></div>
-        <div class="form-group"><label>Текст отзыва *</label><textarea id="text" rows="6" required></textarea></div>
-        <div class="form-actions">
-          <button type="submit" class="btn-save">Сохранить отзыв</button>
-          <button type="button" id="cancel-review-edit" class="btn-cancel hidden">Отмена</button>
-        </div>
-      </form>
-    </div>
-    <h3>Список отзывов</h3>
-    <div class="review-grid" id="review-list"></div>
+    <h2 class="section-title">Отзывы</h2>
+    <form id="review-form">
+      <input type="hidden" id="review-id">
+      <label for="name">Имя</label>
+      <input type="text" id="name" required>
+      <label for="car">Авто</label>
+      <input type="text" id="car">
+      <label for="service">Услуга</label>
+      <input type="text" id="service">
+      <label for="text">Текст отзыва</label>
+      <textarea id="text" rows="5" required></textarea>
+      <div style="margin-top:20px;">
+        <button type="submit">Сохранить</button>
+        <button type="button" id="cancel-review-edit" class="btn-cancel hidden">Отмена</button>
+      </div>
+    </form>
+    <div id="review-list"></div>
   </div>
 
   <!-- Наши работы -->
   <div id="tab-works" class="tab-content">
-    <h2>Управление работами</h2>
-    <div class="service-form">
-      <h3 id="works-form-title">Добавить новую работу</h3>
-      <form id="works-form">
-        <input type="hidden" id="works-id">
-        <div class="form-group"><label>Название авто *</label><input type="text" id="works-title" required></div>
-        <div class="form-group"><label>Описание</label><textarea id="works-description" rows="4"></textarea></div>
-        <div class="form-group"><label>Фото до/после (можно несколько)</label><input type="file" id="works-images" accept="image/*" multiple></div>
-        <div class="form-actions">
-          <button type="submit" class="btn-save">Сохранить работу</button>
-          <button type="button" id="cancel-works-edit" class="btn-cancel hidden">Отмена</button>
-        </div>
-      </form>
-    </div>
-    <h3>Список работ</h3>
-    <div class="works-grid" id="works-list"></div>
+    <h2 class="section-title">Наши работы</h2>
+    <form id="works-form">
+      <input type="hidden" id="works-id">
+      <label for="works-title">Название авто</label>
+      <input type="text" id="works-title" required>
+      <label for="works-description">Описание</label>
+      <textarea id="works-description" rows="4"></textarea>
+      <label for="works-images">Фото (можно несколько)</label>
+      <input type="file" id="works-images" accept="image/*" multiple>
+      <div style="margin-top:20px;">
+        <button type="submit" class="btn-save">Сохранить работу</button>
+        <button type="button" id="cancel-works-edit" class="btn-cancel hidden">Отмена</button>
+      </div>
+    </form>
+
+    <h3 style="margin:40px 0 20px;">Список работ (как на сайте)</h3>
+    <div id="works-list" class="works-grid"></div>
   </div>
 </div>
 
-<script src="pocketbase.umd.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>
