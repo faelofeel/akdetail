@@ -119,16 +119,17 @@
       transform: scale(1.3);
     }
 
-    /* Текст под фото — всегда отображается */
+    /* Текст под фото — всегда виден */
     .work-info {
-      padding: 20px;
-      background: #1e1e1e;
+      padding: 20px 20px 30px;
+      min-height: 120px;
     }
 
     .work-info h3 {
       font-size: 22px;
       margin: 0 0 12px;
       color: #fff;
+      font-weight: 700;
     }
 
     .work-info p {
@@ -138,7 +139,7 @@
       line-height: 1.5;
     }
 
-    /* Галерея (увеличение) */
+    /* Галерея при клике */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -357,86 +358,73 @@
               <img src="${url}" alt="${item.title || 'Работа'}" loading="eager" data-index="${index}">
             </div>
           `).join('');
-
-          let dotsHTML = '';
-          let arrowsHTML = '';
-
-          if (imagesArray.length > 1) {
-            dotsHTML = imagesArray.map((_, i) => `
-              <span class="slider-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
-            `).join('');
-
-            arrowsHTML = `
-              <div class="slider-arrows">
-                <button class="slider-arrow prev">←</button>
-                <button class="slider-arrow next">→</button>
-              </div>
-            `;
-          }
-
-          const card = document.createElement('div');
-          card.className = 'work-card';
-
-          card.innerHTML = `
-            <div class="work-slider">
-              <div class="work-slides">
-                ${imagesHTML || '<p style="color:#666;">Фото отсутствует</p>'}
-              </div>
-              ${arrowsHTML}
-              ${imagesArray.length > 1 ? `<div class="slider-dots">${dotsHTML}</div>` : ''}
-            </div>
-            <div class="work-info">
-              <h3>${item.title || 'Без названия'}</h3>
-              <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
-            </div>
-          `;
-
-          grid.appendChild(card);
-
-          // Слайдер внутри карточки (листание фото)
-          if (imagesArray.length > 1) {
-            const slides = card.querySelector('.work-slides');
-            const prev = card.querySelector('.prev');
-            const next = card.querySelector('.next');
-            const dots = card.querySelectorAll('.slider-dot');
-
-            let current = 0;
-            const total = imagesArray.length;
-
-            function goTo(index) {
-              current = index;
-              slides.style.transform = `translateX(-${current * 100}%)`;
-              dots.forEach((d, i) => d.classList.toggle('active', i === current));
-            }
-
-            prev.addEventListener('click', () => goTo((current - 1 + total) % total));
-            next.addEventListener('click', () => goTo((current + 1) % total));
-            dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
-          }
-
-          // Открытие большой галереи при клике на фото
-          card.querySelectorAll('.work-slide img').forEach(img => {
-            img.addEventListener('click', () => {
-              galleryImages = imagesArray;
-              currentGalleryIndex = parseInt(img.dataset.index) || 0;
-              openGallery();
-            });
-          });
         } else {
-          // Если фото нет — всё равно показываем карточку с текстом
-          const card = document.createElement('div');
-          card.className = 'work-card';
-          card.innerHTML = `
-            <div class="work-images">
-              <p style="color:#666;padding-top:100px;">Фото отсутствует</p>
-            </div>
-            <div class="work-info">
-              <h3>${item.title || 'Без названия'}</h3>
-              <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
+          imagesHTML = '<p style="color:#666;padding-top:100px;">Фото отсутствует</p>';
+        }
+
+        let dotsHTML = '';
+        let arrowsHTML = '';
+
+        if (imagesArray.length > 1) {
+          dotsHTML = imagesArray.map((_, i) => `
+            <span class="slider-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
+          `).join('');
+
+          arrowsHTML = `
+            <div class="slider-arrows">
+              <button class="slider-arrow prev">←</button>
+              <button class="slider-arrow next">→</button>
             </div>
           `;
-          grid.appendChild(card);
         }
+
+        const card = document.createElement('div');
+        card.className = 'work-card';
+        card.innerHTML = `
+          <div class="work-slider">
+            <div class="work-slides">
+              ${imagesHTML}
+            </div>
+            ${arrowsHTML}
+            ${imagesArray.length > 1 ? `<div class="slider-dots">${dotsHTML}</div>` : ''}
+          </div>
+          <div class="work-info">
+            <h3>${item.title || 'Без названия'}</h3>
+            <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
+          </div>
+        `;
+
+        grid.appendChild(card);
+
+        // Слайдер внутри карточки (если несколько фото)
+        if (imagesArray.length > 1) {
+          const slides = card.querySelector('.work-slides');
+          const prev = card.querySelector('.prev');
+          const next = card.querySelector('.next');
+          const dots = card.querySelectorAll('.slider-dot');
+
+          let current = 0;
+          const total = imagesArray.length;
+
+          function goTo(index) {
+            current = index;
+            slides.style.transform = `translateX(-${current * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === current));
+          }
+
+          prev.addEventListener('click', () => goTo((current - 1 + total) % total));
+          next.addEventListener('click', () => goTo((current + 1) % total));
+          dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+        }
+
+        // Открытие галереи при клике на фото
+        card.querySelectorAll('.work-slide img').forEach(img => {
+          img.addEventListener('click', () => {
+            galleryImages = imagesArray;
+            currentGalleryIndex = parseInt(img.dataset.index) || 0;
+            openGallery();
+          });
+        });
       });
     } catch (err) {
       console.error('Ошибка:', err);
@@ -491,7 +479,7 @@
     }
   });
 
-  // Запуск загрузки работ
+  // Запуск
   loadWorks();
 </script>
 
