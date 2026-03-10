@@ -151,7 +151,7 @@
       line-height: 1.5;
     }
 
-    /* Галерея — фото ровно 60% экрана */
+    /* Галерея — фото без чёрных полос, 60% экрана */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -181,16 +181,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #000; /* чёрный фон на случай, если фото меньше */
     }
 
     .gallery-slide img {
       width: 60vw;           /* 60% ширины экрана */
-      max-width: 60vw;
       height: 60vh;          /* 60% высоты экрана */
+      max-width: 60vw;
       max-height: 60vh;
-      object-fit: contain;
+      object-fit: contain;   /* сохраняем пропорции, без обрезки */
       box-shadow: 0 0 80px rgba(255,255,255,0.25);
-      background: #000;      /* чёрный фон для маленьких фото */
     }
 
     .gallery-close {
