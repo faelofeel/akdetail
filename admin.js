@@ -71,10 +71,60 @@ async function loadServices() {
   } catch (err) { console.error(err); }
 }
 
-window.editService = async (id) => { /* твой старый код */ };
-if (serviceForm) { /* твой старый код */ }
-if (cancelServiceBtn) { /* твой старый код */ }
-window.deleteService = async (id) => { /* твой старый код */ };
+window.editService = async (id) => {
+  try {
+    const item = await pb.collection('services').getOne(id);
+    serviceId.value = item.id;
+    serviceTitle.value = item.title;
+    serviceDesc.value = item.description || '';
+    servicePrice.value = item.price;
+    serviceTime.value = item.time || '';
+    serviceOrder.value = item.order || 0;
+    serviceFormTitle.textContent = 'Редактировать услугу';
+    cancelServiceBtn.classList.remove('hidden');
+  } catch (err) { alert('Ошибка загрузки услуги'); }
+};
+
+if (serviceForm) {
+  serviceForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('title', serviceTitle.value);
+    formData.append('description', serviceDesc.value);
+    formData.append('price', servicePrice.value.trim());
+    formData.append('time', serviceTime.value);
+    formData.append('order', serviceOrder.value || 0);
+    if (serviceImage.files[0]) formData.append('image', serviceImage.files[0]);
+
+    try {
+      if (serviceId.value) await pb.collection('services').update(serviceId.value, formData);
+      else await pb.collection('services').create(formData);
+      alert('Услуга сохранена!');
+      serviceForm.reset();
+      serviceFormTitle.textContent = 'Добавить новую услугу';
+      cancelServiceBtn.classList.add('hidden');
+      serviceId.value = '';
+      loadServices();
+    } catch (err) { alert('Ошибка: ' + err.message); }
+  });
+}
+
+if (cancelServiceBtn) {
+  cancelServiceBtn.addEventListener('click', () => {
+    serviceForm.reset();
+    serviceFormTitle.textContent = 'Добавить новую услугу';
+    cancelServiceBtn.classList.add('hidden');
+    serviceId.value = '';
+  });
+}
+
+window.deleteService = async (id) => {
+  if (!confirm('Удалить услугу?')) return;
+  try {
+    await pb.collection('services').delete(id);
+    loadServices();
+  } catch (err) { alert('Ошибка удаления услуги'); }
+};
 
 // ==================== ОТЗЫВЫ ====================
 async function loadReviews() {
@@ -104,10 +154,57 @@ async function loadReviews() {
   } catch (err) { console.error(err); }
 }
 
-window.editReview = async (id) => { /* твой старый код */ };
-if (reviewForm) { /* твой старый код */ }
-if (cancelReviewBtn) { /* твой старый код */ }
-window.deleteReview = async (id) => { /* твой старый код */ };
+window.editReview = async (id) => {
+  try {
+    const item = await pb.collection('reviews').getOne(id);
+    reviewId.value = item.id;
+    reviewName.value = item.name;
+    reviewCar.value = item.car || '';
+    reviewService.value = item.service || '';
+    reviewText.value = item.text;
+    reviewFormTitle.textContent = 'Редактировать отзыв';
+    cancelReviewBtn.classList.remove('hidden');
+  } catch (err) { alert('Ошибка загрузки отзыва'); }
+};
+
+if (reviewForm) {
+  reviewForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      name: reviewName.value.trim(),
+      car: reviewCar.value.trim(),
+      service: reviewService.value.trim(),
+      text: reviewText.value.trim()
+    };
+    try {
+      if (reviewId.value) await pb.collection('reviews').update(reviewId.value, data);
+      else await pb.collection('reviews').create(data);
+      alert('Отзыв сохранён!');
+      reviewForm.reset();
+      reviewFormTitle.textContent = 'Добавить новый отзыв';
+      cancelReviewBtn.classList.add('hidden');
+      reviewId.value = '';
+      loadReviews();
+    } catch (err) { alert('Ошибка: ' + err.message); }
+  });
+}
+
+if (cancelReviewBtn) {
+  cancelReviewBtn.addEventListener('click', () => {
+    reviewForm.reset();
+    reviewFormTitle.textContent = 'Добавить новый отзыв';
+    cancelReviewBtn.classList.add('hidden');
+    reviewId.value = '';
+  });
+}
+
+window.deleteReview = async (id) => {
+  if (!confirm('Удалить отзыв?')) return;
+  try {
+    await pb.collection('reviews').delete(id);
+    loadReviews();
+  } catch (err) { alert('Ошибка удаления отзыва'); }
+};
 
 // ==================== НАШИ РАБОТЫ ====================
 async function loadWorks() {
@@ -123,7 +220,9 @@ async function loadWorks() {
     res.items.forEach(item => {
       let imgsHTML = '';
       if (item.field && item.field.length) {
-        imgsHTML = item.field.map(img => `<img src="${pb.files.getURL(item, img)}" alt="">`).join('');
+        imgsHTML = item.field.map(img => `
+          <img src="${pb.files.getURL(item, img)}" alt="">
+        `).join('');
       }
 
       const card = document.createElement('div');
@@ -133,8 +232,6 @@ async function loadWorks() {
         <div class="work-info">
           <h3>${item.title || 'Без названия'}</h3>
           <p>${item.description || ''}</p>
-          
-          <!-- Кнопки с красивым отступом от текста -->
           <div class="actions" style="margin-top: 25px;">
             <button onclick="editWork('${item.id}')" class="btn-edit">Редактировать</button>
             <button onclick="deleteWork('${item.id}')" class="btn-delete">Удалить</button>
@@ -163,24 +260,50 @@ window.editWork = async (id) => {
 if (worksForm) {
   worksForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!worksTitle.value.trim()) { alert('Название авто обязательно!'); return; }
-    if (!worksImages.files.length) { alert('Добавьте хотя бы одно фото!'); return; }
+    if (!worksTitle.value.trim()) {
+      alert('Поле "Название авто" обязательно!');
+      worksTitle.focus();
+      return;
+    }
+    if (!worksImages.files.length) {
+      alert('Добавьте хотя бы одно фото!');
+      return;
+    }
+
+    const originalText = worksSubmitBtn ? worksSubmitBtn.textContent : 'Сохранить работу';
+    if (worksSubmitBtn) {
+      worksSubmitBtn.disabled = true;
+      worksSubmitBtn.textContent = 'Сохраняем...';
+    }
 
     const formData = new FormData();
     formData.append('title', worksTitle.value.trim());
     formData.append('description', worksDesc.value.trim() || '');
-    for (let file of worksImages.files) formData.append('field', file);
+    for (let i = 0; i < worksImages.files.length; i++) {
+      formData.append('field', worksImages.files[i]);
+    }
 
     try {
-      if (worksId.value) await pb.collection('works').update(worksId.value, formData);
-      else await pb.collection('works').create(formData);
-      alert('Работа сохранена!');
+      if (worksId.value) {
+        await pb.collection('works').update(worksId.value, formData);
+      } else {
+        await pb.collection('works').create(formData);
+      }
+      alert('Работа успешно сохранена!');
       worksForm.reset();
       worksFormTitle.textContent = 'Добавить новую работу';
       cancelWorksBtn.classList.add('hidden');
       worksId.value = '';
       loadWorks();
-    } catch (err) { alert('Ошибка: ' + (err.data?.message || err.message)); }
+    } catch (err) {
+      console.error(err);
+      alert('Ошибка: ' + (err.data?.message || err.message));
+    } finally {
+      if (worksSubmitBtn) {
+        worksSubmitBtn.disabled = false;
+        worksSubmitBtn.textContent = originalText;
+      }
+    }
   });
 }
 
@@ -198,7 +321,7 @@ window.deleteWork = async (id) => {
   try {
     await pb.collection('works').delete(id);
     loadWorks();
-  } catch (err) { alert('Ошибка удаления'); }
+  } catch (err) { alert('Ошибка удаления работы'); }
 };
 
 // ==================== ЗАПУСК ====================
