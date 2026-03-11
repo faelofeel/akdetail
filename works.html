@@ -141,7 +141,7 @@
       line-height: 1.5;
     }
 
-    /* Галерея — без чёрных полос, фото на всю ширину */
+    /* Галерея — фото без чёрных полос, все прогружаются */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -174,9 +174,9 @@
     }
 
     .gallery-slide img {
-      width: 100%;              /* вся ширина экрана */
-      height: auto;             /* высота подстраивается */
-      max-height: 90vh;         /* не выходит за экран */
+      width: 100%;              /* вся ширина экрана, без полос */
+      height: auto;
+      max-height: 85vh;         /* не выходит за экран */
       object-fit: contain;
       box-shadow: 0 0 80px rgba(255,255,255,0.25);
     }
@@ -360,7 +360,7 @@
 
           imagesHTML = imagesArray.map((url, index) => `
             <div class="work-slide">
-              <img src="${url}" alt="${item.title || 'Работа'}" loading="eager" data-index="${index}">
+              <img src="${url}" alt="${item.title || 'Работа'}" loading="lazy" data-index="${index}">
             </div>
           `).join('');
 
@@ -437,12 +437,16 @@
     const slides = document.getElementById('gallerySlides');
     const dots = document.getElementById('galleryDots');
 
-    slides.innerHTML = galleryImages.map(url => `
-      <div class="gallery-slide">
-        <img src="${url}" alt="Фото работы">
-      </div>
-    `).join('');
+    // Очищаем и заполняем слайды
+    slides.innerHTML = '';
+    galleryImages.forEach(url => {
+      const slide = document.createElement('div');
+      slide.className = 'gallery-slide';
+      slide.innerHTML = `<img src="${url}" alt="Фото работы" loading="lazy">`;
+      slides.appendChild(slide);
+    });
 
+    // Точки
     dots.innerHTML = galleryImages.map((_, i) => `
       <span class="gallery-dot ${i === currentGalleryIndex ? 'active' : ''}" data-index="${i}"></span>
     `).join('');
