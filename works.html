@@ -141,7 +141,7 @@
       line-height: 1.5;
     }
 
-    /* Галерея — без чёрных полос по бокам, фон полностью чёрный */
+    /* Галерея — фон полностью чёрный, фото 55%, без полос по бокам */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -178,9 +178,10 @@
     }
 
     .gallery-slide img {
-      width: 100%;              /* вся ширина экрана */
-      height: auto;
-      max-height: 90vh;         /* не выходит за экран */
+      width: 55vw;
+      height: 55vh;
+      max-width: 55vw;
+      max-height: 55vh;
       object-fit: contain;
       box-shadow: 0 0 80px rgba(255,255,255,0.25);
     }
@@ -360,7 +361,7 @@
           });
         }
 
-        // Создаём слайдер внутри карточки через DOM (чтобы все фото точно загрузились)
+        // Создаём контейнер для слайдов
         const slidesContainer = document.createElement('div');
         slidesContainer.className = 'work-slides';
 
