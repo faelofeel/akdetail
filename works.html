@@ -361,7 +361,7 @@
           });
         }
 
-        // Создаём слайды в карточке через DOM — чтобы все фото точно загрузились
+        // Создаём слайды через DOM — чтобы все фото точно загрузились
         const slidesContainer = document.createElement('div');
         slidesContainer.className = 'work-slides';
 
@@ -373,12 +373,12 @@
             const img = document.createElement('img');
             img.src = url;
             img.alt = item.title || 'Работа';
-            img.loading = 'lazy';
+            img.loading = 'eager'; // убрали lazy, чтобы точно загрузилось сразу
             img.dataset.index = index;
 
-            // Отладка: логируем каждое фото
-            img.onload = () => console.log('Фото загружено в карточке:', url);
-            img.onerror = () => console.error('Ошибка загрузки фото в карточке:', url);
+            // Отладка загрузки
+            img.onload = () => console.log('Фото в карточке загружено:', url);
+            img.onerror = (e) => console.error('Ошибка загрузки фото в карточке:', url, e);
 
             slide.appendChild(img);
             slidesContainer.appendChild(slide);
@@ -405,17 +405,26 @@
 
         const card = document.createElement('div');
         card.className = 'work-card';
-        card.innerHTML = `
-          <div class="work-images">
-            ${slidesContainer.outerHTML}
-            ${arrowsHTML}
-            ${imagesArray.length > 1 ? `<div class="slider-dots">${dotsHTML}</div>` : ''}
-          </div>
-          <div class="work-info">
-            <h3>${item.title || 'Без названия'}</h3>
-            <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
-          </div>
+        card.appendChild(slidesContainer);
+
+        if (imagesArray.length > 1) {
+          const arrowsDiv = document.createElement('div');
+          arrowsDiv.innerHTML = arrowsHTML;
+          card.querySelector('.work-images').appendChild(arrowsDiv.firstChild);
+
+          const dotsDiv = document.createElement('div');
+          dotsDiv.className = 'slider-dots';
+          dotsDiv.innerHTML = dotsHTML;
+          card.querySelector('.work-images').appendChild(dotsDiv);
+        }
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'work-info';
+        infoDiv.innerHTML = `
+          <h3>${item.title || 'Без названия'}</h3>
+          <p>${item.description || 'Детейлинг выполнен на высшем уровне'}</p>
         `;
+        card.appendChild(infoDiv);
 
         grid.appendChild(card);
 
