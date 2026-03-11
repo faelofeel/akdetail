@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <script src="pocketbase.umd.js"></script>
   <style>
-    /* Карточки — ВСЕ ОДИНАКОВОГО РАЗМЕРА */
+    /* Карточки — одинакового размера */
     .work-card {
       background: #1e1e1e;
       border-radius: 16px;
@@ -16,9 +16,10 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
       transition: all 0.3s ease;
       border: 1px solid #2a2a2a;
+      text-align: center;
       display: flex;
       flex-direction: column;
-      height: 100%;                    /* фиксированная высота карточки */
+      height: 100%;
     }
 
     .work-card:hover {
@@ -27,9 +28,8 @@
       border-color: #4a90e2;
     }
 
-    /* Фото — фиксированная высота для всех карточек */
     .work-images {
-      height: 280px;                   /* одинаковая высота для всех */
+      height: 280px;
       overflow: hidden;
       flex-shrink: 0;
     }
@@ -39,13 +39,13 @@
       height: 100%;
       object-fit: cover;
       transition: transform 0.4s ease;
+      cursor: pointer;
     }
 
     .work-card:hover .work-images img {
       transform: scale(1.08);
     }
 
-    /* Текстовая часть — занимает оставшееся место */
     .work-info {
       padding: 20px;
       flex: 1;
@@ -67,7 +67,7 @@
       line-height: 1.5;
     }
 
-    /* Галерея при клике */
+    /* Галерея при клике — полностью рабочая */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -281,9 +281,9 @@
             return url;
           });
 
-          imagesHTML = imagesArray.map(url => `
+          imagesHTML = imagesArray.map((url, index) => `
             <div class="work-slide">
-              <img src="${url}" alt="${item.title || 'Работа'}" loading="eager">
+              <img src="${url}" alt="${item.title || 'Работа'}" loading="eager" data-index="${index}">
             </div>
           `).join('');
         } else {
@@ -301,6 +301,15 @@
         `;
 
         grid.appendChild(card);
+
+        // Открытие галереи при клике на любое фото
+        card.querySelectorAll('.work-slide img').forEach(img => {
+          img.addEventListener('click', () => {
+            galleryImages = imagesArray;
+            currentGalleryIndex = parseInt(img.dataset.index) || 0;
+            openGallery();
+          });
+        });
       });
     } catch (err) {
       console.error('Ошибка:', err);
