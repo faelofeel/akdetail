@@ -47,7 +47,7 @@
       transform: scale(1.08);
     }
 
-    /* Стрелки на карточке — появляются ТОЛЬКО при наведении */
+    /* Стрелки на карточке — только при наведении */
     .slider-arrows {
       position: absolute;
       top: 50%;
@@ -89,7 +89,7 @@
       transform: scale(1.1);
     }
 
-    /* Точки на карточке — тоже только при наведении */
+    /* Точки на карточке — только при наведении */
     .slider-dots {
       position: absolute;
       bottom: 15px;
@@ -119,7 +119,7 @@
       transform: scale(1.3);
     }
 
-    /* Текст под фото — всегда виден */
+    /* Текст под фото */
     .work-info {
       padding: 20px;
       flex: 1;
@@ -141,7 +141,7 @@
       line-height: 1.5;
     }
 
-    /* Галерея — фото одного размера */
+    /* Галерея — без чёрных полос, фото на всю ширину */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -174,10 +174,9 @@
     }
 
     .gallery-slide img {
-      width: 60vw;
-      height: 60vh;
-      max-width: 60vw;
-      max-height: 60vh;
+      width: 100%;              /* вся ширина экрана */
+      height: auto;             /* высота подстраивается */
+      max-height: 90vh;         /* не выходит за экран */
       object-fit: contain;
       box-shadow: 0 0 80px rgba(255,255,255,0.25);
     }
@@ -397,7 +396,7 @@
 
         grid.appendChild(card);
 
-        // Слайдер внутри карточки (если >1 фото)
+        // Слайдер внутри карточки
         if (imagesArray.length > 1) {
           const slides = card.querySelector('.work-slides');
           const prev = card.querySelector('.prev');
@@ -418,7 +417,7 @@
           dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
         }
 
-        // Открытие галереи при клике на фото
+        // Открытие галереи по клику на любое фото
         card.querySelectorAll('.work-slide img').forEach(img => {
           img.addEventListener('click', () => {
             galleryImages = imagesArray;
@@ -477,6 +476,16 @@
   document.addEventListener('click', e => {
     if (e.target.classList.contains('gallery-dot')) {
       goToSlide(parseInt(e.target.dataset.index));
+    }
+  });
+
+  // Выход по Esc
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('galleryModal');
+      if (modal.style.display === 'flex') {
+        modal.style.display = 'none';
+      }
     }
   });
 
