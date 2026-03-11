@@ -109,7 +109,7 @@ if (reviewForm) { /* твой старый код */ }
 if (cancelReviewBtn) { /* твой старый код */ }
 window.deleteReview = async (id) => { /* твой старый код */ };
 
-// ==================== НАШИ РАБОТЫ — карточки как на сайте + красивые кнопки ====================
+// ==================== НАШИ РАБОТЫ ====================
 async function loadWorks() {
   if (!worksList) return;
   try {
@@ -123,20 +123,19 @@ async function loadWorks() {
     res.items.forEach(item => {
       let imgsHTML = '';
       if (item.field && item.field.length) {
-        imgsHTML = item.field.map(img => `
-          <img src="${pb.files.getURL(item, img)}" alt="">
-        `).join('');
+        imgsHTML = item.field.map(img => `<img src="${pb.files.getURL(item, img)}" alt="">`).join('');
       }
 
       const card = document.createElement('div');
-      card.className = 'work-card';   // ← точно как на сайте
+      card.className = 'work-card';
       card.innerHTML = `
         <div class="work-images">${imgsHTML}</div>
         <div class="work-info">
           <h3>${item.title || 'Без названия'}</h3>
           <p>${item.description || ''}</p>
           
-          <div class="actions">
+          <!-- Кнопки с красивым отступом от текста -->
+          <div class="actions" style="margin-top: 25px;">
             <button onclick="editWork('${item.id}')" class="btn-edit">Редактировать</button>
             <button onclick="deleteWork('${item.id}')" class="btn-delete">Удалить</button>
           </div>
@@ -157,7 +156,7 @@ window.editWork = async (id) => {
     worksTitle.value = item.title || '';
     worksDesc.value = item.description || '';
     worksFormTitle.textContent = 'Редактировать работу';
-    if (cancelWorksBtn) cancelWorksBtn.classList.remove('hidden');
+    cancelWorksBtn.classList.remove('hidden');
   } catch (err) { alert('Ошибка загрузки работы'); }
 };
 
@@ -178,7 +177,7 @@ if (worksForm) {
       alert('Работа сохранена!');
       worksForm.reset();
       worksFormTitle.textContent = 'Добавить новую работу';
-      if (cancelWorksBtn) cancelWorksBtn.classList.add('hidden');
+      cancelWorksBtn.classList.add('hidden');
       worksId.value = '';
       loadWorks();
     } catch (err) { alert('Ошибка: ' + (err.data?.message || err.message)); }
