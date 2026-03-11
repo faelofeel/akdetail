@@ -141,7 +141,7 @@
       line-height: 1.5;
     }
 
-    /* Галерея — фото 55%, без чёрных полос */
+    /* Галерея — фото без чёрных полос по бокам */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -157,9 +157,6 @@
       position: relative;
       width: 100%;
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .gallery-slides {
@@ -172,16 +169,16 @@
     .gallery-slide {
       flex: 0 0 100%;
       height: 100%;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .gallery-slide img {
-      width: 55vw;
-      height: 55vh;
-      max-width: 55vw;
-      max-height: 55vh;
+      width: 100%;              /* вся ширина экрана, без полос */
+      height: auto;
+      max-height: 90vh;
       object-fit: contain;
       box-shadow: 0 0 80px rgba(255,255,255,0.25);
     }
@@ -352,7 +349,6 @@
       }
 
       res.items.forEach(item => {
-        let imagesHTML = '';
         let imagesArray = [];
         let arrowsHTML = '';
         let dotsHTML = '';
@@ -362,12 +358,24 @@
             const url = `${pb.baseUrl}/api/files/${item.collectionId}/${item.id}/${img}`;
             return url;
           });
+        }
 
-          imagesHTML = imagesArray.map((url, index) => `
-            <div class="work-slide">
-              <img src="${url}" alt="${item.title || 'Работа'}" loading="lazy" data-index="${index}">
-            </div>
-          `).join('');
+        // Создаём слайдер внутри карточки
+        const slidesContainer = document.createElement('div');
+        slidesContainer.className = 'work-slides';
+
+        if (imagesArray.length > 0) {
+          imagesArray.forEach((url, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'work-slide';
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = item.title || 'Работа';
+            img.loading = 'lazy';
+            img.dataset.index = index;
+            slide.appendChild(img);
+            slidesContainer.appendChild(slide);
+          });
 
           if (imagesArray.length > 1) {
             dotsHTML = imagesArray.map((_, i) => `
@@ -382,14 +390,14 @@
             `;
           }
         } else {
-          imagesHTML = '<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#666;">Фото отсутствует</div>';
+          slidesContainer.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#666;">Фото отсутствует</div>';
         }
 
         const card = document.createElement('div');
         card.className = 'work-card';
         card.innerHTML = `
           <div class="work-images">
-            <div class="work-slides">${imagesHTML}</div>
+            ${slidesContainer.outerHTML}
             ${arrowsHTML}
             ${imagesArray.length > 1 ? `<div class="slider-dots">${dotsHTML}</div>` : ''}
           </div>
@@ -442,7 +450,7 @@
     const slides = document.getElementById('gallerySlides');
     const dots = document.getElementById('galleryDots');
 
-    // Очищаем и добавляем все слайды вручную (чтобы точно прогрузились все фото)
+    // Очищаем и добавляем все слайды вручную
     slides.innerHTML = '';
     galleryImages.forEach((url, index) => {
       const slide = document.createElement('div');
