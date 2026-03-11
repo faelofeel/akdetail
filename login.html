@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход в админку | AKDetail</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #111; color: #fff; font-family: 'Montserrat', sans-serif; }
+    .login-box {
+      max-width: 400px;
+      margin: 100px auto;
+      background: #1e1e1e;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+      text-align: center;
+    }
+    input { width: 100%; padding: 14px; margin: 12px 0; background: #222; border: 1px solid #444; border-radius: 8px; color: white; }
+    button { width: 100%; padding: 14px; background: #4a90e2; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+    button:hover { background: #357abd; }
+    .error { color: #e74c3c; margin-top: 10px; }
+  </style>
+</head>
+<body>
+<div class="login-box">
+  <h1>Вход в админку</h1>
+  <p>Только для администратора</p>
+  
+  <input type="email" id="email" placeholder="Email" value="твой@email.com">
+  <input type="password" id="password" placeholder="Пароль">
+  <button onclick="login()">Войти</button>
+  <div id="error" class="error"></div>
+</div>
+
+<script src="pocketbase.umd.js"></script>
+<script>
+  const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
+
+  async function login() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('error');
+
+    try {
+      const authData = await pb.collection('users').authWithPassword(email, password);
+      localStorage.setItem('pb_token', authData.token);
+      localStorage.setItem('pb_user', JSON.stringify(authData.record));
+      window.location.href = 'admin.html';
+    } catch (err) {
+      errorDiv.textContent = 'Неверный email или пароль';
+    }
+  }
+
+  // Если уже авторизован — сразу на админку
+  if (localStorage.getItem('pb_token')) {
+    window.location.href = 'admin.html';
+  }
+</script>
+</body>
+</html>
