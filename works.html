@@ -141,12 +141,12 @@
       line-height: 1.5;
     }
 
-    /* Галерея — фото 55%, без чёрных полос по бокам */
+    /* Галерея — фото 55%, без чёрных полос */
     .gallery-modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.98);
+      background: #000;
       z-index: 9999;
       align-items: center;
       justify-content: center;
@@ -157,11 +157,15 @@
       position: relative;
       width: 100%;
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .gallery-slides {
       display: flex;
       height: 100%;
+      width: 100%;
       transition: transform 0.5s ease;
     }
 
@@ -174,8 +178,8 @@
     }
 
     .gallery-slide img {
-      width: 55vw;                  /* 55% ширины экрана */
-      height: 55vh;                 /* 55% высоты экрана */
+      width: 55vw;
+      height: 55vh;
       max-width: 55vw;
       max-height: 55vh;
       object-fit: contain;
@@ -438,7 +442,7 @@
     const slides = document.getElementById('gallerySlides');
     const dots = document.getElementById('galleryDots');
 
-    // Полностью перестраиваем слайды, чтобы все фото точно прогрузились
+    // Очищаем и добавляем все слайды вручную (чтобы точно прогрузились все фото)
     slides.innerHTML = '';
     galleryImages.forEach((url, index) => {
       const slide = document.createElement('div');
