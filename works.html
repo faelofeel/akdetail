@@ -361,30 +361,26 @@
           });
         }
 
-        // Создаём слайды через DOM — чтобы все фото точно загрузились
-        const slidesContainer = document.createElement('div');
-        slidesContainer.className = 'work-slides';
+        // Создаём контейнер для слайдов
+        const imagesContainer = document.createElement('div');
+        imagesContainer.className = 'work-images';
 
         if (imagesArray.length > 0) {
           imagesArray.forEach((url, index) => {
-            const slide = document.createElement('div');
-            slide.className = 'work-slide';
-
             const img = document.createElement('img');
             img.src = url;
             img.alt = item.title || 'Работа';
-            img.loading = 'eager'; // убрали lazy, чтобы точно загрузилось сразу
+            img.loading = 'eager'; // убрали lazy, чтобы точно загрузилось
             img.dataset.index = index;
 
             // Отладка загрузки
             img.onload = () => console.log('Фото в карточке загружено:', url);
-            img.onerror = (e) => console.error('Ошибка загрузки фото в карточке:', url, e);
+            img.onerror = () => console.error('Ошибка загрузки фото в карточке:', url);
 
-            slide.appendChild(img);
-            slidesContainer.appendChild(slide);
+            imagesContainer.appendChild(img);
           });
         } else {
-          slidesContainer.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#666;">Фото отсутствует</div>';
+          imagesContainer.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#666;">Фото отсутствует</div>';
         }
 
         let arrowsHTML = '';
@@ -405,18 +401,23 @@
 
         const card = document.createElement('div');
         card.className = 'work-card';
-        card.appendChild(slidesContainer);
+
+        const imagesDiv = document.createElement('div');
+        imagesDiv.className = 'work-images';
+        imagesDiv.appendChild(imagesContainer);
 
         if (imagesArray.length > 1) {
           const arrowsDiv = document.createElement('div');
           arrowsDiv.innerHTML = arrowsHTML;
-          card.querySelector('.work-images').appendChild(arrowsDiv.firstChild);
+          imagesDiv.appendChild(arrowsDiv.firstChild);
 
           const dotsDiv = document.createElement('div');
           dotsDiv.className = 'slider-dots';
           dotsDiv.innerHTML = dotsHTML;
-          card.querySelector('.work-images').appendChild(dotsDiv);
+          imagesDiv.appendChild(dotsDiv);
         }
+
+        card.appendChild(imagesDiv);
 
         const infoDiv = document.createElement('div');
         infoDiv.className = 'work-info';
@@ -430,7 +431,6 @@
 
         // Слайдер внутри карточки
         if (imagesArray.length > 1) {
-          const slides = card.querySelector('.work-slides');
           const prev = card.querySelector('.prev');
           const next = card.querySelector('.next');
           const dots = card.querySelectorAll('.slider-dot');
@@ -440,7 +440,7 @@
 
           function goTo(index) {
             current = index;
-            slides.style.transform = `translateX(-${current * 100}%)`;
+            imagesContainer.style.transform = `translateX(-${current * 100}%)`;
             dots.forEach((d, i) => d.classList.toggle('active', i === current));
           }
 
@@ -450,7 +450,7 @@
         }
 
         // Открытие галереи
-        card.querySelectorAll('.work-slide img').forEach(img => {
+        card.querySelectorAll('.work-images img').forEach(img => {
           img.addEventListener('click', () => {
             galleryImages = imagesArray;
             currentGalleryIndex = parseInt(img.dataset.index) || 0;
