@@ -141,12 +141,12 @@
       line-height: 1.5;
     }
 
-    /* Галерея — фото без чёрных полос, все прогружаются */
+    /* Галерея — фото 55%, без чёрных полос по бокам */
     .gallery-modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.95);
+      background: rgba(0,0,0,0.98);
       z-index: 9999;
       align-items: center;
       justify-content: center;
@@ -174,9 +174,10 @@
     }
 
     .gallery-slide img {
-      width: 100%;              /* вся ширина экрана, без полос */
-      height: auto;
-      max-height: 85vh;         /* не выходит за экран */
+      width: 55vw;                  /* 55% ширины экрана */
+      height: 55vh;                 /* 55% высоты экрана */
+      max-width: 55vw;
+      max-height: 55vh;
       object-fit: contain;
       box-shadow: 0 0 80px rgba(255,255,255,0.25);
     }
@@ -437,12 +438,16 @@
     const slides = document.getElementById('gallerySlides');
     const dots = document.getElementById('galleryDots');
 
-    // Очищаем и заполняем слайды
+    // Полностью перестраиваем слайды, чтобы все фото точно прогрузились
     slides.innerHTML = '';
-    galleryImages.forEach(url => {
+    galleryImages.forEach((url, index) => {
       const slide = document.createElement('div');
       slide.className = 'gallery-slide';
-      slide.innerHTML = `<img src="${url}" alt="Фото работы" loading="lazy">`;
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = 'Фото работы';
+      img.loading = 'lazy';
+      slide.appendChild(img);
       slides.appendChild(slide);
     });
 
