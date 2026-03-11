@@ -8,6 +8,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<!-- Защита входа: если нет токена — перенаправляем на login.html -->
+<script>
+  if (!localStorage.getItem('pb_token')) {
+    window.location.href = 'login.html';
+  }
+
+  function logout() {
+    localStorage.removeItem('pb_token');
+    localStorage.removeItem('pb_user');
+    window.location.href = 'login.html';
+  }
+</script>
+
 <header>
   <div class="nav">
     <a href="index.html" class="logo-link">
@@ -28,17 +42,26 @@
       <span class="call-us">Позвони нам:</span>
       <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
     </div>
+
+    <!-- Кнопка "Выйти" -->
+    <button onclick="logout()" style="background:#e74c3c;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:15px;cursor:pointer;margin-left:20px;">
+      Выйти
+    </button>
+
     <div class="hamburger"><span></span><span></span><span></span></div>
   </div>
 </header>
+
 <div class="admin-container">
   <h1>Админ-панель AKDetail</h1>
+
   <!-- Вкладки -->
   <div class="admin-tabs">
     <button class="tab-btn active" data-tab="services">Услуги</button>
     <button class="tab-btn" data-tab="reviews">Отзывы</button>
     <button class="tab-btn" data-tab="works">Наши работы</button>
   </div>
+
   <!-- Услуги -->
   <div id="tab-services" class="tab-content active">
     <h2>Управление услугами</h2>
@@ -61,6 +84,7 @@
     <h3>Список услуг</h3>
     <div class="service-grid" id="service-list"></div>
   </div>
+
   <!-- Отзывы -->
   <div id="tab-reviews" class="tab-content">
     <h2>Управление отзывами</h2>
@@ -81,6 +105,7 @@
     <h3>Список отзывов</h3>
     <div class="review-grid" id="review-list"></div>
   </div>
+
   <!-- Наши работы -->
   <div id="tab-works" class="tab-content">
     <h2>Управление работами</h2>
@@ -101,6 +126,7 @@
     <div class="works-grid" id="works-list"></div>
   </div>
 </div>
+
 <script src="pocketbase.umd.js"></script>
 <script src="admin.js"></script>
 </body>
