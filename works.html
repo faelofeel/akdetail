@@ -361,7 +361,7 @@
           });
         }
 
-        // Создаём слайды в карточке через DOM
+        // Создаём слайды в карточке через DOM — чтобы все фото точно загрузились
         const slidesContainer = document.createElement('div');
         slidesContainer.className = 'work-slides';
 
@@ -369,11 +369,17 @@
           imagesArray.forEach((url, index) => {
             const slide = document.createElement('div');
             slide.className = 'work-slide';
+
             const img = document.createElement('img');
             img.src = url;
             img.alt = item.title || 'Работа';
             img.loading = 'lazy';
             img.dataset.index = index;
+
+            // Отладка: логируем каждое фото
+            img.onload = () => console.log('Фото загружено в карточке:', url);
+            img.onerror = () => console.error('Ошибка загрузки фото в карточке:', url);
+
             slide.appendChild(img);
             slidesContainer.appendChild(slide);
           });
@@ -444,7 +450,7 @@
         });
       });
     } catch (err) {
-      console.error('Ошибка:', err);
+      console.error('Ошибка загрузки работ:', err);
       grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#e74c3c;">Не удалось загрузить работы</p>';
     }
   }
