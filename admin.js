@@ -35,7 +35,7 @@ const cancelWorksBtn = document.getElementById('cancel-works-edit');
 const worksList = document.getElementById('works-list');
 const worksSubmitBtn = worksForm ? worksForm.querySelector('.btn-save') : null;
 
-// Переменные для работы с фото при редактировании
+// Переменные для фото при редактировании
 let currentEditId = null;
 let existingImages = [];
 let newImagesToUpload = [];
@@ -248,11 +248,15 @@ async function loadWorks() {
   }
 }
 
-// Отрисовка превью фото
+// Отрисовка превью фото (с защитой от null)
 function renderWorksPreview() {
-  if (!worksPreview) return; // защита от null
+  const previewElement = document.getElementById('works-preview');
+  if (!previewElement) {
+    console.warn('Элемент #works-preview ещё не найден. Ждём открытия вкладки "Наши работы".');
+    return;
+  }
 
-  worksPreview.innerHTML = '';
+  previewElement.innerHTML = '';
 
   // Старые фото из базы
   existingImages.forEach((filename, index) => {
@@ -289,10 +293,10 @@ function renderWorksPreview() {
 
     wrap.appendChild(img);
     wrap.appendChild(delBtn);
-    worksPreview.appendChild(wrap);
+    previewElement.appendChild(wrap);
   });
 
-  // Новые файлы (ещё не загружены)
+  // Новые файлы
   newImagesToUpload.forEach((file, index) => {
     const url = URL.createObjectURL(file);
     const wrap = document.createElement('div');
@@ -327,7 +331,7 @@ function renderWorksPreview() {
 
     wrap.appendChild(img);
     wrap.appendChild(delBtn);
-    worksPreview.appendChild(wrap);
+    previewElement.appendChild(wrap);
   });
 }
 
@@ -337,18 +341,21 @@ if (worksImagesInput) {
     const files = Array.from(e.target.files);
     newImagesToUpload.push(...files);
     renderWorksPreview();
-    e.target.value = ''; // очищаем input
+    e.target.value = '';
   });
 }
 
-// Кнопка "Удалить все добавленные фото"
-document.getElementById('clear-all-photos')?.addEventListener('click', () => {
-  if (confirm('Удалить ВСЕ добавленные фотографии?')) {
-    existingImages = [];
-    newImagesToUpload = [];
-    renderWorksPreview();
-  }
-});
+// Кнопка удалить все фото
+const clearAllPhotosBtn = document.getElementById('clear-all-photos');
+if (clearAllPhotosBtn) {
+  clearAllPhotosBtn.addEventListener('click', () => {
+    if (confirm('Удалить ВСЕ добавленные фотографии?')) {
+      existingImages = [];
+      newImagesToUpload = [];
+      renderWorksPreview();
+    }
+  });
+}
 
 // Отмена редактирования
 if (cancelWorksBtn) {
@@ -373,7 +380,10 @@ window.editWork = async (id) => {
     worksDesc.value = item.description || '';
     existingImages = item.field || [];
     newImagesToUpload = [];
+
+    // Ждём открытия вкладки и рендерим превью
     renderWorksPreview();
+
     worksFormTitle.textContent = 'Редактировать работу';
     cancelWorksBtn.classList.remove('hidden');
 
@@ -400,10 +410,7 @@ if (worksForm) {
     formData.append('title', worksTitle.value.trim());
     formData.append('description', worksDesc.value.trim() || '');
 
-    // Старые фото
     existingImages.forEach(name => formData.append('field', name));
-
-    // Новые фото
     newImagesToUpload.forEach(file => formData.append('field', file));
 
     const originalText = worksSubmitBtn ? worksSubmitBtn.textContent : 'Сохранить работу';
