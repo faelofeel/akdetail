@@ -251,7 +251,10 @@ async function loadWorks() {
 // Отрисовка превью фото
 function renderWorksPreview() {
   const preview = document.getElementById('works-preview');
-  if (!preview) return;
+  if (!preview) {
+    console.log('Превью не найдено — ждём открытия вкладки');
+    return;
+  }
 
   preview.innerHTML = '';
 
@@ -378,16 +381,23 @@ window.editWork = async (id) => {
     existingImages = item.field || [];
     newImagesToUpload = [];
 
-    // Принудительно переключаем вкладку "Наши работы", если не активна
-    const worksTab = document.querySelector('.tab-btn[data-tab="works"]');
-    if (worksTab && !worksTab.classList.contains('active')) {
-      worksTab.click();
+    // Принудительно переключаем вкладку "Наши работы"
+    const worksTabBtn = document.querySelector('.tab-btn[data-tab="works"]');
+    if (worksTabBtn && !worksTabBtn.classList.contains('active')) {
+      worksTabBtn.click();
     }
 
-    // Ждём 300 мс (достаточно для переключения вкладки и рендера DOM)
-    setTimeout(() => {
-      renderWorksPreview();
-    }, 300);
+    // Ждём открытия вкладки и рендерим превью
+    const waitForTab = setInterval(() => {
+      const tabContent = document.getElementById('tab-works');
+      if (tabContent && tabContent.classList.contains('active')) {
+        clearInterval(waitForTab);
+        renderWorksPreview();
+      }
+    }, 100);
+
+    // Таймаут на случай, если вкладка не открывается
+    setTimeout(() => clearInterval(waitForTab), 3000);
 
     worksFormTitle.textContent = 'Редактировать работу';
     cancelWorksBtn.classList.remove('hidden');
@@ -395,7 +405,7 @@ window.editWork = async (id) => {
     // Прокрутка в самый верх страницы
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (err) {
-    alert('Ошибка загрузки работы: ' + (err.message || 'Неизвестная ошибка'));
+    alert('Ошибка загрузки работы');
     console.error(err);
   }
 };
