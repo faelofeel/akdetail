@@ -356,7 +356,7 @@
 
         grid.appendChild(card);
 
-        // Слайдер внутри карточки
+        // Слайдер в карточке
         if (imagesArray.length > 1) {
           const slideContainer = card.querySelector('.work-slides');
           const prevBtn = card.querySelector('.prev');
@@ -377,7 +377,7 @@
           dotBtns.forEach(dot => dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index))));
         }
 
-        // Галерея
+        // Открытие галереи
         card.querySelectorAll('.work-images img').forEach(img => {
           img.addEventListener('click', () => {
             galleryImages = imagesArray;
@@ -395,8 +395,9 @@
   function openGallery() {
     const modal = document.getElementById('galleryModal');
     const slides = document.getElementById('gallerySlides');
-    slides.innerHTML = '';
+    const dotsContainer = document.getElementById('galleryDots');
 
+    slides.innerHTML = '';
     galleryImages.forEach(url => {
       const div = document.createElement('div');
       div.className = 'gallery-slide';
@@ -404,9 +405,17 @@
       slides.appendChild(div);
     });
 
-    document.getElementById('galleryDots').innerHTML = galleryImages.map((_, i) => `
+    dotsContainer.innerHTML = galleryImages.map((_, i) => `
       <span class="gallery-dot ${i===currentGalleryIndex?'active':''}" data-index="${i}"></span>
     `).join('');
+
+    // === ТОЧКИ ТЕПЕРЬ РАБОЧИЕ ===
+    dotsContainer.querySelectorAll('.gallery-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        currentGalleryIndex = parseInt(dot.dataset.index);
+        goToSlide(currentGalleryIndex);
+      });
+    });
 
     goToSlide(currentGalleryIndex);
     modal.style.display = 'flex';
@@ -415,6 +424,10 @@
   function goToSlide(i) {
     currentGalleryIndex = i;
     document.getElementById('gallerySlides').style.transform = `translateX(-${i*100}%)`;
+
+    document.querySelectorAll('.gallery-dot').forEach(d => {
+      d.classList.toggle('active', parseInt(d.dataset.index) === i);
+    });
   }
 
   document.getElementById('galleryClose').addEventListener('click', () => document.getElementById('galleryModal').style.display = 'none');
