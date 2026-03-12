@@ -29,11 +29,17 @@ const worksForm = document.getElementById('works-form');
 const worksId = document.getElementById('works-id');
 const worksTitle = document.getElementById('works-title');
 const worksDesc = document.getElementById('works-description');
-const worksImages = document.getElementById('works-images');
+const worksImagesInput = document.getElementById('works-images');
 const worksFormTitle = document.getElementById('works-form-title');
 const cancelWorksBtn = document.getElementById('cancel-works-edit');
 const worksList = document.getElementById('works-list');
 const worksSubmitBtn = worksForm ? worksForm.querySelector('.btn-save') : null;
+const worksPreview = document.getElementById('works-preview');
+
+// Переменные для работы с фото в режиме редактирования
+let currentEditId = null;
+let existingImages = [];      // имена файлов, которые уже в базе
+let newImagesToUpload = [];   // новые файлы, выбранные сейчас
 
 // Переключение вкладок
 document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -95,7 +101,6 @@ if (serviceForm) {
     formData.append('time', serviceTime.value);
     formData.append('order', serviceOrder.value || 0);
     if (serviceImage.files[0]) formData.append('image', serviceImage.files[0]);
-
     try {
       if (serviceId.value) await pb.collection('services').update(serviceId.value, formData);
       else await pb.collection('services').create(formData);
@@ -216,7 +221,6 @@ async function loadWorks() {
       worksList.innerHTML = '<p style="text-align:center;color:#666;padding:40px;">Пока нет работ</p>';
       return;
     }
-
     res.items.forEach(item => {
       let imgsHTML = '';
       if (item.field && item.field.length) {
@@ -224,7 +228,6 @@ async function loadWorks() {
           <img src="${pb.files.getURL(item, img)}" alt="">
         `).join('');
       }
-
       const card = document.createElement('div');
       card.className = 'work-card';
       card.innerHTML = `
@@ -246,41 +249,164 @@ async function loadWorks() {
   }
 }
 
+// Отрисовка превью фото (старые + новые)
+function renderWorksPreview() {
+  worksPreview.innerHTML = '';
+
+  // Старые фото
+  existingImages.forEach((filename, index) => {
+    const url = `${pb.baseUrl}/api/files/works/${currentEditId}/${filename}`;
+    const wrap = document.createElement('div');
+    wrap.style.position = 'relative';
+    wrap.style.width = '140px';
+    wrap.style.height = '140px';
+    wrap.style.borderRadius = '8px';
+    wrap.style.overflow = 'hidden';
+
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '×';
+    delBtn.style.position = 'absolute';
+    delBtn.style.top = '4px';
+    delBtn.style.right = '4px';
+    delBtn.style.background = 'red';
+    delBtn.style.color = 'white';
+    delBtn.style.border = 'none';
+    delBtn.style.borderRadius = '50%';
+    delBtn.style.width = '24px';
+    delBtn.style.height = '24px';
+    delBtn.style.cursor = 'pointer';
+    delBtn.onclick = () => {
+      existingImages.splice(index, 1);
+      renderWorksPreview();
+    };
+
+    wrap.appendChild(img);
+    wrap.appendChild(delBtn);
+    worksPreview.appendChild(wrap);
+  });
+
+  // Новые фото
+  newImagesToUpload.forEach((file, index) => {
+    const url = URL.createObjectURL(file);
+    const wrap = document.createElement('div');
+    wrap.style.position = 'relative';
+    wrap.style.width = '140px';
+    wrap.style.height = '140px';
+    wrap.style.borderRadius = '8px';
+    wrap.style.overflow = 'hidden';
+
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '×';
+    delBtn.style.position = 'absolute';
+    delBtn.style.top = '4px';
+    delBtn.style.right = '4px';
+    delBtn.style.background = 'red';
+    delBtn.style.color = 'white';
+    delBtn.style.border = 'none';
+    delBtn.style.borderRadius = '50%';
+    delBtn.style.width = '24px';
+    delBtn.style.height = '24px';
+    delBtn.style.cursor = 'pointer';
+    delBtn.onclick = () => {
+      newImagesToUpload.splice(index, 1);
+      renderWorksPreview();
+    };
+
+    wrap.appendChild(img);
+    wrap.appendChild(delBtn);
+    worksPreview.appendChild(wrap);
+  });
+}
+
+// При выборе новых файлов
+worksImagesInput.addEventListener('change', e => {
+  const files = Array.from(e.target.files);
+  newImagesToUpload.push(...files);
+  renderWorksPreview();
+  e.target.value = ''; // очищаем input
+});
+
+// Удалить все фото
+document.getElementById('clear-all-photos')?.addEventListener('click', () => {
+  if (confirm('Удалить ВСЕ добавленные фотографии?')) {
+    existingImages = [];
+    newImagesToUpload = [];
+    renderWorksPreview();
+  }
+});
+
+// Отмена редактирования
+if (cancelWorksBtn) {
+  cancelWorksBtn.addEventListener('click', () => {
+    worksForm.reset();
+    worksFormTitle.textContent = 'Добавить новую работу';
+    cancelWorksBtn.classList.add('hidden');
+    worksId.value = '';
+    existingImages = [];
+    newImagesToUpload = [];
+    renderWorksPreview();
+  });
+}
+
+// Редактирование работы
 window.editWork = async (id) => {
   try {
     const item = await pb.collection('works').getOne(id);
+    currentEditId = id;
     worksId.value = item.id;
     worksTitle.value = item.title || '';
     worksDesc.value = item.description || '';
+    existingImages = item.field || [];
+    newImagesToUpload = [];
+    renderWorksPreview();
     worksFormTitle.textContent = 'Редактировать работу';
     cancelWorksBtn.classList.remove('hidden');
-  } catch (err) { alert('Ошибка загрузки работы'); }
+
+    // Прокрутка к форме
+    worksForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) {
+    alert('Ошибка загрузки работы');
+    console.error(err);
+  }
 };
 
+// Сохранение работы
 if (worksForm) {
   worksForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     if (!worksTitle.value.trim()) {
       alert('Поле "Название авто" обязательно!');
       worksTitle.focus();
       return;
     }
-    if (!worksImages.files.length) {
-      alert('Добавьте хотя бы одно фото!');
-      return;
-    }
+
+    const formData = new FormData();
+    formData.append('title', worksTitle.value.trim());
+    formData.append('description', worksDesc.value.trim() || '');
+
+    // Добавляем существующие фото (их имена)
+    existingImages.forEach(name => formData.append('field', name));
+
+    // Добавляем новые фото
+    newImagesToUpload.forEach(file => formData.append('field', file));
 
     const originalText = worksSubmitBtn ? worksSubmitBtn.textContent : 'Сохранить работу';
     if (worksSubmitBtn) {
       worksSubmitBtn.disabled = true;
       worksSubmitBtn.textContent = 'Сохраняем...';
-    }
-
-    const formData = new FormData();
-    formData.append('title', worksTitle.value.trim());
-    formData.append('description', worksDesc.value.trim() || '');
-    for (let i = 0; i < worksImages.files.length; i++) {
-      formData.append('field', worksImages.files[i]);
     }
 
     try {
@@ -294,6 +420,9 @@ if (worksForm) {
       worksFormTitle.textContent = 'Добавить новую работу';
       cancelWorksBtn.classList.add('hidden');
       worksId.value = '';
+      existingImages = [];
+      newImagesToUpload = [];
+      renderWorksPreview();
       loadWorks();
     } catch (err) {
       console.error(err);
@@ -304,15 +433,6 @@ if (worksForm) {
         worksSubmitBtn.textContent = originalText;
       }
     }
-  });
-}
-
-if (cancelWorksBtn) {
-  cancelWorksBtn.addEventListener('click', () => {
-    worksForm.reset();
-    worksFormTitle.textContent = 'Добавить новую работу';
-    cancelWorksBtn.classList.add('hidden');
-    worksId.value = '';
   });
 }
 
