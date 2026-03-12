@@ -103,7 +103,7 @@
       line-height: 1.5;
     }
 
-    /* Галерея — 55% + чёрный фон без полос */
+    /* ГАЛЕРЕЯ — без полос по бокам */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -140,10 +140,9 @@
     }
 
     .gallery-slide img {
-      width: 55vw;
-      height: 55vh;
-      max-width: 55vw;
-      max-height: 55vh;
+      width: 100%;              /* Полная ширина — полос по бокам нет */
+      height: auto;
+      max-height: 90vh;
       object-fit: contain;
       box-shadow: 0 0 80px rgba(255,255,255,0.25);
     }
@@ -409,7 +408,6 @@
       <span class="gallery-dot ${i===currentGalleryIndex?'active':''}" data-index="${i}"></span>
     `).join('');
 
-    // === ТОЧКИ ТЕПЕРЬ РАБОЧИЕ ===
     dotsContainer.querySelectorAll('.gallery-dot').forEach(dot => {
       dot.addEventListener('click', () => {
         currentGalleryIndex = parseInt(dot.dataset.index);
@@ -424,7 +422,6 @@
   function goToSlide(i) {
     currentGalleryIndex = i;
     document.getElementById('gallerySlides').style.transform = `translateX(-${i*100}%)`;
-
     document.querySelectorAll('.gallery-dot').forEach(d => {
       d.classList.toggle('active', parseInt(d.dataset.index) === i);
     });
