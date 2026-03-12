@@ -103,7 +103,7 @@
       line-height: 1.5;
     }
 
-    /* ГАЛЕРЕЯ — без полос по бокам */
+    /* ГАЛЕРЕЯ — 60% + чёрный фон без полос */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -140,7 +140,7 @@
     }
 
     .gallery-slide img {
-      width: 100%;              /* Полная ширина — полос по бокам нет */
+      width: 60vw;              /* ← 60% ширины экрана */
       height: auto;
       max-height: 90vh;
       object-fit: contain;
@@ -355,7 +355,6 @@
 
         grid.appendChild(card);
 
-        // Слайдер в карточке
         if (imagesArray.length > 1) {
           const slideContainer = card.querySelector('.work-slides');
           const prevBtn = card.querySelector('.prev');
@@ -376,7 +375,6 @@
           dotBtns.forEach(dot => dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index))));
         }
 
-        // Открытие галереи
         card.querySelectorAll('.work-images img').forEach(img => {
           img.addEventListener('click', () => {
             galleryImages = imagesArray;
