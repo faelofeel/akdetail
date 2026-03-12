@@ -10,6 +10,7 @@
 </head>
 <body>
 
+<!-- Защита входа -->
 <script>
   if (!localStorage.getItem('pb_token')) {
     window.location.href = 'login.html';
@@ -43,6 +44,7 @@
       <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
     </div>
 
+    <!-- Кнопка "Выйти" -->
     <button onclick="logout()" style="background:#e74c3c;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:15px;cursor:pointer;margin-left:20px;">
       Выйти
     </button>
@@ -54,315 +56,79 @@
 <div class="admin-container">
   <h1>Админ-панель AKDetail</h1>
 
+  <!-- Вкладки -->
   <div class="admin-tabs">
     <button class="tab-btn active" data-tab="services">Услуги</button>
     <button class="tab-btn" data-tab="reviews">Отзывы</button>
     <button class="tab-btn" data-tab="works">Наши работы</button>
   </div>
 
-  <!-- Услуги (без изменений) -->
+  <!-- Услуги -->
   <div id="tab-services" class="tab-content active">
     <h2>Управление услугами</h2>
-    <!-- ... остальной код услуг без изменений ... -->
+    <div class="service-form">
+      <h3 id="service-form-title">Добавить новую услугу</h3>
+      <form id="service-form">
+        <input type="hidden" id="service-id">
+        <div class="form-group"><label>Название услуги *</label><input type="text" id="title" required></div>
+        <div class="form-group"><label>Описание</label><textarea id="description" rows="4"></textarea></div>
+        <div class="form-group"><label>Цена *</label><input type="text" id="price" required></div>
+        <div class="form-group"><label>Время выполнения *</label><input type="text" id="time" required></div>
+        <div class="form-group"><label>Фото услуги</label><input type="file" id="image" accept="image/*"></div>
+        <div class="form-group"><label>Порядок отображения</label><input type="number" id="order" value="0"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn-save">Сохранить услугу</button>
+          <button type="button" id="cancel-service-edit" class="btn-cancel hidden">Отмена</button>
+        </div>
+      </form>
+    </div>
+    <h3>Список услуг</h3>
+    <div class="service-grid" id="service-list"></div>
   </div>
 
-  <!-- Отзывы (без изменений) -->
+  <!-- Отзывы -->
   <div id="tab-reviews" class="tab-content">
     <h2>Управление отзывами</h2>
-    <!-- ... остальной код отзывов без изменений ... -->
+    <div class="service-form">
+      <h3 id="review-form-title">Добавить новый отзыв</h3>
+      <form id="review-form">
+        <input type="hidden" id="review-id">
+        <div class="form-group"><label>Имя клиента *</label><input type="text" id="name" required></div>
+        <div class="form-group"><label>Марка авто</label><input type="text" id="car"></div>
+        <div class="form-group"><label>Услуга</label><input type="text" id="service"></div>
+        <div class="form-group"><label>Текст отзыва *</label><textarea id="text" rows="6" required></textarea></div>
+        <div class="form-actions">
+          <button type="submit" class="btn-save">Сохранить отзыв</button>
+          <button type="button" id="cancel-review-edit" class="btn-cancel hidden">Отмена</button>
+        </div>
+      </form>
+    </div>
+    <h3>Список отзывов</h3>
+    <div class="review-grid" id="review-list"></div>
   </div>
 
-  <!-- Наши работы – здесь основные изменения -->
+  <!-- Наши работы -->
   <div id="tab-works" class="tab-content">
     <h2>Управление работами</h2>
     <div class="service-form">
       <h3 id="works-form-title">Добавить новую работу</h3>
       <form id="works-form">
         <input type="hidden" id="works-id">
-        <div class="form-group">
-          <label>Название авто *</label>
-          <input type="text" id="works-title" required>
-        </div>
-        <div class="form-group">
-          <label>Описание</label>
-          <textarea id="works-description" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Фото до/после (можно несколько)</label>
-          <input type="file" id="works-images" accept="image/*" multiple>
-        </div>
-
-        <!-- Превью существующих + новых фото -->
-        <div id="works-preview" style="display:flex; flex-wrap:wrap; gap:12px; margin:16px 0;"></div>
-
-        <!-- Кнопка удалить все -->
-        <div style="margin:16px 0; display:flex; gap:12px;">
-          <button type="button" id="clear-all-photos" style="background:#e74c3c;color:white;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;">
-            Удалить все добавленные фото
-          </button>
-        </div>
-
+        <div class="form-group"><label>Название авто *</label><input type="text" id="works-title" required></div>
+        <div class="form-group"><label>Описание</label><textarea id="works-description" rows="4"></textarea></div>
+        <div class="form-group"><label>Фото до/после (можно несколько)</label><input type="file" id="works-images" accept="image/*" multiple></div>
         <div class="form-actions">
           <button type="submit" class="btn-save">Сохранить работу</button>
           <button type="button" id="cancel-works-edit" class="btn-cancel hidden">Отмена</button>
         </div>
       </form>
     </div>
-
     <h3>Список работ</h3>
     <div class="works-grid" id="works-list"></div>
   </div>
 </div>
 
 <script src="pocketbase.umd.js"></script>
-<script>
-// Основной скрипт админки (полностью обновлённый)
-
-const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
-
-let currentEditId = null;
-let existingImages = [];      // имена уже загруженных файлов в базе
-let newImagesToUpload = [];   // новые файлы, выбранные сейчас
-
-// Табы
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.getElementById(btn.dataset.tab).classList.add('active');
-  });
-});
-
-// --------------------- Наши работы ---------------------
-const worksForm = document.getElementById('works-form');
-const worksTitle = document.getElementById('works-title');
-const worksDescription = document.getElementById('works-description');
-const worksImagesInput = document.getElementById('works-images');
-const worksPreview = document.getElementById('works-preview');
-
-// Показать/скрыть кнопку отмены
-function toggleCancelBtn(show) {
-  document.getElementById('cancel-works-edit').classList.toggle('hidden', !show);
-}
-
-// Очистка формы
-function resetWorksForm() {
-  currentEditId = null;
-  existingImages = [];
-  newImagesToUpload = [];
-  worksPreview.innerHTML = '';
-  worksTitle.value = '';
-  worksDescription.value = '';
-  worksImagesInput.value = '';
-  document.getElementById('works-form-title').textContent = 'Добавить новую работу';
-  toggleCancelBtn(false);
-}
-
-// Отрисовка превью (старые + новые)
-function renderExistingImages() {
-  worksPreview.innerHTML = '';
-
-  // Старые фото из базы
-  existingImages.forEach((filename, idx) => {
-    const url = `${pb.baseUrl}/api/files/works/${currentEditId}/${filename}`;
-    const wrap = document.createElement('div');
-    wrap.style.position = 'relative';
-    wrap.style.width = '140px';
-    wrap.style.height = '140px';
-    wrap.style.borderRadius = '8px';
-    wrap.style.overflow = 'hidden';
-
-    const img = document.createElement('img');
-    img.src = url;
-    img.style.width = '100%';
-    img.style.height = '100%';
-    img.style.objectFit = 'cover';
-
-    const delBtn = document.createElement('button');
-    delBtn.textContent = '×';
-    delBtn.style.position = 'absolute';
-    delBtn.style.top = '4px';
-    delBtn.style.right = '4px';
-    delBtn.style.background = 'red';
-    delBtn.style.color = 'white';
-    delBtn.style.border = 'none';
-    delBtn.style.borderRadius = '50%';
-    delBtn.style.width = '24px';
-    delBtn.style.height = '24px';
-    delBtn.style.cursor = 'pointer';
-    delBtn.onclick = () => {
-      existingImages.splice(idx, 1);
-      renderExistingImages();
-    };
-
-    wrap.appendChild(img);
-    wrap.appendChild(delBtn);
-    worksPreview.appendChild(wrap);
-  });
-
-  // Новые файлы (ещё не загружены)
-  newImagesToUpload.forEach((file, idx) => {
-    const url = URL.createObjectURL(file);
-    const wrap = document.createElement('div');
-    wrap.style.position = 'relative';
-    wrap.style.width = '140px';
-    wrap.style.height = '140px';
-    wrap.style.borderRadius = '8px';
-    wrap.style.overflow = 'hidden';
-
-    const img = document.createElement('img');
-    img.src = url;
-    img.style.width = '100%';
-    img.style.height = '100%';
-    img.style.objectFit = 'cover';
-
-    const delBtn = document.createElement('button');
-    delBtn.textContent = '×';
-    delBtn.style.position = 'absolute';
-    delBtn.style.top = '4px';
-    delBtn.style.right = '4px';
-    delBtn.style.background = 'red';
-    delBtn.style.color = 'white';
-    delBtn.style.border = 'none';
-    delBtn.style.borderRadius = '50%';
-    delBtn.style.width = '24px';
-    delBtn.style.height = '24px';
-    delBtn.style.cursor = 'pointer';
-    delBtn.onclick = () => {
-      newImagesToUpload.splice(idx, 1);
-      renderExistingImages();
-    };
-
-    wrap.appendChild(img);
-    wrap.appendChild(delBtn);
-    worksPreview.appendChild(wrap);
-  });
-}
-
-// При выборе новых файлов
-worksImagesInput.addEventListener('change', e => {
-  const files = Array.from(e.target.files);
-  newImagesToUpload.push(...files);
-  renderExistingImages();
-  e.target.value = ''; // очищаем input
-});
-
-// Удалить все добавленные фото
-document.getElementById('clear-all-photos').addEventListener('click', () => {
-  if (confirm('Удалить ВСЕ добавленные фотографии?')) {
-    existingImages = [];
-    newImagesToUpload = [];
-    renderExistingImages();
-  }
-});
-
-// Отмена редактирования
-document.getElementById('cancel-works-edit').addEventListener('click', () => {
-  resetWorksForm();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-// Сохранение формы
-worksForm.addEventListener('submit', async e => {
-  e.preventDefault();
-
-  const formData = new FormData();
-  formData.append('title', worksTitle.value.trim());
-  formData.append('description', worksDescription.value.trim());
-
-  // Старые фото сохраняем
-  existingImages.forEach(name => formData.append('field', name));
-
-  // Новые фото добавляем
-  newImagesToUpload.forEach(file => formData.append('field', file));
-
-  try {
-    if (currentEditId) {
-      await pb.collection('works').update(currentEditId, formData);
-      alert('Работа обновлена!');
-    } else {
-      await pb.collection('works').create(formData);
-      alert('Работа добавлена!');
-    }
-
-    resetWorksForm();
-    loadWorksList();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } catch (err) {
-    console.error(err);
-    alert('Ошибка: ' + (err.data?.message || err.message));
-  }
-});
-
-// Загрузка списка работ
-async function loadWorksList() {
-  const list = document.getElementById('works-list');
-  list.innerHTML = '<p style="text-align:center;color:#666;">Загрузка...</p>';
-
-  try {
-    const res = await pb.collection('works').getList(1, 50, { sort: '-created' });
-    list.innerHTML = '';
-
-    res.items.forEach(item => {
-      const card = document.createElement('div');
-      card.style.background = '#222';
-      card.style.padding = '16px';
-      card.style.borderRadius = '12px';
-      card.style.marginBottom = '16px';
-
-      card.innerHTML = `
-        <h3 style="margin:0 0 8px;">${item.title || 'Без названия'}</h3>
-        <p style="color:#aaa;margin:0 0 12px;">${item.description || ''}</p>
-        <div style="display:flex;gap:12px;">
-          <button class="edit-btn" data-id="${item.id}">Редактировать</button>
-          <button class="delete-btn" data-id="${item.id}">Удалить</button>
-        </div>
-      `;
-
-      list.appendChild(card);
-    });
-
-    // Редактирование
-    list.querySelectorAll('.edit-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const id = btn.dataset.id;
-        const record = await pb.collection('works').getOne(id);
-
-        currentEditId = id;
-        worksTitle.value = record.title || '';
-        worksDescription.value = record.description || '';
-        existingImages = record.field || [];
-        newImagesToUpload = [];
-        renderExistingImages();
-
-        document.getElementById('works-form-title').textContent = 'Редактировать работу';
-        toggleCancelBtn(true);
-
-        // Прокрутка вверх к форме
-        worksForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
-
-    // Удаление
-    list.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        if (confirm('Удалить эту работу?')) {
-          await pb.collection('works').delete(btn.dataset.id);
-          loadWorksList();
-        }
-      });
-    });
-  } catch (err) {
-    console.error(err);
-    list.innerHTML = '<p style="text-align:center;color:#e74c3c;">Ошибка загрузки</p>';
-  }
-}
-
-// Запуск
-loadWorksList();
-</script>
-
+<script src="admin.js"></script>
 </body>
 </html>
