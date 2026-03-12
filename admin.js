@@ -250,13 +250,13 @@ async function loadWorks() {
 
 // Отрисовка превью фото (с защитой)
 function renderWorksPreview() {
-  const previewElement = document.getElementById('works-preview');
-  if (!previewElement) {
-    console.warn('Элемент #works-preview ещё не найден. Ждём открытия вкладки.');
+  const preview = document.getElementById('works-preview');
+  if (!preview) {
+    console.log('Превью не найдено — ждём открытия вкладки');
     return;
   }
 
-  previewElement.innerHTML = '';
+  preview.innerHTML = '';
 
   // Старые фото
   existingImages.forEach((filename, index) => {
@@ -293,7 +293,7 @@ function renderWorksPreview() {
 
     wrap.appendChild(img);
     wrap.appendChild(delBtn);
-    previewElement.appendChild(wrap);
+    preview.appendChild(wrap);
   });
 
   // Новые файлы
@@ -331,7 +331,7 @@ function renderWorksPreview() {
 
     wrap.appendChild(img);
     wrap.appendChild(delBtn);
-    previewElement.appendChild(wrap);
+    preview.appendChild(wrap);
   });
 }
 
@@ -370,7 +370,7 @@ if (cancelWorksBtn) {
   });
 }
 
-// Редактирование работы (основная функция)
+// Редактирование работы
 window.editWork = async (id) => {
   try {
     const item = await pb.collection('works').getOne(id);
@@ -381,16 +381,16 @@ window.editWork = async (id) => {
     existingImages = item.field || [];
     newImagesToUpload = [];
 
-    // Важно: рендерим превью ТОЛЬКО если элемент существует
-    const previewElement = document.getElementById('works-preview');
-    if (previewElement) {
-      renderWorksPreview();
-    } else {
-      // Если вкладка ещё не открыта — ждём 100 мс и пробуем снова
-      setTimeout(() => {
-        renderWorksPreview();
-      }, 100);
+    // Открываем вкладку "Наши работы" (если не открыта)
+    const worksTabBtn = document.querySelector('.tab-btn[data-tab="works"]');
+    if (worksTabBtn && !worksTabBtn.classList.contains('active')) {
+      worksTabBtn.click();
     }
+
+    // Ждём 150 мс, чтобы DOM обновился, и рендерим превью
+    setTimeout(() => {
+      renderWorksPreview();
+    }, 150);
 
     worksFormTitle.textContent = 'Редактировать работу';
     cancelWorksBtn.classList.remove('hidden');
