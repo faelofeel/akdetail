@@ -251,10 +251,7 @@ async function loadWorks() {
 // Отрисовка превью фото
 function renderWorksPreview() {
   const preview = document.getElementById('works-preview');
-  if (!preview) {
-    console.log('Превью не найдено — ждём открытия вкладки');
-    return;
-  }
+  if (!preview) return;
 
   preview.innerHTML = '';
 
@@ -381,28 +378,36 @@ window.editWork = async (id) => {
     existingImages = item.field || [];
     newImagesToUpload = [];
 
-    // Принудительно переключаем вкладку "Наши работы"
+    // Переключаем вкладку "Наши работы"
     const worksTabBtn = document.querySelector('.tab-btn[data-tab="works"]');
     if (worksTabBtn && !worksTabBtn.classList.contains('active')) {
       worksTabBtn.click();
     }
 
-    // Ждём открытия вкладки и рендерим превью
-    const waitForTab = setInterval(() => {
-      const tabContent = document.getElementById('tab-works');
-      if (tabContent && tabContent.classList.contains('active')) {
-        clearInterval(waitForTab);
+    // Ждём появления элемента #works-preview
+    const observer = new MutationObserver((mutations, obs) => {
+      const preview = document.getElementById('works-preview');
+      if (preview) {
         renderWorksPreview();
+        obs.disconnect(); // останавливаем наблюдение
       }
-    }, 100);
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
 
     // Таймаут на случай, если вкладка не открывается
-    setTimeout(() => clearInterval(waitForTab), 3000);
+    setTimeout(() => {
+      observer.disconnect();
+      renderWorksPreview(); // на всякий случай пробуем ещё раз
+    }, 5000);
 
     worksFormTitle.textContent = 'Редактировать работу';
     cancelWorksBtn.classList.remove('hidden');
 
-    // Прокрутка в самый верх страницы
+    // Поднимаем в самый верх страницы
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (err) {
     alert('Ошибка загрузки работы');
