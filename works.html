@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <script src="pocketbase.umd.js"></script>
   <style>
+    /* Карточки */
     .work-card {
       background: #1e1e1e;
       border-radius: 16px;
@@ -46,6 +47,7 @@
       transform: scale(1.08);
     }
 
+    /* Стрелки на карточке */
     .slider-arrows {
       position: absolute;
       top: 50%;
@@ -66,6 +68,7 @@
     }
 
     .slider-arrow {
+      pointer-events: auto;
       background: rgba(0,0,0,0.6);
       color: white;
       border: none;
@@ -78,12 +81,15 @@
       align-items: center;
       justify-content: center;
       transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
 
     .slider-arrow:hover {
       background: #4a90e2;
+      transform: scale(1.1);
     }
 
+    /* Точки на карточке */
     .slider-dots {
       position: absolute;
       bottom: 15px;
@@ -113,6 +119,7 @@
       transform: scale(1.3);
     }
 
+    /* Текст */
     .work-info {
       padding: 20px;
       flex: 1;
@@ -134,7 +141,7 @@
       line-height: 1.5;
     }
 
-    /* Галерея */
+    /* Галерея — полностью чёрный фон, фото 55% */
     .gallery-modal {
       display: none;
       position: fixed;
@@ -291,6 +298,7 @@
   </div>
 </section>
 
+<!-- Галерея -->
 <div class="gallery-modal" id="galleryModal">
   <div class="gallery-content">
     <button class="gallery-close" id="galleryClose">×</button>
@@ -353,53 +361,60 @@
           });
         }
 
+        // Создаём контейнер для слайдов
+        const imagesContainer = document.createElement('div');
+        imagesContainer.className = 'work-images';
+
+        if (imagesArray.length > 0) {
+          imagesArray.forEach((url, index) => {
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = item.title || 'Работа';
+            img.loading = 'eager'; // убрали lazy, чтобы точно загрузилось
+            img.dataset.index = index;
+
+            // Отладка загрузки
+            img.onload = () => console.log('Фото в карточке загружено:', url);
+            img.onerror = () => console.error('Ошибка загрузки фото в карточке:', url);
+
+            imagesContainer.appendChild(img);
+          });
+        } else {
+          imagesContainer.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#666;">Фото отсутствует</div>';
+        }
+
+        let arrowsHTML = '';
+        let dotsHTML = '';
+
+        if (imagesArray.length > 1) {
+          dotsHTML = imagesArray.map((_, i) => `
+            <span class="slider-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
+          `).join('');
+
+          arrowsHTML = `
+            <div class="slider-arrows">
+              <button class="slider-arrow prev">←</button>
+              <button class="slider-arrow next">→</button>
+            </div>
+          `;
+        }
+
         const card = document.createElement('div');
         card.className = 'work-card';
 
         const imagesDiv = document.createElement('div');
         imagesDiv.className = 'work-images';
+        imagesDiv.appendChild(imagesContainer);
 
-        if (imagesArray.length > 0) {
-          const slidesContainer = document.createElement('div');
-          slidesContainer.className = 'work-slides';
+        if (imagesArray.length > 1) {
+          const arrowsDiv = document.createElement('div');
+          arrowsDiv.innerHTML = arrowsHTML;
+          imagesDiv.appendChild(arrowsDiv.firstChild);
 
-          imagesArray.forEach((url, index) => {
-            const slide = document.createElement('div');
-            slide.className = 'work-slide';
-
-            const img = document.createElement('img');
-            img.src = url;
-            img.alt = item.title || 'Работа';
-            img.loading = 'eager'; // сразу грузим
-            img.dataset.index = index;
-
-            img.onload = () => console.log('Фото в карточке загружено:', url);
-            img.onerror = () => console.error('Ошибка загрузки фото в карточке:', url);
-
-            slide.appendChild(img);
-            slidesContainer.appendChild(slide);
-          });
-
-          imagesDiv.appendChild(slidesContainer);
-
-          if (imagesArray.length > 1) {
-            const arrowsDiv = document.createElement('div');
-            arrowsDiv.className = 'slider-arrows';
-            arrowsDiv.innerHTML = `
-              <button class="slider-arrow prev">←</button>
-              <button class="slider-arrow next">→</button>
-            `;
-            imagesDiv.appendChild(arrowsDiv);
-
-            const dotsDiv = document.createElement('div');
-            dotsDiv.className = 'slider-dots';
-            dotsDiv.innerHTML = imagesArray.map((_, i) => `
-              <span class="slider-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
-            `).join('');
-            imagesDiv.appendChild(dotsDiv);
-          }
-        } else {
-          imagesDiv.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#666;">Фото отсутствует</div>';
+          const dotsDiv = document.createElement('div');
+          dotsDiv.className = 'slider-dots';
+          dotsDiv.innerHTML = dotsHTML;
+          imagesDiv.appendChild(dotsDiv);
         }
 
         card.appendChild(imagesDiv);
@@ -416,25 +431,22 @@
 
         // Слайдер внутри карточки
         if (imagesArray.length > 1) {
-          const slides = card.querySelector('.work-slides');
           const prev = card.querySelector('.prev');
           const next = card.querySelector('.next');
           const dots = card.querySelectorAll('.slider-dot');
 
-          if (slides && prev && next && dots.length > 0) {
-            let current = 0;
-            const total = imagesArray.length;
+          let current = 0;
+          const total = imagesArray.length;
 
-            function goTo(index) {
-              current = index;
-              slides.style.transform = `translateX(-${current * 100}%)`;
-              dots.forEach((d, i) => d.classList.toggle('active', i === current));
-            }
-
-            prev.addEventListener('click', () => goTo((current - 1 + total) % total));
-            next.addEventListener('click', () => goTo((current + 1) % total));
-            dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+          function goTo(index) {
+            current = index;
+            imagesContainer.style.transform = `translateX(-${current * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === current));
           }
+
+          prev.addEventListener('click', () => goTo((current - 1 + total) % total));
+          next.addEventListener('click', () => goTo((current + 1) % total));
+          dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
         }
 
         // Открытие галереи
