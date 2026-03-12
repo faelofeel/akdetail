@@ -248,17 +248,17 @@ async function loadWorks() {
   }
 }
 
-// Отрисовка превью фото (с защитой от null)
+// Отрисовка превью фото (с защитой)
 function renderWorksPreview() {
   const previewElement = document.getElementById('works-preview');
   if (!previewElement) {
-    console.warn('Элемент #works-preview ещё не найден. Ждём открытия вкладки "Наши работы".');
+    console.warn('Элемент #works-preview ещё не найден. Ждём открытия вкладки.');
     return;
   }
 
   previewElement.innerHTML = '';
 
-  // Старые фото из базы
+  // Старые фото
   existingImages.forEach((filename, index) => {
     const url = `${pb.baseUrl}/api/files/works/${currentEditId}/${filename}`;
     const wrap = document.createElement('div');
@@ -370,7 +370,7 @@ if (cancelWorksBtn) {
   });
 }
 
-// Редактирование работы
+// Редактирование работы (основная функция)
 window.editWork = async (id) => {
   try {
     const item = await pb.collection('works').getOne(id);
@@ -381,14 +381,22 @@ window.editWork = async (id) => {
     existingImages = item.field || [];
     newImagesToUpload = [];
 
-    // Ждём открытия вкладки и рендерим превью
-    renderWorksPreview();
+    // Важно: рендерим превью ТОЛЬКО если элемент существует
+    const previewElement = document.getElementById('works-preview');
+    if (previewElement) {
+      renderWorksPreview();
+    } else {
+      // Если вкладка ещё не открыта — ждём 100 мс и пробуем снова
+      setTimeout(() => {
+        renderWorksPreview();
+      }, 100);
+    }
 
     worksFormTitle.textContent = 'Редактировать работу';
     cancelWorksBtn.classList.remove('hidden');
 
-    // Прокрутка к форме
-    worksForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Прокрутка в самый верх страницы
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (err) {
     alert('Ошибка загрузки работы');
     console.error(err);
