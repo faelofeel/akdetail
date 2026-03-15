@@ -13,11 +13,10 @@ const serviceFormTitle = document.getElementById('service-form-title');
 const cancelServiceBtn = document.getElementById('cancel-service-edit');
 const serviceList = document.getElementById('service-list');
 
-// ==================== ОТЗЫВЫ ====================
+// ==================== ОТЗЫВЫ (без марки авто) ====================
 const reviewForm = document.getElementById('review-form');
 const reviewId = document.getElementById('review-id');
 const reviewName = document.getElementById('name');
-const reviewCar = document.getElementById('car');
 const reviewService = document.getElementById('service');
 const reviewText = document.getElementById('text');
 const reviewFormTitle = document.getElementById('review-form-title');
@@ -35,7 +34,6 @@ const cancelWorksBtn = document.getElementById('cancel-works-edit');
 const worksList = document.getElementById('works-list');
 const worksSubmitBtn = worksForm ? worksForm.querySelector('.btn-save') : null;
 
-// Переменные для фото при редактировании
 let currentEditId = null;
 let existingImages = [];
 let newImagesToUpload = [];
@@ -130,7 +128,7 @@ window.deleteService = async (id) => {
   } catch (err) { alert('Ошибка удаления услуги'); }
 };
 
-// ==================== ОТЗЫВЫ ====================
+// ==================== ОТЗЫВЫ (без марки авто) ====================
 async function loadReviews() {
   if (!reviewList) return;
   try {
@@ -141,11 +139,8 @@ async function loadReviews() {
       card.className = 'review-card-admin';
       card.innerHTML = `
         <div class="review-header">
-          <h3 class="review-name">${item.name}</h3>
-          <div class="review-meta">
-            ${item.car ? `<span class="review-car">${item.car}</span>` : ''}
-            ${item.service ? `<span class="review-service">${item.service}</span>` : ''}
-          </div>
+          <h3>${item.name}</h3>
+          ${item.service ? `<span class="review-service">${item.service}</span>` : ''}
         </div>
         <p class="review-text">${item.text}</p>
         <div class="actions">
@@ -163,7 +158,6 @@ window.editReview = async (id) => {
     const item = await pb.collection('reviews').getOne(id);
     reviewId.value = item.id;
     reviewName.value = item.name;
-    reviewCar.value = item.car || '';
     reviewService.value = item.service || '';
     reviewText.value = item.text;
     reviewFormTitle.textContent = 'Редактировать отзыв';
@@ -176,7 +170,6 @@ if (reviewForm) {
     e.preventDefault();
     const data = {
       name: reviewName.value.trim(),
-      car: reviewCar.value.trim(),
       service: reviewService.value.trim(),
       text: reviewText.value.trim()
     };
@@ -248,14 +241,11 @@ async function loadWorks() {
   }
 }
 
-// Отрисовка превью фото
 function renderWorksPreview() {
   const preview = document.getElementById('works-preview');
   if (!preview) return;
-
   preview.innerHTML = '';
 
-  // Старые фото
   existingImages.forEach((filename, index) => {
     const url = `${pb.baseUrl}/api/files/works/${currentEditId}/${filename}`;
     const wrap = document.createElement('div');
@@ -293,7 +283,6 @@ function renderWorksPreview() {
     preview.appendChild(wrap);
   });
 
-  // Новые файлы
   newImagesToUpload.forEach((file, index) => {
     const url = URL.createObjectURL(file);
     const wrap = document.createElement('div');
@@ -332,7 +321,6 @@ function renderWorksPreview() {
   });
 }
 
-// При выборе новых файлов
 if (worksImagesInput) {
   worksImagesInput.addEventListener('change', e => {
     const files = Array.from(e.target.files);
@@ -342,7 +330,6 @@ if (worksImagesInput) {
   });
 }
 
-// Кнопка удалить все фото
 const clearAllPhotosBtn = document.getElementById('clear-all-photos');
 if (clearAllPhotosBtn) {
   clearAllPhotosBtn.addEventListener('click', () => {
@@ -354,7 +341,6 @@ if (clearAllPhotosBtn) {
   });
 }
 
-// Отмена редактирования
 if (cancelWorksBtn) {
   cancelWorksBtn.addEventListener('click', () => {
     worksForm.reset();
@@ -367,7 +353,6 @@ if (cancelWorksBtn) {
   });
 }
 
-// Редактирование работы
 window.editWork = async (id) => {
   try {
     const item = await pb.collection('works').getOne(id);
@@ -378,53 +363,29 @@ window.editWork = async (id) => {
     existingImages = item.field || [];
     newImagesToUpload = [];
 
-    // Переключаем вкладку "Наши работы"
     const worksTabBtn = document.querySelector('.tab-btn[data-tab="works"]');
-    if (worksTabBtn && !worksTabBtn.classList.contains('active')) {
-      worksTabBtn.click();
-    }
+    if (worksTabBtn && !worksTabBtn.classList.contains('active')) worksTabBtn.click();
 
-    // Ждём появления элемента #works-preview
-    const observer = new MutationObserver((mutations, obs) => {
-      const preview = document.getElementById('works-preview');
-      if (preview) {
+    const wait = setInterval(() => {
+      if (document.getElementById('works-preview')) {
+        clearInterval(wait);
         renderWorksPreview();
-        obs.disconnect(); // останавливаем наблюдение
       }
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-
-    // Таймаут на случай, если вкладка не открывается
-    setTimeout(() => {
-      observer.disconnect();
-      renderWorksPreview(); // на всякий случай пробуем ещё раз
-    }, 5000);
+    }, 100);
+    setTimeout(() => clearInterval(wait), 5000);
 
     worksFormTitle.textContent = 'Редактировать работу';
     cancelWorksBtn.classList.remove('hidden');
-
-    // Поднимаем в самый верх страницы
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (err) {
     alert('Ошибка загрузки работы');
-    console.error(err);
   }
 };
 
-// Сохранение работы
 if (worksForm) {
   worksForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    if (!worksTitle.value.trim()) {
-      alert('Поле "Название авто" обязательно!');
-      worksTitle.focus();
-      return;
-    }
+    if (!worksTitle.value.trim()) return alert('Название авто обязательно!');
 
     const formData = new FormData();
     formData.append('title', worksTitle.value.trim());
@@ -433,19 +394,10 @@ if (worksForm) {
     existingImages.forEach(name => formData.append('field', name));
     newImagesToUpload.forEach(file => formData.append('field', file));
 
-    const originalText = worksSubmitBtn ? worksSubmitBtn.textContent : 'Сохранить работу';
-    if (worksSubmitBtn) {
-      worksSubmitBtn.disabled = true;
-      worksSubmitBtn.textContent = 'Сохраняем...';
-    }
-
     try {
-      if (worksId.value) {
-        await pb.collection('works').update(worksId.value, formData);
-      } else {
-        await pb.collection('works').create(formData);
-      }
-      alert('Работа успешно сохранена!');
+      if (worksId.value) await pb.collection('works').update(worksId.value, formData);
+      else await pb.collection('works').create(formData);
+      alert('Работа сохранена!');
       worksForm.reset();
       worksFormTitle.textContent = 'Добавить новую работу';
       cancelWorksBtn.classList.add('hidden');
@@ -455,13 +407,7 @@ if (worksForm) {
       renderWorksPreview();
       loadWorks();
     } catch (err) {
-      console.error(err);
       alert('Ошибка: ' + (err.data?.message || err.message));
-    } finally {
-      if (worksSubmitBtn) {
-        worksSubmitBtn.disabled = false;
-        worksSubmitBtn.textContent = originalText;
-      }
     }
   });
 }
@@ -471,7 +417,7 @@ window.deleteWork = async (id) => {
   try {
     await pb.collection('works').delete(id);
     loadWorks();
-  } catch (err) { alert('Ошибка удаления работы'); }
+  } catch (err) { alert('Ошибка удаления'); }
 };
 
 // ==================== ЗАПУСК ====================
