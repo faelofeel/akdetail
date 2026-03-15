@@ -10,7 +10,6 @@
 </head>
 <body>
 
-<!-- Защита входа -->
 <script>
   if (!localStorage.getItem('pb_token')) {
     window.location.href = 'login.html';
@@ -42,7 +41,6 @@
       <span class="call-us">Позвони нам:</span>
       <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
     </div>
-    <!-- Кнопка "Выйти" -->
     <button onclick="logout()" style="background:#e74c3c;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:15px;cursor:pointer;margin-left:20px;">
       Выйти
     </button>
@@ -53,7 +51,6 @@
 <div class="admin-container">
   <h1>Админ-панель AKDetail</h1>
 
-  <!-- Вкладки -->
   <div class="admin-tabs">
     <button class="tab-btn active" data-tab="services">Услуги</button>
     <button class="tab-btn" data-tab="reviews">Отзывы</button>
@@ -83,7 +80,7 @@
     <div class="service-grid" id="service-list"></div>
   </div>
 
-  <!-- Отзывы -->
+  <!-- Отзывы (без "Марки машины") -->
   <div id="tab-reviews" class="tab-content">
     <h2>Управление отзывами</h2>
     <div class="service-form">
@@ -91,7 +88,6 @@
       <form id="review-form">
         <input type="hidden" id="review-id">
         <div class="form-group"><label>Имя клиента *</label><input type="text" id="name" required></div>
-        <div class="form-group"><label>Марка авто</label><input type="text" id="car"></div>
         <div class="form-group"><label>Услуга</label><input type="text" id="service"></div>
         <div class="form-group"><label>Текст отзыва *</label><textarea id="text" rows="6" required></textarea></div>
         <div class="form-actions">
@@ -114,17 +110,12 @@
         <div class="form-group"><label>Название авто *</label><input type="text" id="works-title" required></div>
         <div class="form-group"><label>Описание</label><textarea id="works-description" rows="4"></textarea></div>
         <div class="form-group"><label>Фото до/после (можно несколько)</label><input type="file" id="works-images" accept="image/*" multiple></div>
-
-        <!-- БЛОК ПРЕВЬЮ ФОТО (добавлен сюда) -->
         <div id="works-preview" style="display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0;"></div>
-
-        <!-- Кнопка удалить все фото -->
         <div style="margin: 16px 0;">
           <button type="button" id="clear-all-photos" style="background: #e74c3c; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">
             Удалить все добавленные фото
           </button>
         </div>
-
         <div class="form-actions">
           <button type="submit" class="btn-save">Сохранить работу</button>
           <button type="button" id="cancel-works-edit" class="btn-cancel hidden">Отмена</button>
