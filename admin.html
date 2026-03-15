@@ -15,7 +15,6 @@
   if (!localStorage.getItem('pb_token')) {
     window.location.href = 'login.html';
   }
-
   function logout() {
     localStorage.removeItem('pb_token');
     localStorage.removeItem('pb_user');
@@ -43,12 +42,10 @@
       <span class="call-us">Позвони нам:</span>
       <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
     </div>
-
     <!-- Кнопка "Выйти" -->
     <button onclick="logout()" style="background:#e74c3c;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:15px;cursor:pointer;margin-left:20px;">
       Выйти
     </button>
-
     <div class="hamburger"><span></span><span></span><span></span></div>
   </div>
 </header>
@@ -117,6 +114,17 @@
         <div class="form-group"><label>Название авто *</label><input type="text" id="works-title" required></div>
         <div class="form-group"><label>Описание</label><textarea id="works-description" rows="4"></textarea></div>
         <div class="form-group"><label>Фото до/после (можно несколько)</label><input type="file" id="works-images" accept="image/*" multiple></div>
+
+        <!-- БЛОК ПРЕВЬЮ ФОТО (добавлен сюда) -->
+        <div id="works-preview" style="display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0;"></div>
+
+        <!-- Кнопка удалить все фото -->
+        <div style="margin: 16px 0;">
+          <button type="button" id="clear-all-photos" style="background: #e74c3c; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">
+            Удалить все добавленные фото
+          </button>
+        </div>
+
         <div class="form-actions">
           <button type="submit" class="btn-save">Сохранить работу</button>
           <button type="button" id="cancel-works-edit" class="btn-cancel hidden">Отмена</button>
