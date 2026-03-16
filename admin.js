@@ -12,8 +12,11 @@ const serviceOrder = document.getElementById('order');
 const serviceFormTitle = document.getElementById('service-form-title');
 const cancelServiceBtn = document.getElementById('cancel-service-edit');
 const serviceList = document.getElementById('service-list');
+const servicePreview = document.getElementById('service-preview');
 
-// ==================== ОТЗЫВЫ (без марки авто) ====================
+let currentServiceImage = null;
+
+// ==================== ОТЗЫВЫ ====================
 const reviewForm = document.getElementById('review-form');
 const reviewId = document.getElementById('review-id');
 const reviewName = document.getElementById('name');
@@ -33,6 +36,7 @@ const worksFormTitle = document.getElementById('works-form-title');
 const cancelWorksBtn = document.getElementById('cancel-works-edit');
 const worksList = document.getElementById('works-list');
 const worksSubmitBtn = worksForm ? worksForm.querySelector('.btn-save') : null;
+const worksPreview = document.getElementById('works-preview');
 
 let currentEditId = null;
 let existingImages = [];
@@ -48,7 +52,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// ==================== УСЛУГИ ====================
+// ==================== УСЛУГИ (с превью и подъёмом вверх) ====================
 async function loadServices() {
   if (!serviceList) return;
   try {
@@ -74,6 +78,47 @@ async function loadServices() {
   } catch (err) { console.error(err); }
 }
 
+function renderServicePreview() {
+  if (!servicePreview) return;
+  servicePreview.innerHTML = '';
+  if (currentServiceImage) {
+    const url = `${pb.baseUrl}/api/files/services/${serviceId.value}/${currentServiceImage}`;
+    const wrap = document.createElement('div');
+    wrap.style.position = 'relative';
+    wrap.style.width = '200px';
+    wrap.style.height = '140px';
+    wrap.style.borderRadius = '8px';
+    wrap.style.overflow = 'hidden';
+
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '×';
+    delBtn.style.position = 'absolute';
+    delBtn.style.top = '4px';
+    delBtn.style.right = '4px';
+    delBtn.style.background = 'red';
+    delBtn.style.color = 'white';
+    delBtn.style.border = 'none';
+    delBtn.style.borderRadius = '50%';
+    delBtn.style.width = '24px';
+    delBtn.style.height = '24px';
+    delBtn.style.cursor = 'pointer';
+    delBtn.onclick = () => {
+      currentServiceImage = null;
+      renderServicePreview();
+    };
+
+    wrap.appendChild(img);
+    wrap.appendChild(delBtn);
+    servicePreview.appendChild(wrap);
+  }
+}
+
 window.editService = async (id) => {
   try {
     const item = await pb.collection('services').getOne(id);
@@ -83,8 +128,14 @@ window.editService = async (id) => {
     servicePrice.value = item.price;
     serviceTime.value = item.time || '';
     serviceOrder.value = item.order || 0;
+    currentServiceImage = item.image || null;
+
+    renderServicePreview();
+
     serviceFormTitle.textContent = 'Редактировать услугу';
     cancelServiceBtn.classList.remove('hidden');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (err) { alert('Ошибка загрузки услуги'); }
 };
 
@@ -97,7 +148,9 @@ if (serviceForm) {
     formData.append('price', servicePrice.value.trim());
     formData.append('time', serviceTime.value);
     formData.append('order', serviceOrder.value || 0);
+
     if (serviceImage.files[0]) formData.append('image', serviceImage.files[0]);
+
     try {
       if (serviceId.value) await pb.collection('services').update(serviceId.value, formData);
       else await pb.collection('services').create(formData);
@@ -106,6 +159,8 @@ if (serviceForm) {
       serviceFormTitle.textContent = 'Добавить новую услугу';
       cancelServiceBtn.classList.add('hidden');
       serviceId.value = '';
+      currentServiceImage = null;
+      servicePreview.innerHTML = '';
       loadServices();
     } catch (err) { alert('Ошибка: ' + err.message); }
   });
@@ -117,6 +172,8 @@ if (cancelServiceBtn) {
     serviceFormTitle.textContent = 'Добавить новую услугу';
     cancelServiceBtn.classList.add('hidden');
     serviceId.value = '';
+    currentServiceImage = null;
+    servicePreview.innerHTML = '';
   });
 }
 
@@ -128,7 +185,7 @@ window.deleteService = async (id) => {
   } catch (err) { alert('Ошибка удаления услуги'); }
 };
 
-// ==================== ОТЗЫВЫ (без марки авто) ====================
+// ==================== ОТЗЫВЫ (только подъём вверх) ====================
 async function loadReviews() {
   if (!reviewList) return;
   try {
@@ -162,6 +219,8 @@ window.editReview = async (id) => {
     reviewText.value = item.text;
     reviewFormTitle.textContent = 'Редактировать отзыв';
     cancelReviewBtn.classList.remove('hidden');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (err) { alert('Ошибка загрузки отзыва'); }
 };
 
@@ -216,9 +275,7 @@ async function loadWorks() {
     res.items.forEach(item => {
       let imgsHTML = '';
       if (item.field && item.field.length) {
-        imgsHTML = item.field.map(img => `
-          <img src="${pb.files.getURL(item, img)}" alt="">
-        `).join('');
+        imgsHTML = item.field.map(img => `<img src="${pb.files.getURL(item, img)}" alt="">`).join('');
       }
       const card = document.createElement('div');
       card.className = 'work-card';
@@ -242,9 +299,8 @@ async function loadWorks() {
 }
 
 function renderWorksPreview() {
-  const preview = document.getElementById('works-preview');
-  if (!preview) return;
-  preview.innerHTML = '';
+  if (!worksPreview) return;
+  worksPreview.innerHTML = '';
 
   existingImages.forEach((filename, index) => {
     const url = `${pb.baseUrl}/api/files/works/${currentEditId}/${filename}`;
@@ -280,7 +336,7 @@ function renderWorksPreview() {
 
     wrap.appendChild(img);
     wrap.appendChild(delBtn);
-    preview.appendChild(wrap);
+    worksPreview.appendChild(wrap);
   });
 
   newImagesToUpload.forEach((file, index) => {
@@ -317,7 +373,7 @@ function renderWorksPreview() {
 
     wrap.appendChild(img);
     wrap.appendChild(delBtn);
-    preview.appendChild(wrap);
+    worksPreview.appendChild(wrap);
   });
 }
 
@@ -417,7 +473,7 @@ window.deleteWork = async (id) => {
   try {
     await pb.collection('works').delete(id);
     loadWorks();
-  } catch (err) { alert('Ошибка удаления'); }
+  } catch (err) { alert('Ошибка удаления работы'); }
 };
 
 // ==================== ЗАПУСК ====================
