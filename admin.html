@@ -69,6 +69,10 @@
         <div class="form-group"><label>Цена *</label><input type="text" id="price" required></div>
         <div class="form-group"><label>Время выполнения *</label><input type="text" id="time" required></div>
         <div class="form-group"><label>Фото услуги</label><input type="file" id="image" accept="image/*"></div>
+
+        <!-- Превью текущего фото (как в работах) -->
+        <div id="service-preview" style="display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0;"></div>
+
         <div class="form-group"><label>Порядок отображения</label><input type="number" id="order" value="0"></div>
         <div class="form-actions">
           <button type="submit" class="btn-save">Сохранить услугу</button>
@@ -80,7 +84,7 @@
     <div class="service-grid" id="service-list"></div>
   </div>
 
-  <!-- Отзывы (без "Марки машины") -->
+  <!-- Отзывы -->
   <div id="tab-reviews" class="tab-content">
     <h2>Управление отзывами</h2>
     <div class="service-form">
@@ -100,7 +104,7 @@
     <div class="review-grid" id="review-list"></div>
   </div>
 
-  <!-- Наши работы -->
+  <!-- Наши работы (оставил без изменений) -->
   <div id="tab-works" class="tab-content">
     <h2>Управление работами</h2>
     <div class="service-form">
