@@ -124,24 +124,27 @@
 
     <script src="script.js"></script>
 
-    <!-- СКРИПТ АВТОМАТИЧЕСКОГО ВЫБОРА УСЛУГИ -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const serviceName = urlParams.get('service');
+<!-- СКРИПТ АВТОМАТИЧЕСКОГО ВЫБОРА УСЛУГИ -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceFromUrl = urlParams.get('service');
 
-            if (serviceName) {
-                const select = document.getElementById('service');
-                
-                // Ищем точное совпадение по тексту опции
-                for (let option of select.options) {
-                    if (option.text.includes(serviceName)) {
-                        option.selected = true;
-                        break;
-                    }
+        if (serviceFromUrl) {
+            const select = document.getElementById('service');
+            
+            // Убираем лишние пробелы и приводим к нижнему регистру для надёжности
+            const cleanService = serviceFromUrl.trim().toLowerCase();
+
+            for (let option of select.options) {
+                // Ищем, содержит ли текст опции название услуги (игнорируем цену и тире)
+                if (option.text.toLowerCase().includes(cleanService)) {
+                    option.selected = true;
+                    break;
                 }
             }
-        });
-    </script>
+        }
+    });
+</script>
 </body>
 </html>
