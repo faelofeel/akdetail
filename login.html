@@ -44,7 +44,7 @@
     }
     input {
       width: 100%;
-      padding: 16px 48px 16px 16px;
+      padding: 16px;
       background: #222;
       border: 1px solid #444;
       border-radius: 8px;
@@ -56,6 +56,9 @@
       outline: none;
       border-color: #4a90e2;
       box-shadow: 0 0 0 3px rgba(74,144,226,0.2);
+    }
+    .password-wrapper {
+      position: relative;
     }
     .toggle-password {
       position: absolute;
@@ -86,15 +89,10 @@
     button:hover {
       background: #357abd;
     }
-    button:disabled {
-      background: #555;
-      cursor: not-allowed;
-    }
     .error {
       color: #e74c3c;
       margin-top: 15px;
       font-size: 15px;
-      min-height: 18px;
     }
   </style>
 </head>
@@ -122,7 +120,7 @@
       >
     </div>
 
-    <div class="form-group">
+    <div class="form-group password-wrapper">
       <input 
         type="password" 
         id="password" 
@@ -159,7 +157,7 @@
   togglePassword.addEventListener('click', () => {
     const type = passwordInput.type === 'password' ? 'text' : 'password';
     passwordInput.type = type;
-    togglePassword.textContent = type === 'password' ? '👁' : '🙈';
+    togglePassword.textContent = type === 'password' ? '👁' : '👁‍🗨';
   });
 
   // Защита формы
