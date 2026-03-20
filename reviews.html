@@ -10,6 +10,7 @@
   <script src="pocketbase.umd.js"></script>
 </head>
 <body>
+
 <header>
   <div class="nav">
     <a href="index.html" class="logo-link">
@@ -34,17 +35,18 @@
   </div>
 </header>
 
-<section class="reviews">
-  <div class="container">
-    <h1 style="font-size: 40px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; margin-bottom: 20px; text-align: center;">
+<!-- Секция с фото-фоном и заголовком -->
+<section class="page-hero" style="background: url('https://images.unsplash.com/photo-1519643381401-22c77e60520e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat; height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; position: relative;">
+  <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.65);"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <h1 style="font-size: 40px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; margin-bottom: 20px;">
       Отзывы наших клиентов
     </h1>
-    <p style="font-size: 20px; font-weight: 500; max-width: 800px; margin: 0 auto 16px; line-height: 1.5; text-align: center;">
+    <p style="font-size: 20px; font-weight: 500; max-width: 800px; margin: 0 auto 16px; line-height: 1.5;">
       Реальные истории владельцев автомобилей
     </p>
-    <p style="font-size: 18px; color: #ccc; margin-top: 12px; text-align: center;">
-      Что говорят люди, которые уже доверили нам свои машины.<br>
-      Честные впечатления, фото до/после и эмоции после работы.
+    <p style="font-size: 18px; max-width: 800px; margin: 0 auto; line-height: 1.5;">
+      Что говорят люди, которые уже доверили нам свои машины. Честные впечатления, фото до/после и эмоции после работы.
     </p>
   </div>
 </section>
@@ -91,7 +93,7 @@
       const container = document.getElementById('reviews-container');
       container.innerHTML = '';
       if (res.items.length === 0) {
-        container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Пока нет отзывов</p>';
+        container.innerHTML = '<p style="text-align:center;">Пока нет отзывов</p>';
         return;
       }
       res.items.forEach(item => {
@@ -109,8 +111,7 @@
       });
     } catch (err) {
       console.error('Ошибка загрузки отзывов:', err);
-      document.getElementById('reviews-container').innerHTML =
-        '<p style="text-align:center;color:#e74c3c; grid-column:1/-1;">Не удалось загрузить отзывы</p>';
+      document.getElementById('reviews-container').innerHTML = '<p style="text-align:center;color:#e74c3c;">Не удалось загрузить отзывы</p>';
     }
   }
   loadReviews();
