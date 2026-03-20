@@ -2384,3 +2384,72 @@ h3 {
   margin: 0;
   font-weight: 300;
 }
+
+/* Тёмный фон для всей страницы и секций */
+body {
+    background: #0f0f0f; /* основной тёмный фон */
+    color: #dddddd;
+}
+
+.booking-section {
+    background: #0f0f0f; /* тёмный фон для секции записи */
+    padding: 60px 0;
+}
+
+.booking-section .container {
+    background: #111111; /* чуть светлее контейнер формы */
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    max-width: 900px;
+}
+
+.form-grid {
+    background: transparent;
+}
+
+/* Поля ввода и селект — чтобы выглядели на тёмном фоне */
+input, select, textarea {
+    background: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+input::placeholder, select option {
+    color: #888888;
+}
+
+select {
+    appearance: none;
+    background: #1e1e1e url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234caf50' d='M2 4l4 4 4-4z'/%3E%3C/svg%3E") no-repeat right 14px center;
+    background-size: 12px;
+}
+
+/* Кнопка отправки */
+.btn-primary.full-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    font-size: 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    transition: all 0.3s;
+}
+
+.btn-primary.full-btn:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+}
+
+/* Текст заметки и счётчик символов */
+.form-note, .char-count {
+    color: #888888;
+    font-size: 14px;
+    margin-top: 12px;
+}
