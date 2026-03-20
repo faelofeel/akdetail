@@ -59,6 +59,7 @@
                     <div class="form-group">
                         <label for="service">Услуга</label>
                         <select id="service">
+                            <option value="">— Выберите услугу —</option>
                             <option value="Комплексная мойка">Комплексная мойка кузова — от 1 500 ₽</option>
                             <option value="Химчистка салона">Химчистка салона — от 4 500 ₽</option>
                             <option value="Полировка кузова (одноступенчатая)">Полировка кузова (одноступенчатая) — от 6 000 ₽</option>
@@ -66,13 +67,13 @@
                             <option value="Нанесение жидкого стекла">Нанесение жидкого стекла — от 12 000 ₽</option>
                             <option value="Керамическое покрытие (9H)">Керамическое покрытие (9H) — от 25 000 ₽</option>
                             <option value="Полировка фар + бронирование">Полировка фар + бронирование — от 3 500 ₽</option>
-                            <option value="Антидождь (гидрофобное покрытие стёкол)">Антидождь (гидрофобное покрытие стёкол) — от 2 500 ₽</option>
+                            <option value="Антидождь">Антидождь (гидрофобное покрытие стёкол) — от 2 500 ₽</option>
                             <option value="Антигравийная плёнка">Антигравийная плёнка — от 15 000 ₽</option>
                             <option value="Чистка и защита кожи">Чистка и защита кожи — от 3 500 ₽</option>
-                            <option value="Удаление запахов (озонирование)">Удаление запахов (озонирование) — от 2 000 ₽</option>
+                            <option value="Удаление запахов">Удаление запахов (озонирование) — от 2 000 ₽</option>
                             <option value="Дезинфекция салона">Дезинфекция салона — от 2 500 ₽</option>
-                            <option value="Тонировка стёкол (премиум-плёнка)">Тонировка стёкол (премиум-плёнка) — от 6 000 ₽</option>
-                            <option value="Антикоррозийная обработка днища и арок">Антикоррозийная обработка днища и арок — от 12 000 ₽</option>
+                            <option value="Тонировка стёкол">Тонировка стёкол (премиум-плёнка) — от 6 000 ₽</option>
+                            <option value="Антикоррозийная обработка">Антикоррозийная обработка днища и арок — от 12 000 ₽</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -122,6 +123,22 @@
     </footer>
 
     <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const serviceFromUrl = urlParams.get('service');
+
+            if (serviceFromUrl) {
+                const select = document.getElementById('service');
+                for (let option of select.options) {
+                    if (option.text.includes(serviceFromUrl)) {
+                        option.selected = true;
+                        break;
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
-
