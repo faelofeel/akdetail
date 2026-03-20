@@ -74,7 +74,6 @@
     </footer>
 
     <script src="script.js"></script>
-
     <script>
         const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
@@ -100,7 +99,8 @@
                                     <span class="price">${item.price} ₽</span>
                                     <span class="time">${item.time || ''}</span>
                                 </div>
-                                <a href="booking.html" class="btn-primary">Записаться</a>
+                                <!-- Изменённая ссылка с передачей услуги -->
+                                <a href="booking.html?service=${encodeURIComponent(item.title)}" class="btn-primary">Записаться</a>
                             </div>
                         </div>
                     `;
@@ -116,4 +116,3 @@
     </script>
 </body>
 </html>
-
