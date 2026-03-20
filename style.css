@@ -2521,3 +2521,71 @@ select {
     font-size: 14px;
     margin-top: 12px;
 }
+
+/* Основной фон страницы — светлее предыдущего (примерно +12–15%) */
+body {
+    background: #181818;  /* светлее, чем #121212 */
+    color: #e0e0e0;
+}
+
+/* Секция записи — такой же светлый серый */
+.booking-section {
+    background: #181818;
+    padding: 60px 0;
+}
+
+/* Контейнер формы — ещё светлее для контраста */
+.booking-section .container {
+    background: #222222;  /* светлее, чем #1a1a1a */
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-width: 900px;
+}
+
+/* Поля ввода и селект — светлее, чтобы не сливались */
+input, select, textarea {
+    background: #2a2a2a;  /* светлее, чем #222222 */
+    color: #ffffff;
+    border: 1px solid #444444;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+input::placeholder, select option {
+    color: #bbbbbb;
+}
+
+/* Селект — стрелка остаётся зелёной */
+select {
+    appearance: none;
+    background: #2a2a2a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234caf50' d='M2 4l4 4 4-4z'/%3E%3C/svg%3E") no-repeat right 14px center;
+    background-size: 12px;
+}
+
+/* Кнопка отправки — без изменений (красная) */
+.btn-primary.full-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    font-size: 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    transition: all 0.3s;
+}
+
+.btn-primary.full-btn:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+}
+
+/* Заметка и счётчик символов */
+.form-note, .char-count {
+    color: #aaaaaa;
+    font-size: 14px;
+    margin-top: 12px;
+}
