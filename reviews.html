@@ -10,7 +10,6 @@
   <script src="pocketbase.umd.js"></script>
 </head>
 <body>
-
 <header>
   <div class="nav">
     <a href="index.html" class="logo-link">
@@ -36,17 +35,18 @@
 </header>
 
 <section class="reviews">
-    <div class="container">
-        <h1 style="font-size: 40px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; margin-bottom: 20px; text-align: center;">
-            Отзывы наших клиентов
-        </h1>
-        <p style="font-size: 20px; font-weight: 500; max-width: 800px; margin: 0 auto 16px; line-height: 1.5; text-align: center;">
-            Реальные истории владельцев автомобилей
-        </p>
-        <p style="font-size: 18px; color: #ccc; margin-top: 12px; text-align: center;">
-            Что говорят люди, которые уже доверили нам свои машины.  
-            Честные впечатления, фото до/после и эмоции после работы.
-        </p>
+  <div class="container">
+    <h1 style="font-size: 40px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; margin-bottom: 20px; text-align: center;">
+      Отзывы наших клиентов
+    </h1>
+    <p style="font-size: 20px; font-weight: 500; max-width: 800px; margin: 0 auto 16px; line-height: 1.5; text-align: center;">
+      Реальные истории владельцев автомобилей
+    </p>
+    <p style="font-size: 18px; color: #ccc; margin-top: 12px; text-align: center;">
+      Что говорят люди, которые уже доверили нам свои машины.<br>
+      Честные впечатления, фото до/после и эмоции после работы.
+    </p>
+  </div>
 </section>
 
 <section class="reviews-section">
@@ -67,22 +67,21 @@
         <a href="booking.html">Запись</a>
         <a href="about.html">О нас</a>
         <a href="contacts.html">Контакты</a>
-      </nav>
-    </div>
-    <div class="footer-info">
-      <p>г. Буй, ул. Советская, 25</p>
-      <p>+7 (920) 555-12-34</p>
-      <p>© 2020–2026 AKDetail. Все права защищены.</p>
-      <div class="footer-social">
-        <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
-        <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
+      </div>
+      <div class="footer-info">
+        <p>г. Буй, ул. Советская, 25</p>
+        <p>+7 (920) 555-12-34</p>
+        <p>© 2020–2026 AKDetail. Все права защищены.</p>
+        <div class="footer-social">
+          <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
+          <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
+        </div>
       </div>
     </div>
   </div>
 </footer>
 
 <script src="script.js"></script>
-
 <script>
   const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
 
@@ -91,12 +90,10 @@
       const res = await pb.collection('reviews').getList(1, 50);
       const container = document.getElementById('reviews-container');
       container.innerHTML = '';
-
       if (res.items.length === 0) {
         container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Пока нет отзывов</p>';
         return;
       }
-
       res.items.forEach(item => {
         const card = `
           <div class="review-card">
@@ -112,14 +109,11 @@
       });
     } catch (err) {
       console.error('Ошибка загрузки отзывов:', err);
-      document.getElementById('reviews-container').innerHTML = 
+      document.getElementById('reviews-container').innerHTML =
         '<p style="text-align:center;color:#e74c3c; grid-column:1/-1;">Не удалось загрузить отзывы</p>';
     }
   }
-
   loadReviews();
 </script>
-
 </body>
 </html>
-
