@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // ==================== БУРГЕР-МЕНЮ ====================
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
 
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ==================== ПЛАВНЫЙ СКРОЛЛ ====================
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const target = document.querySelector(this.getAttribute('href'));
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ==================== АНИМАЦИЯ КАРТОЧЕК ПРИ СКРОЛЛЕ ====================
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -49,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(card);
     });
 
+    // ==================== ЗАКРЫТИЕ МЕНЮ ПО ESC ====================
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
             navLinks.classList.remove('active');
@@ -59,11 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ==================== ФОРМА ЗАПИСИ ====================
     const bookingForm = document.getElementById('booking-form');
     if (bookingForm) {
         const commentTextarea = document.getElementById('comment');
         const charCount = document.getElementById('char-count');
 
+        // Счётчик символов
         if (commentTextarea && charCount) {
             const updateCount = () => {
                 const remaining = 500 - commentTextarea.value.length;
@@ -73,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCount();
         }
 
+        // Отправка формы
         bookingForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -122,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ==================== АВТОВЫБОР УСЛУГИ ИЗ URL ====================
     const urlParams = new URLSearchParams(window.location.search);
     const serviceFromUrl = urlParams.get('service');
     if (serviceFromUrl) {
