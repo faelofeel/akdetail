@@ -33,24 +33,29 @@
             <div class="hamburger"><span></span><span></span><span></span></div>
         </div>
     </header>
-
-    <section class="page-hero">
-        <div class="container">
-            <h1>Наши услуги</h1>
-            <p>Детейлинг в Буе с 2022 года</p>
-            <p>Мы делаем автомобили чище, красивее и защищённее — от простой мойки до полной керамики и антигравия.<br>
-               Большой опыт, проверенные материалы и внимательный подход к каждой машине.</p>
-            <p>Работаем с любыми автомобилями — от LADA и Hyundai до Porsche и Mercedes.<br>
-               Цены в среднем на 20% ниже рынка + подарки при заказе.</p>
-        </div>
-    </section>
-
+<section class="page-hero">
+    <div class="container">
+        <h1 style="font-weight: 900; font-size: 40px; letter-spacing: -1px; text-transform: uppercase; margin-bottom: 16px;">
+            Наши услуги
+        </h1>
+        <p style="font-size: 20px; font-weight: 500; max-width: 800px; margin: 0 auto; line-height: 1.5;">
+            Детейлинг в Буе с 2022 года.
+        </p>
+        <p style="font-size: 18px; color: #ccc; margin-top: 16px;">
+            Мы делаем автомобили чище, красивее и защищённее — от простой мойки до полной керамики и антигравия.<br>
+            Большой опыт, проверенные материалы и внимательный подход к каждой машине.
+        </p>
+        <p style="font-size: 18px; color: #ccc; margin-top: 12px;">
+            Работаем с любыми автомобилями — от LADA и Hyundai до Porsche и Mercedes.<br>
+            Цены в среднем на 20% ниже рынка + подарки при заказе.
+        </p>
+    </div>
+</section>
     <section class="services-full">
         <div class="container">
             <div class="grid-3" id="services-container"></div>
         </div>
     </section>
-
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -70,52 +75,46 @@
                     <p>© 2020–2026 AKDetail. Все права защищены.</p>
                     <div class="footer-social">
                         <a href="https://wa.me/79203871764" target="_blank">WhatsApp</a>
-                        <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
+                        <a href="https://t.me/---" target="_blank">Telegram</a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
-
     <script src="script.js"></script>
     <script>
         const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
-
         async function loadServices() {
             try {
                 const res = await pb.collection('services').getList(1, 50, { sort: '+order' });
                 const container = document.getElementById('services-container');
                 container.innerHTML = '';
-
                 if (res.items.length === 0) {
-                    container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;padding:40px;">Услуги пока не добавлены</p>';
+                    container.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Услуги пока не добавлены</p>';
                     return;
                 }
-
                 res.items.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'service-card full';
-                    card.innerHTML = `
-                        ${item.image ? `<img src="${pb.files.getURL(item, item.image)}" alt="${item.title}">` : ''}
-                        <div class="service-info">
-                            <h3>${item.title}</h3>
-                            <p>${item.description || ''}</p>
-                            <div class="price-time">
-                                <span class="price">${item.price} ₽</span>
-                                <span class="time">${item.time || ''}</span>
+                    const card = `
+                        <div class="service-card full">
+                            ${item.image ? `<img src="${pb.files.getURL(item, item.image)}" alt="${item.title}">` : ''}
+                            <div class="service-info">
+                                <h3>${item.title}</h3>
+                                <p>${item.description || ''}</p>
+                                <div class="price-time">
+                                    <span class="price">${item.price} ₽</span>
+                                    <span class="time">${item.time || ''}</span>
+                                </div>
+                                <a href="booking.html?service=${encodeURIComponent(item.title)}" class="btn-primary">Записаться</a>
                             </div>
-                            <a href="booking.html?service=${encodeURIComponent(item.title)}" class="btn-primary">Записаться</a>
                         </div>
                     `;
-                    container.appendChild(card);
+                    container.innerHTML += card;
                 });
             } catch (err) {
                 console.error('Ошибка загрузки услуг:', err);
-                document.getElementById('services-container').innerHTML = 
-                    '<p style="grid-column:1/-1;text-align:center;color:#e74c3c;">Ошибка загрузки услуг. Попробуйте позже.</p>';
+                document.getElementById('services-container').innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#e74c3c;">Ошибка загрузки услуг. Попробуйте позже.</p>';
             }
         }
-
         loadServices();
     </script>
 </body>
