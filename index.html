@@ -1,200 +1,216 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AKDetail | Детейлинг в Буе</title>
-    <link rel="icon" type="image/png" href="images/logo.png">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKDetail | Детейлинг в Буе</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="nav">
-            <a href="index.html" class="logo-link">
-                <img src="images/logo.png" alt="AKDetail" class="logo-img">
+<header>
+    <div class="nav">
+        <a href="index.html" class="logo-link">
+            <img src="images/logo.png" alt="AKDetail" class="logo-img">
+        </a>
+        <div class="nav-center">
+            <nav class="nav-links">
+                <a href="index.html" class="active">Главная</a>
+                <a href="services.html">Услуги</a>
+                <a href="works.html">Наши работы</a>
+                <a href="reviews.html">Отзывы</a>
+                <a href="booking.html">Запись</a>
+                <a href="about.html">О нас</a>
+                <a href="contacts.html">Контакты</a>
+            </nav>
+        </div>
+        <div class="contact-header">
+            <span class="call-us">Позвони нам:</span>
+            <a href="tel:+79203871764" class="phone">+7 (920) 387-17-64</a>
+        </div>
+        <div class="hamburger"><span></span><span></span><span></span></div>
+    </div>
+</header>
+<section class="hero">
+    <div class="hero-content">
+        <h1>AKDetail</h1>
+        <p class="slogan">Детейлинг в Буе: от мойки до полной защиты вашего автомобиля. Мы используем только премиум - средства и современное оборудование для идеального результата.</p>
+        <a href="booking.html" class="btn-primary">Записаться сейчас</a>
+    </div>
+</section>
+<section class="why-us" id="why-us">
+    <div class="container">
+        <h2>Почему выбирают нас</h2>
+        <div class="grid-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">🛠️</div>
+                    <h3>Опыт 3 года</h3>
+                </div>
+                <div class="card-description">
+                    <p>Многолетний опыт позволяет качественно работать с любыми автомобилями — от простых до самых требовательных.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">⚡</div>
+                    <h3>Современное оборудование</h3>
+                </div>
+                <div class="card-description">
+                    <p>Мы используем только проверенные и качественные материалы, которые гарантируют идеальный результат и полностью безопасны для лакокрасочного покрытия вашего автомобиля.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">🌿</div>
+                    <h3>Эко-средства</h3>
+                </div>
+                <div class="card-description">
+                    <p>Все наши составы безопасны для здоровья человека и окружающей среды. Мы заботимся о вас, вашем автомобиле и планете, используя биоразлагаемые продукты без вредных веществ.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">✅</div>
+                    <h3>Гарантия качества</h3>
+                </div>
+                <div class="card-description">
+                    <p>Гарантируем высокое качество каждой работы — используем только проверенные материалы и тщательно соблюдаем технологию.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">💎</div>
+                    <h3>Прозрачность и фотоотчет</h3>
+                </div>
+                <div class="card-description">
+                    <p>Стоимость фиксируется до начала работ. Мы предоставляем полный фотоотчет о процессе, чтобы вы были в курсе каждого шага.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">🎁</div>
+                    <h3>Подарки клиентам</h3>
+                </div>
+                <div class="card-description">
+                    <p>При заказе услуг — подарки: антидождь на стекла, чернение резины, ароматизатор салона. Также доступны подарочные сертификаты на любые услуги.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="services-preview">
+    <div class="container">
+        <h2>Наши услуги</h2>
+        <div class="grid-3">
+            <div class="service-card">
+                <img src="https://aqualife24.ru/wp-content/uploads/2022/09/8068340c0f9f672e7ed979803ec4214e.jpg" alt="Комплексная мойка">
+                <div class="service-info">
+                    <h3>Комплексная мойка</h3>
+                    <p>Полная мойка кузова и салона с использованием специальных шампуней и средств. Мы удаляем все загрязнения, включая битум, насекомых и дорожную пыль.</p>
+                    <span class="price">от 1 500 ₽</span>
+                    <a href="services.html" class="btn-secondary">Подробнее</a>
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="https://st.detailing.zone/7/2535/065/Ceramic_Pro_9H_detailing_zone1.jpg" alt="Керамическое покрытие (9H)">
+                <div class="service-info">
+                    <h3>Керамическое покрытие (9H)</h3>
+                    <p>Профессиональное керамическое покрытие на 2–3 года. Защита от УФ, химии, мелких царапин и лёгкого мытья.</p>
+                    <span class="price">от 25 000 ₽</span>
+                    <a href="services.html" class="btn-secondary">Подробнее</a>
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="https://1evel.ru/wa-data/public/photos/41/09/941/941.1920.jpg" alt="Керамическое покрытие">
+                <div class="service-info">
+                    <h3>Химчистка салона</h3>
+                    <p>Полная химчистка всех поверхностей салона: сиденья, потолок, двери, коврики, baгажник. Удаление пятен, запахов и грязи.</p>
+                    <span class="price">от 4 500 ₽</span>
+                    <a href="services.html" class="btn-secondary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <a href="services.html" class="btn-primary all-services">Все услуги</a>
+        </div>
+    </div>
+</section>
+<section class="reviews">
+    <div class="container">
+        <h2 class="reviews-title">Что говорят наши клиенты</h2>
+       
+        <div class="reviews-grid" style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 100px;">
+           
+            <div class="review-card" style="max-width: 380px; text-align: center; padding: 30px 20px;">
+                <h3 style="font-size: 28px; font-weight: 700; margin: 0 0 16px 0; color: #ffffff;">
+                    Евгения Серова
+                </h3>
+                <span class="review-service" style="display: block; margin: 0 auto 20px auto; background: #1e1e1e; color: #22ff66; border: 2px solid #22ff66; padding: 8px 24px; border-radius: 30px; font-size: 15px; font-weight: 500;">
+                    Химическая чистка салона
+                </span>
+                <p class="review-text" style="font-size: 16px; line-height: 1.6; color: #dddddd;">
+                    Хочу поблагодарить за идеально выполненную химчистку салона. Очень приятно, когда работа выполнена качественно, быстро и очень педантично! Спасибо, я очень довольна и буду рекомендовать другим!
+                </p>
+            </div>
+            <div class="review-card" style="max-width: 380px; text-align: center; padding: 30px 20px;">
+                <h3 style="font-size: 28px; font-weight: 700; margin: 0 0 16px 0; color: #ffffff;">
+                    Анастасия Пухаева
+                </h3>
+                <span class="review-service" style="display: block; margin: 0 auto 20px auto; background: #1e1e1e; color: #22ff66; border: 2px solid #22ff66; padding: 8px 24px; border-radius: 30px; font-size: 15px; font-weight: 500;">
+                    Полный комплекс
+                </span>
+                <p class="review-text" style="font-size: 16px; line-height: 1.6; color: #dddddd;">
+                    Спасибо огромное! Получила машину в идеальном состоянии, от пятен на чехлах не осталось и следа! Как будто только из салона! Успехов тебе в этом деле, всего самого наилучшего. Буду рекомендовать друзьям и знакомым. Еще раз спасибо
+                </p>
+            </div>
+            <div class="review-card" style="max-width: 380px; text-align: center; padding: 30px 20px;">
+                <h3 style="font-size: 28px; font-weight: 700; margin: 0 0 16px 0; color: #ffffff;">
+                    Александр Верещагин
+                </h3>
+                <span class="review-service" style="display: block; margin: 0 auto 20px auto; background: #1e1e1e; color: #22ff66; border: 2px solid #22ff66; padding: 8px 24px; border-radius: 30px; font-size: 15px; font-weight: 500;">
+                    Доставка товара
+                </span>
+                <p class="review-text" style="font-size: 16px; line-height: 1.6; color: #dddddd;">
+                    Заказывал глушитель, авито доставкой, всё пришло, хорошо упакованным, целым и невредимым, спасибо продавцу! Из Буя в Ярославль за 2 дня пришла посылка 👍
+                </p>
+            </div>
+        </div>
+        <div class="reviews-button-wrapper" style="text-align: center; margin-top: 120px; margin-bottom: 120px;">
+            <a href="reviews.html" class="btn-all-reviews"
+               style="background: #e74c3c; color: white; padding: 18px 50px; font-size: 20px; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: 600;">
+                Все отзывы
             </a>
-            <div class="nav-center">
-                <nav class="nav-links">
-                    <a href="index.html" class="active">Главная</a>
-                    <a href="services.html">Услуги</a>
-                    <a href="works.html">Наши работы</a>
-                    <a href="reviews.html">Отзывы</a>
-                    <a href="booking.html">Запись</a>
-                    <a href="about.html">О нас</a>
-                    <a href="contacts.html">Контакты</a>
-                </nav>
-            </div>
-            <div class="contact-header">
-                <span class="call-us">Позвони нам:</span>
-                <a href="tel:+79203871764" class="phone">+7 (920) 387-17-64</a>
-            </div>
-            <div class="hamburger"><span></span><span></span><span></span></div>
         </div>
-    </header>
-
-    <section class="hero">
-        <div class="hero-content">
-            <h1>AKDetail</h1>
-            <p class="slogan">Детейлинг в Буе: от мойки до полной защиты вашего автомобиля. Мы используем только премиум-средства и современное оборудование для идеального результата.</p>
-            <a href="booking.html" class="btn-primary">Записаться сейчас</a>
-        </div>
-    </section>
-
-    <section class="why-us" id="why-us">
-        <div class="container">
-            <h2>Почему выбирают нас</h2>
-            <div class="grid-4">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon">🛠️</div>
-                        <h3>Опыт 3 года</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Многолетний опыт позволяет качественно работать с любыми автомобилями — от простых до самых требовательных.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon">⚡</div>
-                        <h3>Современное оборудование</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Мы используем только проверенные и качественные материалы, которые гарантируют идеальный результат и полностью безопасны для лакокрасочного покрытия вашего автомобиля.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon">🌿</div>
-                        <h3>Эко-средства</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Все наши составы безопасны для здоровья человека и окружающей среды. Мы заботимся о вас, вашем автомобиле и планете, используя биоразлагаемые продукты без вредных веществ.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon">✅</div>
-                        <h3>Гарантия качества</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Гарантируем высокое качество каждой работы — используем только проверенные материалы и тщательно соблюдаем технологию.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon">💎</div>
-                        <h3>Прозрачность и фотоотчет</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Стоимость фиксируется до начала работ. Мы предоставляем полный фотоотчет о процессе, чтобы вы были в курсе каждого шага.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon">🎁</div>
-                        <h3>Подарки клиентам</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>При заказе услуг — подарки: антидождь на стекла, чернение резины, ароматизатор салона. Также доступны подарочные сертификаты на любые услуги.</p>
-                    </div>
+    </div>
+</section>
+   
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-logo">AK<span>Detail</span></div>
+            <div class="footer-links">
+                <a href="index.html">Главная</a>
+                <a href="services.html">Услуги</a>
+                <a href="works.html">Наши работы</a>
+                <a href="reviews.html">Отзывы</a>
+                <a href="booking.html">Запись</a>
+                <a href="about.html">О нас</a>
+                <a href="contacts.html">Контакты</a>
+            </div>
+            <div class="footer-info">
+                <p>г. Буй, ул. Советская, 25</p>
+                <p>+7 (920) 387-17-64</p>
+                <p>© 2020–2026 AKDetail. Все права защищены.</p>
+                <div class="footer-social">
+                    <a href="https://wa.me/79203871764" target="_blank">WhatsApp</a>
+                    <a href="https://t.me/---" target="_blank">Telegram</a>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section class="services-preview">
-        <div class="container">
-            <h2>Наши услуги</h2>
-            <div class="grid-3">
-                <div class="service-card">
-                    <img src="https://aqualife24.ru/wp-content/uploads/2022/09/8068340c0f9f672e7ed979803ec4214e.jpg" alt="Комплексная мойка">
-                    <div class="service-info">
-                        <h3>Комплексная мойка</h3>
-                        <p>Полная мойка кузова и салона с использованием специальных шампуней и средств. Мы удаляем все загрязнения, включая битум, насекомых и дорожную пыль.</p>
-                        <span class="price">от 1 500 ₽</span>
-                        <a href="services.html" class="btn-secondary">Подробнее</a>
-                    </div>
-                </div>
-                <div class="service-card">
-                    <img src="https://st.detailing.zone/7/2535/065/Ceramic_Pro_9H_detailing_zone1.jpg" alt="Керамическое покрытие (9H)">
-                    <div class="service-info">
-                        <h3>Керамическое покрытие (9H)</h3>
-                        <p>Профессиональное керамическое покрытие на 2–3 года. Защита от УФ, химии, мелких царапин и лёгкого мытья.</p>
-                        <span class="price">от 25 000 ₽</span>
-                        <a href="services.html" class="btn-secondary">Подробнее</a>
-                    </div>
-                </div>
-                <div class="service-card">
-                    <img src="https://1evel.ru/wa-data/public/photos/41/09/941/941.1920.jpg" alt="Химчистка салона">
-                    <div class="service-info">
-                        <h3>Химчистка салона</h3>
-                        <p>Полная химчистка всех поверхностей салона: сиденья, потолок, двери, коврики, багажник. Удаление пятен, запахов и грязи.</p>
-                        <span class="price">от 4 500 ₽</span>
-                        <a href="services.html" class="btn-secondary">Подробнее</a>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center">
-                <a href="services.html" class="btn-primary all-services">Все услуги</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="reviews">
-        <div class="container">
-            <h2 class="reviews-title">Что говорят наши клиенты</h2>
-            
-            <div class="reviews-grid">
-                <div class="review-card">
-                    <h3>Евгения Серова</h3>
-                    <span class="review-service">Химическая чистка салона</span>
-                    <p class="review-text">Хочу поблагодарить за идеально выполненную химчистку салона. Очень приятно, когда работа выполнена качественно, быстро и очень педантично! Спасибо, я очень довольна и буду рекомендовать другим!</p>
-                </div>
-                <div class="review-card">
-                    <h3>Анастасия Пухаева</h3>
-                    <span class="review-service">Полный комплекс</span>
-                    <p class="review-text">Спасибо огромное! Получила машину в идеальном состоянии, от пятен на чехлах не осталось и следа! Как будто только из салона! Успехов тебе в этом деле, всего самого наилучшего. Буду рекомендовать друзьям и знакомым. Еще раз спасибо</p>
-                </div>
-                <div class="review-card">
-                    <h3>Александр Верещагин</h3>
-                    <span class="review-service">Доставка товара</span>
-                    <p class="review-text">Заказывал глушитель, авито доставкой, всё пришло, хорошо упакованным, целым и невредимым, спасибо продавцу! Из Буя в Ярославль за 2 дня пришла посылка 👍</p>
-                </div>
-            </div>
-
-            <div class="reviews-button-wrapper">
-                <a href="reviews.html" class="btn-all-reviews">Все отзывы</a>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">AK<span>Detail</span></div>
-                <div class="footer-links">
-                    <a href="index.html">Главная</a>
-                    <a href="services.html">Услуги</a>
-                    <a href="works.html">Наши работы</a>
-                    <a href="reviews.html">Отзывы</a>
-                    <a href="booking.html">Запись</a>
-                    <a href="about.html">О нас</a>
-                    <a href="contacts.html">Контакты</a>
-                </div>
-                <div class="footer-info">
-                    <p>г. Буй, ул. Советская, 25</p>
-                    <p>+7 (920) 387-17-64</p>
-                    <p>© 2020–2026 AKDetail. Все права защищены.</p>
-                    <div class="footer-social">
-                        <a href="https://wa.me/79203871764" target="_blank">WhatsApp</a>
-                        <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
+    </div>
+</footer>
+<script src="script.js"></script>
 </body>
 </html>
