@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Бургер-меню
+
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     if (hamburger && navLinks) {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    // Плавный скролл по якорям
+
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const target = document.querySelector(this.getAttribute('href'));
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-    // Анимация карточек при скролле
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)';
         observer.observe(card);
     });
-    // Закрытие меню по Escape
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
             navLinks.classList.remove('active');
@@ -56,10 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
             spans[2].style.transform = 'none';
         }
     });
-    // Обработка формы записи
+
     const bookingForm = document.getElementById('booking-form');
     if (bookingForm) {
-        // Счётчик символов
+
         const commentTextarea = document.getElementById('comment');
         const charCount = document.getElementById('char-count');
         if (commentTextarea && charCount) {
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             commentTextarea.addEventListener('input', updateCount);
             updateCount();
         }
-        // Отправка формы
+
         bookingForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const nameInput = document.getElementById('name');
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const date = dateInput.value.trim();
             const time = timeInput.value.trim();
             const comment = commentTextarea ? commentTextarea.value.trim() : '';
-            // Валидация
+
             if (!name) { alert('Имя обязательно'); nameInput.focus(); return; }
             if (name.length < 3) { alert('Имя минимум 3 символа'); nameInput.focus(); return; }
             if (!phoneRaw) { alert('Телефон обязателен'); phoneInput.focus(); return; }
