@@ -10,104 +10,105 @@
   <script src="pocketbase.umd.js"></script>
 </head>
 <body>
-  <header>
-    <div class="nav">
-      <a href="index.html" class="logo-link">
-        <img src="images/logo.png" alt="AKDetail" class="logo-img">
-      </a>
-      <div class="nav-center">
-        <nav class="nav-links">
-          <a href="index.html">Главная</a>
-          <a href="services.html">Услуги</a>
-          <a href="works.html">Наши работы</a>
-          <a href="reviews.html" class="active">Отзывы</a>
-          <a href="booking.html">Запись</a>
-          <a href="about.html">О нас</a>
-          <a href="contacts.html">Контакты</a>
-        </nav>
+<header>
+  <div class="nav">
+    <a href="index.html" class="logo-link">
+      <img src="images/logo.png" alt="AKDetail" class="logo-img">
+    </a>
+    <div class="nav-center">
+      <nav class="nav-links">
+        <a href="index.html">Главная</a>
+        <a href="services.html">Услуги</a>
+        <a href="works.html">Наши работы</a>
+        <a href="reviews.html" class="active">Отзывы</a>
+        <a href="booking.html">Запись</a>
+        <a href="about.html">О нас</a>
+        <a href="contacts.html">Контакты</a>
+      </nav>
+    </div>
+    <div class="contact-header">
+      <span class="call-us">Позвони нам:</span>
+      <a href="tel:+79205551234" class="phone">+7 (920) 387-17-64</a>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+<!-- Секция с фоном из style.css (как на услугах) -->
+<section class="page-hero">
+  <div class="container">
+    <h1 style="font-size: 40px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; margin-bottom: 20px; text-align: center;">
+      Отзывы наших клиентов
+    </h1>
+    <p style="font-size: 20px; font-weight: 500; max-width: 800px; margin: 0 auto 16px; line-height: 1.5; text-align: center;">
+      Реальные истории владельцев автомобилей
+    </p>
+    <p style="font-size: 18px; color: #ccc; margin-top: 12px; text-align: center;">
+      Что говорят люди, которые уже доверили нам свои машины.<br>
+      Честные впечатления, фото до/после и эмоции после работы.
+    </p>
+  </div>
+</section>
+<section class="reviews-section">
+  <div class="container">
+    <div class="review-grid" id="reviews-container"></div>
+  </div>
+</section>
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">AK<span>Detail</span></div>
+      <div class="footer-links">
+        <a href="index.html">Главная</a>
+        <a href="services.html">Услуги</a>
+        <a href="works.html">Наши работы</a>
+        <a href="reviews.html">Отзывы</a>
+        <a href="booking.html">Запись</a>
+        <a href="about.html">О нас</a>
+        <a href="contacts.html">Контакты</a>
       </div>
-      <div class="contact-header">
-        <span class="call-us">Позвони нам:</span>
-        <a href="tel:+79203871764" class="phone">+7 (920) 387-17-64</a>
-      </div>
-      <div class="hamburger"><span></span><span></span><span></span></div>
-    </div>
-  </header>
-
-  <section class="page-hero">
-    <div class="container">
-      <h1>Отзывы наших клиентов</h1>
-      <p>Реальные истории владельцев автомобилей</p>
-      <p>Что говорят люди, которые уже доверили нам свои машины.<br>
-         Честные впечатления и эмоции после работы.</p>
-    </div>
-  </section>
-
-  <section class="reviews-section">
-    <div class="container">
-      <div class="review-grid" id="reviews-container"></div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">AK<span>Detail</span></div>
-        <div class="footer-links">
-          <a href="index.html">Главная</a>
-          <a href="services.html">Услуги</a>
-          <a href="works.html">Наши работы</a>
-          <a href="reviews.html">Отзывы</a>
-          <a href="booking.html">Запись</a>
-          <a href="about.html">О нас</a>
-          <a href="contacts.html">Контакты</a>
+      <div class="footer-info">
+        <p>г. Буй, ул. Советская, 25</p>
+        <p>+7 (920) 387-17-64</p>
+        <p>© 2022–2026 AKDetail. Все права защищены.</p>
+        <div class="footer-social">
+          <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
+          <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
         </div>
-        <div class="footer-info">
-          <p>г. Буй, ул. Советская, 25</p>
-          <p>+7 (920) 387-17-64</p>
-          <p>© 2020–2026 AKDetail. Все права защищены.</p>
-          <div class="footer-social">
-            <a href="https://wa.me/79203871764" target="_blank">WhatsApp</a>
-            <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
-          </div>
-        </div>
       </div>
     </div>
-  </footer>
-
-  <script src="script.js"></script>
-  <script>
-    const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
-
-    async function loadReviews() {
-      try {
-        const res = await pb.collection('reviews').getList(1, 50);
-        const container = document.getElementById('reviews-container');
-        container.innerHTML = '';
-
-        if (res.items.length === 0) {
-          container.innerHTML = '<p style="text-align:center;color:#666;padding:40px;">Пока нет отзывов</p>';
-          return;
-        }
-
-        res.items.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'review-card';
-          card.innerHTML = `
-            <h3>${item.name}</h3>
-            ${item.service ? `<span class="review-service">${item.service}</span>` : ''}
-            <p class="review-text">${item.text}</p>
-          `;
-          container.appendChild(card);
-        });
-      } catch (err) {
-        console.error('Ошибка загрузки отзывов:', err);
-        document.getElementById('reviews-container').innerHTML = 
-          '<p style="text-align:center;color:#e74c3c;">Не удалось загрузить отзывы</p>';
+  </div>
+</footer>
+<script src="script.js"></script>
+<script>
+  const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
+  async function loadReviews() {
+    try {
+      const res = await pb.collection('reviews').getList(1, 50);
+      const container = document.getElementById('reviews-container');
+      container.innerHTML = '';
+      if (res.items.length === 0) {
+        container.innerHTML = '<p style="text-align:center;">Пока нет отзывов</p>';
+        return;
       }
+      res.items.forEach(item => {
+        const card = `
+          <div class="review-card">
+            <h3 class="review-name">${item.name}</h3>
+            <div class="review-meta">
+              ${item.car ? `<div class="review-car">${item.car}</div>` : ''}
+              ${item.service ? `<div class="review-service">${item.service}</div>` : ''}
+            </div>
+            <p class="review-text">${item.text}</p>
+          </div>
+        `;
+        container.innerHTML += card;
+      });
+    } catch (err) {
+      console.error('Ошибка загрузки отзывов:', err);
+      document.getElementById('reviews-container').innerHTML = '<p style="text-align:center;color:#e74c3c;">Не удалось загрузить отзывы</p>';
     }
-
-    loadReviews();
-  </script>
+  }
+  loadReviews();
+</script>
 </body>
 </html>
