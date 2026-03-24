@@ -27,20 +27,24 @@
             </div>
             <div class="contact-header">
                 <span class="call-us">Позвони нам:</span>
-                <a href="tel:+79203871764" class="phone">+7 (920) 387-17-64</a>
+                <a href="tel:+79205551234" class="phone">+7 (920) 555-12-34</a>
             </div>
             <div class="hamburger"><span></span><span></span><span></span></div>
         </div>
     </header>
-
-    <section class="page-hero">
+<section class="page-hero">
         <div class="container">
-            <h1>Записаться на детейлинг</h1>
-            <p>Быстрая онлайн-запись</p>
-            <p>Выберите услугу, дату и время — мы оперативно свяжемся с вами для уточнения всех деталей и подтверждения записи.</p>
+            <h1 style="font-size: 40px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; margin-bottom: 20px; text-align: center;">
+                Записаться на детейлинг
+            </h1>
+            <p style="font-size: 20px; font-weight: 500; max-width: 800px; margin: 0 auto 16px; line-height: 1.5; text-align: center;">
+                Быстрая онлайн-запись
+            </p>
+            <p style="font-size: 18px; color: #ccc; margin-top: 12px; text-align: center;">
+                Выберите услугу, дату и время — мы оперативно свяжемся с вами для уточнения всех деталей и подтверждения записи.
+            </p>
         </div>
     </section>
-
     <section class="booking-section">
         <div class="container">
             <form id="booking-form">
@@ -96,7 +100,6 @@
             </form>
         </div>
     </section>
-
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -112,17 +115,36 @@
                 </div>
                 <div class="footer-info">
                     <p>г. Буй, ул. Советская, 25</p>
-                    <p>+7 (920) 387-17-64</p>
+                    <p>+7 (920) 555-12-34</p>
                     <p>© 2020–2026 AKDetail. Все права защищены.</p>
                     <div class="footer-social">
-                        <a href="https://wa.me/79203871764" target="_blank">WhatsApp</a>
+                        <a href="https://wa.me/79205551234" target="_blank">WhatsApp</a>
                         <a href="https://t.me/akdetail_buy" target="_blank">Telegram</a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
-
     <script src="script.js"></script>
+<!-- СКРИПТ АВТОМАТИЧЕСКОГО ВЫБОРА УСЛУГИ -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceFromUrl = urlParams.get('service');
+        if (serviceFromUrl) {
+            const select = document.getElementById('service');
+           
+            // Убираем лишние пробелы и приводим к нижнему регистру для надёжности
+            const cleanService = serviceFromUrl.trim().toLowerCase();
+            for (let option of select.options) {
+                // Ищем, содержит ли текст опции название услуги (игнорируем цену и тире)
+                if (option.text.toLowerCase().includes(cleanService)) {
+                    option.selected = true;
+                    break;
+                }
+            }
+        }
+    });
+</script>
 </body>
 </html>
