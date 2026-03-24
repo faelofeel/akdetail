@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Бургер-меню
+
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
 
     if (hamburger && navLinks) {
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
-            
+
             const spans = hamburger.querySelectorAll('span');
             if (navLinks.classList.contains('active')) {
                 spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Плавный скролл по якорям
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const target = document.querySelector(this.getAttribute('href'));
@@ -31,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Анимация карточек при скролле
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -44,14 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
         rootMargin: "0px 0px -50px 0px"
     });
 
-    document.querySelectorAll('.card, .service-card, .review-card').forEach(card => {
+    document.querySelectorAll('.card, .service-card, .review-card, .work-card').forEach(card => {
         card.style.opacity = '0';
         card.style.transform = 'translateY(40px)';
         card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)';
         observer.observe(card);
     });
 
-    // Закрытие меню по Escape
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
             navLinks.classList.remove('active');
@@ -62,12 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Обработка формы записи
     const bookingForm = document.getElementById('booking-form');
     if (bookingForm) {
-        // Счётчик символов
         const commentTextarea = document.getElementById('comment');
         const charCount = document.getElementById('char-count');
+
         if (commentTextarea && charCount) {
             const updateCount = () => {
                 const remaining = 500 - commentTextarea.value.length;
@@ -77,75 +73,68 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCount();
         }
 
-        // Отправка формы
         bookingForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const nameInput = document.getElementById('name');
-            const phoneInput = document.getElementById('phone');
-            const carInput = document.getElementById('car');
-            const dateInput = document.getElementById('date');
-            const timeInput = document.getElementById('time');
-
-            const name = nameInput.value.trim();
-            const phoneRaw = phoneInput.value.trim();
-            const car = carInput.value.trim();
-            const date = dateInput.value.trim();
-            const time = timeInput.value.trim();
+            const name = document.getElementById('name').value.trim();
+            const phoneRaw = document.getElementById('phone').value.trim();
+            const car = document.getElementById('car').value.trim();
+            const service = document.getElementById('service').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
             const comment = commentTextarea ? commentTextarea.value.trim() : '';
 
-            // Валидация
-            if (!name) { alert('Имя обязательно'); nameInput.focus(); return; }
-            if (name.length < 3) { alert('Имя минимум 3 символа'); nameInput.focus(); return; }
-
-            if (!phoneRaw) { alert('Телефон обязателен'); phoneInput.focus(); return; }
-            let phone = phoneRaw.replace(/\D/g, '');
-            if (phone.length < 10) { alert('Телефон минимум 10 цифр'); phoneInput.focus(); return; }
-
-            if (!car) { alert('Марка и модель авто обязательны'); carInput.focus(); return; }
-
-            if (!date) { alert('Дата обязательна'); dateInput.focus(); return; }
-
-            if (!time) { alert('Время обязательно'); timeInput.focus(); return; }
+            if (!name || name.length < 3) return alert('Введите корректное имя (минимум 3 символа)');
+            if (!phoneRaw) return alert('Телефон обязателен');
+            if (!car) return alert('Укажите марку и модель автомобиля');
+            if (!date) return alert('Выберите дату');
+            if (!time) return alert('Выберите время');
 
             const data = {
                 name: name,
                 phone: phoneRaw,
                 car: car,
-                service: document.getElementById('service').value || '',
+                service: service,
                 date: date,
                 time: time,
                 comment: comment,
                 status: 'новая'
             };
 
-            const PB_URL = 'https://pocketbase-production-70159.up.railway.app';
-
             try {
-                const response = await fetch(`${PB_URL}/api/collections/bookings/records`, {
+                const response = await fetch('https://pocketbase-production-70159.up.railway.app/api/collections/bookings/records', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
                 if (response.ok) {
-                    alert('Заявка успешно отправлена!');
+                    alert('Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
                     bookingForm.reset();
                     if (charCount) charCount.textContent = '500 символов осталось';
-                    } else {
-                        const errData = await response.json();
-                        console.log('Детали ошибки от PocketBase:', JSON.stringify(errData, null, 2));
-                        alert('Ошибка отправки. Проверьте все поля и попробуйте снова.');
-                    }
+                } else {
+                    alert('Ошибка при отправке заявки. Попробуйте ещё раз.');
+                }
             } catch (error) {
-                console.error('Ошибка:', error);
-                alert('Ошибка соединения');
+                console.error(error);
+                alert('Ошибка соединения. Проверьте интернет.');
             }
         });
     }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceFromUrl = urlParams.get('service');
+    if (serviceFromUrl) {
+        const select = document.getElementById('service');
+        if (select) {
+            const cleanService = serviceFromUrl.trim().toLowerCase();
+            for (let option of select.options) {
+                if (option.text.toLowerCase().includes(cleanService)) {
+                    option.selected = true;
+                    break;
+                }
+            }
+        }
+    }
+
 });
-
-
-
-
-
