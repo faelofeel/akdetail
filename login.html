@@ -7,41 +7,181 @@
   <link rel="icon" type="image/png" href="images/logo.png">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-box {
+      background: #1e1e1e;
+      padding: 50px 40px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      border: 1px solid #2a2a2a;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+    p.subtitle {
+      color: #aaa;
+      margin: 0 0 40px;
+      font-size: 16px;
+    }
+    .form-group {
+      margin-bottom: 24px;
+    }
+    input {
+      width: 100%;
+      padding: 16px;
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    input:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 3px rgba(74,144,226,0.2);
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #357abd;
+    }
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    .error {
+      color: #e74c3c;
+      margin-top: 15px;
+      font-size: 15px;
+    }
+  </style>
 </head>
 <body>
-  <div class="login-box">
-    <h1>Вход в админ-панель</h1>
-    <p class="subtitle">Введите данные администратора</p>
-    
-    <form id="loginForm" autocomplete="off">
-      <div class="form-group">
-        <input 
-          type="email" 
-          id="email" 
-          placeholder="Email" 
-          maxlength="40" 
-          required
-          autocomplete="off"
-        >
-      </div>
-      <div class="form-group">
-        <input 
-          type="password" 
-          id="password" 
-          placeholder="Пароль" 
-          maxlength="20" 
-          minlength="6" 
-          required
-          autocomplete="off"
-        >
-      </div>
-      <button type="submit" id="submitBtn">Войти</button>
-    </form>
-    
-    <div id="error" class="error"></div>
-  </div>
-
-  <script src="pocketbase.umd.js"></script>
-  <script src="login.js"></script>
+<div class="login-box">
+  <h1>Вход в админ-панель</h1>
+  <p class="subtitle">Введите данные администратора</p>
+  <form id="loginForm" autocomplete="off">
+    <div class="form-group">
+      <input
+        type="email"
+        id="email"
+        placeholder="Email"
+        maxlength="40"
+        minlength="5"
+        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        title="Введите корректный email (до 40 символов)"
+        required
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+    </div>
+    <div class="form-group">
+      <input
+        type="password"
+        id="password"
+        placeholder="Пароль"
+        maxlength="20"
+        minlength="6"
+        required
+        autocomplete="off"
+      >
+    </div>
+    <button type="submit" id="submitBtn">Войти</button>
+  </form>
+  <div id="error" class="error"></div>
+</div>
+<script src="pocketbase.umd.js"></script>
+<script>
+  const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
+  // Если уже авторизован — сразу на админку
+  if (localStorage.getItem('pb_token')) {
+    window.location.href = 'admin.html';
+  }
+  // Защита формы
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('error');
+    const submitBtn = document.getElementById('submitBtn');
+    // Базовые проверки
+    if (!email || !password) {
+      errorDiv.textContent = 'Заполните все поля';
+      return;
+    }
+    if (email.length > 40) {
+      errorDiv.textContent = 'Email слишком длинный (макс. 40 символов)';
+      return;
+    }
+    if (password.length > 20) {
+      errorDiv.textContent = 'Пароль слишком длинный (макс. 20 символов)';
+      return;
+    }
+    if (password.length < 6) {
+      errorDiv.textContent = 'Пароль слишком короткий (мин. 6 символов)';
+      return;
+    }
+    if (/\s/.test(email) || /\s/.test(password)) {
+      errorDiv.textContent = 'Пробелы в логине и пароле запрещены';
+      return;
+    }
+    // Запрещаем кириллицу в логине
+    if (/[а-яА-ЯёЁ]/.test(email)) {
+      errorDiv.textContent = 'Логин может содержать только латинские буквы';
+      return;
+    }
+    errorDiv.textContent = '';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Вход...';
+    try {
+      const authData = await pb.collection('users').authWithPassword(email, password);
+      localStorage.setItem('pb_token', authData.token);
+      localStorage.setItem('pb_user', JSON.stringify(authData.record));
+      window.location.href = 'admin.html';
+    } catch (err) {
+      errorDiv.textContent = 'Неверный email или пароль';
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Войти';
+    }
+  });
+  // Вход по Enter
+  document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+    }
+  });
+</script>
 </body>
 </html>
