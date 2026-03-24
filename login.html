@@ -122,18 +122,18 @@
 <script src="pocketbase.umd.js"></script>
 <script>
   const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
-  // Если уже авторизован — сразу на админку
+
   if (localStorage.getItem('pb_token')) {
     window.location.href = 'admin.html';
   }
-  // Защита формы
+
   document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
     const errorDiv = document.getElementById('error');
     const submitBtn = document.getElementById('submitBtn');
-    // Базовые проверки
+
     if (!email || !password) {
       errorDiv.textContent = 'Заполните все поля';
       return;
@@ -154,7 +154,7 @@
       errorDiv.textContent = 'Пробелы в логине и пароле запрещены';
       return;
     }
-    // Запрещаем кириллицу в логине
+
     if (/[а-яА-ЯёЁ]/.test(email)) {
       errorDiv.textContent = 'Логин может содержать только латинские буквы';
       return;
@@ -175,7 +175,7 @@
       submitBtn.textContent = 'Войти';
     }
   });
-  // Вход по Enter
+
   document.getElementById('password').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
       e.preventDefault();
