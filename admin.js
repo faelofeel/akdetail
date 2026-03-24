@@ -1,5 +1,5 @@
 const pb = new PocketBase('https://pocketbase-production-70159.up.railway.app');
-// ==================== УСЛУГИ ====================
+
 const serviceForm = document.getElementById('service-form');
 const serviceId = document.getElementById('service-id');
 const serviceTitle = document.getElementById('title');
@@ -13,7 +13,7 @@ const cancelServiceBtn = document.getElementById('cancel-service-edit');
 const serviceList = document.getElementById('service-list');
 const servicePreview = document.getElementById('service-preview');
 let currentServiceImage = null;
-// ==================== ОТЗЫВЫ ====================
+
 const reviewForm = document.getElementById('review-form');
 const reviewId = document.getElementById('review-id');
 const reviewName = document.getElementById('name');
@@ -22,7 +22,7 @@ const reviewText = document.getElementById('text');
 const reviewFormTitle = document.getElementById('review-form-title');
 const cancelReviewBtn = document.getElementById('cancel-review-edit');
 const reviewList = document.getElementById('review-list');
-// ==================== НАШИ РАБОТЫ ====================
+
 const worksForm = document.getElementById('works-form');
 const worksId = document.getElementById('works-id');
 const worksTitle = document.getElementById('works-title');
@@ -36,7 +36,7 @@ const worksPreview = document.getElementById('works-preview');
 let currentEditId = null;
 let existingImages = [];
 let newImagesToUpload = [];
-// Переключение вкладок
+
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -45,7 +45,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
   });
 });
-// ==================== УСЛУГИ (с превью и подъёмом вверх) ====================
+
 async function loadServices() {
   if (!serviceList) return;
   try {
@@ -164,7 +164,7 @@ window.deleteService = async (id) => {
     loadServices();
   } catch (err) { alert('Ошибка удаления услуги'); }
 };
-// ==================== ОТЗЫВЫ (только подъём вверх) ====================
+
 async function loadReviews() {
   if (!reviewList) return;
   try {
@@ -235,7 +235,7 @@ window.deleteReview = async (id) => {
     loadReviews();
   } catch (err) { alert('Ошибка удаления отзыва'); }
 };
-// ==================== НАШИ РАБОТЫ ====================
+
 async function loadWorks() {
   if (!worksList) return;
   try {
@@ -427,7 +427,7 @@ window.deleteWork = async (id) => {
     loadWorks();
   } catch (err) { alert('Ошибка удаления работы'); }
 };
-// ==================== ЗАПУСК ====================
+
 loadServices();
 loadReviews();
 loadWorks();
