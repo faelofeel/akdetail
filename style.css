@@ -794,11 +794,14 @@ footer {
 .tab-content.active {
   display: block;
 }
+
 .review-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 40px;
-  justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 60px;
+    row-gap: 80px;
+    justify-content: center;
+    padding: 40px 0;
 }
 .review-card-admin {
   background: #222;
